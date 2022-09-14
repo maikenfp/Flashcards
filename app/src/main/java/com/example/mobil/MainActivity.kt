@@ -20,12 +20,12 @@ class MainActivity : AppCompatActivity() {
         val myAdapter = DecksAdapter(this, myList)
         val myRecycler = findViewById<RecyclerView>(R.id.my_recycler_view)
         val btn = findViewById<Button>(R.id.btn)
-        val txt = findViewById<TextView>(R.id.addText)
+        //val txt = findViewById<TextView>(R.id.addDeck)
 
-        btn.setOnClickListener{
-            myList.add(txt.text.toString())
-            myAdapter.notifyDataSetChanged()
-        }
+        //btn.setOnClickListener{
+         //   myList.add(txt.text.toString())
+            //myAdapter.notifyDataSetChanged()
+        //}
 
         myRecycler.adapter = myAdapter
         myRecycler.layoutManager = LinearLayoutManager(this)
