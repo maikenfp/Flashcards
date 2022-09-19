@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class DecksAdapter(private val context: Context, private val myList : ArrayList<String>) : RecyclerView.Adapter<DecksAdapter.ViewHolder>() {
+class DecksAdapter(val context: Context, private val myList : ArrayList<String>) : RecyclerView.Adapter<DecksAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): ViewHolder {
         val myDecksItem = LayoutInflater.from(viewGroup.context).inflate(R.layout.deck_item, viewGroup, false)
@@ -16,7 +16,12 @@ class DecksAdapter(private val context: Context, private val myList : ArrayList<
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.bind(myList[position])
+        val textItem = viewHolder.itemView.findViewById<TextView>(R.id.txt)
+        val newList = myList[position]
+
+        textItem.text = newList
+
+        //viewHolder.bind(myList[position])
     }
 
     override fun getItemCount(): Int {
@@ -25,10 +30,12 @@ class DecksAdapter(private val context: Context, private val myList : ArrayList<
 
     inner class ViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
 
-        private val textItem : TextView = itemView.findViewById(R.id.txt)
+        //private val textItem : TextView = itemView.findViewById(R.id.txt)
 
-        fun bind(deckItem : String){
+        /*fun bind(deckItem : String){
             textItem.text = deckItem
-        }
+        }*/
     }
+
+
 }
