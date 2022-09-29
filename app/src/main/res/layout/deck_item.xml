@@ -8,6 +8,7 @@
     app:cardMaxElevation="5dp"
     android:layout_margin="10dp"
     >
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
