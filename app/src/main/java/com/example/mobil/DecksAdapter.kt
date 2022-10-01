@@ -1,7 +1,6 @@
 package com.example.mobil
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +40,7 @@ class DecksAdapter(val context: Context, private val myList : ArrayList<String>)
 
     inner class ViewHolder(itemView : View, listener: onItemClickListener) : RecyclerView.ViewHolder(itemView) {
 
-        private val textItem = itemView.findViewById<TextView>(R.id.txt)
+        private val textItem = itemView.findViewById<TextView>(R.id.testText)
 
         fun bind(deckItem : String){
             textItem.text = deckItem
