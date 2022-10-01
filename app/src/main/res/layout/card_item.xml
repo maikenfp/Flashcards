@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="10dp"
+    app:cardBackgroundColor="#90673AB7"
     app:cardCornerRadius="10dp"
     app:cardElevation="8dp"
-    app:cardMaxElevation="5dp"
-    android:layout_margin="10dp"
-    >
+    app:cardMaxElevation="5dp">
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="222dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="190dp"
+            android:layout_margin="15dp"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_margin="15dp"
-            android:padding="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:padding="4dp">
+
             <TextView
                 android:id="@+id/testText"
-                android:text="txt"
+                android:layout_width="317dp"
+                android:layout_height="143dp"
+                android:layout_margin="20dp"
+                android:text="@string/testText"
                 android:textSize="19sp"
-                android:textStyle="bold"
-                android:layout_margin="6dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 

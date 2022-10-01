@@ -12,15 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-
-        val myList = ArrayList<String>()
+                val myList = ArrayList<String>()
         myList.add("Mobile Programming")
         myList.add("History")
 
@@ -60,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         myAdapter.setOnItemClickListener(object : DecksAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
-                startActivity(Intent(this@MainActivity, Test::class.java))
+                startActivity(Intent(this@MainActivity, DeckActivity::class.java))
             }
 
         })
