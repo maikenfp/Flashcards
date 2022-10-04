@@ -9,23 +9,14 @@
         android:id="@+id/deckName"
         android:layout_width="wrap_content"
         android:layout_height="52dp"
+        android:layout_marginTop="16dp"
         android:fontFamily="sans-serif-light"
         android:text="@string/test_deck"
         android:textSize="34sp"
-        app:layout_constraintBottom_toTopOf="@+id/card_view"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentContainerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/card_view"
-        android:layout_width="367dp"
-        android:layout_height="488dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.452" />
 
     <Button
         android:id="@+id/goBackButton"
@@ -37,7 +28,7 @@
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         app:iconSize="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/card_view"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentContainerView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/deckName"
         app:layout_constraintTop_toTopOf="parent" />
@@ -52,15 +43,16 @@
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         app:iconSize="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/card_view"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentContainerView"
         app:layout_constraintEnd_toStartOf="@+id/deckName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/flipCardButton"
-        android:layout_width="82dp"
-        android:layout_height="85dp"
+        android:layout_width="95dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
         android:contentDescription="@string/add_card"
         app:icon="@drawable/ic_launcher_foreground"
         app:iconGravity="textStart"
@@ -69,12 +61,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_view" />
+        app:layout_constraintTop_toBottomOf="@+id/fragmentContainerView" />
 
     <Button
         android:id="@+id/previousCardButton"
         android:layout_width="63dp"
         android:layout_height="68dp"
+        android:layout_marginStart="32dp"
         android:contentDescription="@string/shuffle"
         app:icon="?attr/actionModeCloseDrawable"
         app:iconGravity="textStart"
@@ -84,12 +77,13 @@
         app:layout_constraintEnd_toStartOf="@+id/flipCardButton"
         app:layout_constraintHorizontal_bias="0.529"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_view" />
+        app:layout_constraintTop_toBottomOf="@+id/fragmentContainerView" />
 
     <Button
         android:id="@+id/nextCardButton"
         android:layout_width="63dp"
         android:layout_height="68dp"
+        android:layout_marginEnd="32dp"
         android:contentDescription="@string/edit"
         app:icon="@drawable/ic_launcher_foreground"
         app:iconGravity="textStart"
@@ -99,5 +93,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toEndOf="@+id/flipCardButton"
-        app:layout_constraintTop_toBottomOf="@+id/card_view" />
+        app:layout_constraintTop_toBottomOf="@+id/fragmentContainerView" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.example.mobil.CardFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/flipCardButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deckName" />
 </androidx.constraintlayout.widget.ConstraintLayout>

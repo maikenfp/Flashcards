@@ -5,67 +5,28 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.Button
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.widget.TextView
 import com.example.mobil.model.Card
 
 class CardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_deck)
+        setContentView(R.layout.activity_card)
 
+        var index = 0
+        val cardText: TextView = findViewById(R.id.cardTextView)
+
+        // Current Deck
+        // ToDo: This ArrayList should be loaded with the correct deckId
         val cards = ArrayList<Card>()
-        cards.add(Card(0, "What course is this?", "Android Programming!", 0, false))
+        cards.add(Card(0, "Card 0 Question", "Card 0 Answer", 0, false))
+        cards.add(Card(1, "Card 1 Question", "Card 1 Answer", 0, false))
+        cards.add(Card(2, "Card 2 Question", "Card 2 Answer", 0, false))
+        cards.add(Card(3, "Card 3 Question", "Card 3 Answer", 0, false))
+        cards.add(Card(4, "Card 4 Question", "Card 4 Answer", 0, false))
 
-        // adapter & recycler
-        val cardAdapter = CardsAdapter(this, cards)
-        val cardRecycler = findViewById<RecyclerView>(R.id.card_recycle_view)
-
-        cardRecycler.adapter = cardAdapter
-        cardRecycler.layoutManager = LinearLayoutManager(this)
-
-        // Add button
-        val addBtn = findViewById<Button>(R.id.addCardButton)
-
-        addBtn.setOnClickListener {
-            val inflater = LayoutInflater.from(this).inflate(R.layout.add_card, null)
-            val addQuestion = inflater.findViewById<EditText>(R.id.input_question)
-            val addAnswer = inflater.findViewById<EditText>(R.id.input_answer)
-
-            val addCardDialog = AlertDialog.Builder(this)
-            addCardDialog.setView(inflater)
-
-            addCardDialog.setPositiveButton("Save") {
-                    dialog,_->
-                val question = addQuestion.text.toString()
-                val answer = addAnswer.text.toString()
-                cards.add(Card(1, question, answer, 1, false))
-                cardAdapter.notifyDataSetChanged()
-                dialog.dismiss()
-            }
-
-            addCardDialog.setNegativeButton("Cancel") {
-                    dialog,_->
-                dialog.dismiss()
-            }
-        }
-
-        // Edit button
-        val editBtn = findViewById<Button>(R.id.editModeButton)
-        editBtn.setOnClickListener{
-            val inflater = LayoutInflater.from(this).inflate(R.layout.add_card,null)
-            val addtxt = inflater.findViewById<EditText>(R.id.addText)
-        }
-
-        // Shuffle button
-        val shuffleBtn = findViewById<Button>(R.id.shuffleButton)
-        shuffleBtn.setOnClickListener{
-            val inflater = LayoutInflater.from(this).inflate(R.layout.add_card,null)
-            val addtxt = inflater.findViewById<EditText>(R.id.addText)
-        }
 
         // Go back button
         val goBackBtn = findViewById<Button>(R.id.goBackButton)
@@ -73,18 +34,38 @@ class CardActivity : AppCompatActivity() {
             startActivity(Intent(this@CardActivity, DeckActivity::class.java))
         }
 
-        // Go to card
-        cardAdapter.setOnCardClickListener(object : CardsAdapter.onCardClickListener{
-            override fun onCardClick(position: Int) {
-                startActivity(Intent(this@CardActivity, Test::class.java))
-            }
-        })
 
-        // Go to card
-        cardAdapter.setOnCardClickListener(object : CardsAdapter.onCardClickListener{
-            override fun onCardClick(position: Int) {
-                
+        // Hamburger Menu button
+        // ToDo: Make Hamburger Button correctly
+        val editBtn = findViewById<Button>(R.id.editModeButton)
+        editBtn.setOnClickListener{
+            val inflater = LayoutInflater.from(this).inflate(R.layout.add_card,null)
+        }
+
+        // Previous Card button
+        val previousCardBtn = findViewById<Button>(R.id.previousCardButton)
+        previousCardBtn.setOnClickListener{
+            index -= 1
+            cardText.text = cards[index].question
+        }
+
+
+        // Next Card Button
+        val nextCardBtn = findViewById<Button>(R.id.nextCardButton)
+        nextCardBtn.setOnClickListener{
+            index += 1
+            cardText.text = cards[index].question
+        }
+
+        // Flip Card Button
+        val flipCardBtn = findViewById<Button>(R.id.flipCardButton)
+        flipCardBtn.setOnClickListener{
+            if (cardText.text == cards[index].question) {
+                cardText.text = cards[index].answer
             }
-        })
+            else {
+                cardText.text = cards[index].question
+            }
+        }
     }
 }
