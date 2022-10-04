@@ -76,7 +76,7 @@ class DeckActivity : AppCompatActivity() {
         // Go to card
         cardAdapter.setOnCardClickListener(object : CardsAdapter.onCardClickListener{
             override fun onCardClick(position: Int) {
-                startActivity(Intent(this@DeckActivity, Test::class.java))
+                startActivity(Intent(this@DeckActivity, CardActivity::class.java))
             }
         })
     }
