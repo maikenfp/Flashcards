@@ -10,12 +10,56 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <Button
+            android:id="@+id/flipCardButton"
+            android:layout_width="95dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="32dp"
+            android:contentDescription="@string/add_card"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="70dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_fragment" />
+
+        <Button
+            android:id="@+id/previousCardButton"
+            android:layout_width="63dp"
+            android:layout_height="68dp"
+            android:layout_marginEnd="24dp"
+            android:contentDescription="@string/shuffle"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="35dp"
+            app:layout_constraintBottom_toBottomOf="@+id/flipCardButton"
+            app:layout_constraintEnd_toStartOf="@+id/flipCardButton"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/flipCardButton" />
+
+        <Button
+            android:id="@+id/nextCardButton"
+            android:layout_width="63dp"
+            android:layout_height="68dp"
+            android:layout_marginStart="24dp"
+            android:contentDescription="@string/edit"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="35dp"
+            app:layout_constraintBottom_toBottomOf="@+id/flipCardButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/flipCardButton"
+            app:layout_constraintTop_toTopOf="@+id/flipCardButton" />
+
         <TextView
             android:id="@+id/cardTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="cardTextView"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/flipCardButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
