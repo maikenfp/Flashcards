@@ -13,24 +13,9 @@
         android:fontFamily="sans-serif-light"
         android:text="@string/test_deck"
         android:textSize="34sp"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentContainerView"
+        app:layout_constraintBottom_toTopOf="@+id/card_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/goBackButton"
-        android:layout_width="54dp"
-        android:layout_height="62dp"
-        android:contentDescription="@string/go_back"
-        android:insetRight="0dp"
-        app:icon="@drawable/ic_baseline_more_vert_24"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
-        app:iconSize="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentContainerView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/deckName"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -39,64 +24,30 @@
         android:layout_height="62dp"
         android:contentDescription="@string/go_back"
         android:insetRight="0dp"
-        app:icon="?attr/actionModeCloseDrawable"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         app:iconSize="40dp"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentContainerView"
+        app:layout_constraintBottom_toTopOf="@+id/card_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/deckName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/goBackButton"
+        android:layout_width="54dp"
+        android:layout_height="62dp"
+        android:contentDescription="@string/go_back"
+        android:insetRight="0dp"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="40dp"
+        app:layout_constraintBottom_toTopOf="@+id/card_fragment"
         app:layout_constraintEnd_toStartOf="@+id/deckName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/flipCardButton"
-        android:layout_width="95dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="16dp"
-        android:contentDescription="@string/add_card"
-        app:icon="@drawable/ic_launcher_foreground"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
-        app:iconSize="70dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentContainerView" />
-
-    <Button
-        android:id="@+id/previousCardButton"
-        android:layout_width="63dp"
-        android:layout_height="68dp"
-        android:layout_marginStart="32dp"
-        android:contentDescription="@string/shuffle"
-        app:icon="?attr/actionModeCloseDrawable"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
-        app:iconSize="35dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/flipCardButton"
-        app:layout_constraintHorizontal_bias="0.529"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentContainerView" />
-
-    <Button
-        android:id="@+id/nextCardButton"
-        android:layout_width="63dp"
-        android:layout_height="68dp"
-        android:layout_marginEnd="32dp"
-        android:contentDescription="@string/edit"
-        app:icon="@drawable/ic_launcher_foreground"
-        app:iconGravity="textStart"
-        app:iconPadding="0dp"
-        app:iconSize="35dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.485"
-        app:layout_constraintStart_toEndOf="@+id/flipCardButton"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentContainerView" />
-
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
+        android:id="@+id/card_fragment"
         android:name="com.example.mobil.CardFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -104,7 +55,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/flipCardButton"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
