@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.model.Card
 
-class CardsAdapter(val context: Context, private val cards: List<Card>) : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>() {
+class CardsAdapter(val context: DeckActivity, private val cards: List<Card>) : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>() {
 
     lateinit var listener : onCardClickListener
 
