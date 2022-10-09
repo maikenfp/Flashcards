@@ -9,17 +9,21 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobil.model.Card
+import com.example.mobil.model.Deck
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-                val myList = ArrayList<String>()
-        myList.add("Mobile Programming")
-        myList.add("History")
 
-        val myAdapter = DecksAdapter(this, myList)
+        val cardList = ArrayList<Card>()
+        val deckList = ArrayList<Deck>()
+        deckList.add(Deck(0, "Mobil programmering", cardList))
+        deckList.add(Deck(1, "History", cardList))
+
+        val myAdapter = DecksAdapter(this, deckList)
         val myRecycler = findViewById<RecyclerView>(R.id.my_recycler_view)
 
         val btn = findViewById<Button>(R.id.btn)
@@ -38,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             addDialog.setPositiveButton("Ok"){
                     dialog,_->
                 val txt = addtxt.text.toString()
-                myList.add(txt)
+                deckList.add(Deck(2, txt, cardList))
                 myAdapter.notifyDataSetChanged()
                 dialog.dismiss()
             }

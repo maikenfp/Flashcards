@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobil.model.Deck
 
-class DecksAdapter(val context: Context, private val myList : ArrayList<String>) : RecyclerView.Adapter<DecksAdapter.ViewHolder>() {
+class DecksAdapter(val context: Context, private val myList : ArrayList<Deck>) : RecyclerView.Adapter<DecksAdapter.ViewHolder>() {
 
     lateinit var listener : onItemClickListener
 
@@ -42,8 +43,8 @@ class DecksAdapter(val context: Context, private val myList : ArrayList<String>)
 
         private val textItem = itemView.findViewById<TextView>(R.id.testText)
 
-        fun bind(deckItem : String){
-            textItem.text = deckItem
+        fun bind(deckItem : Deck){
+            textItem.text = deckItem.title
         }
 
         init {
