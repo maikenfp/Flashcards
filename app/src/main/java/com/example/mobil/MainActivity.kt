@@ -9,24 +9,32 @@ import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobil.databinding.ActivityMainBinding
 import com.example.mobil.model.Card
 import com.example.mobil.model.Deck
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var mainBinding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        mainBinding = ActivityMainBinding.inflate(layoutInflater)
+        val view = mainBinding.root
+        setContentView(view)
 
         val cardList = ArrayList<Card>()
         val deckList = ArrayList<Deck>()
         deckList.add(Deck(0, "Mobil programmering", cardList))
         deckList.add(Deck(1, "History", cardList))
 
-        val myAdapter = DecksAdapter(this, deckList)
-        val myRecycler = findViewById<RecyclerView>(R.id.my_recycler_view)
 
-        val btn = findViewById<Button>(R.id.btn)
+        val myAdapter = DecksAdapter(this, deckList)
+        val myRecycler = mainBinding.myRecyclerView
+
+        val btn = mainBinding.btn
 
         myRecycler.adapter = myAdapter
         myRecycler.layoutManager = LinearLayoutManager(this)
@@ -41,8 +49,8 @@ class MainActivity : AppCompatActivity() {
 
             addDialog.setPositiveButton("Ok"){
                     dialog,_->
-                val txt = addtxt.text.toString()
-                deckList.add(Deck(2, txt, cardList))
+                val deckTitle = addtxt.text.toString()
+                deckList.add(Deck(2, deckTitle, cardList))
                 myAdapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
