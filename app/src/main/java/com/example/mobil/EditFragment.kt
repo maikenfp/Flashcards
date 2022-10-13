@@ -88,7 +88,9 @@ class EditFragment : Fragment() {
         // Select card
         cardsAdapter.setOnCardClickListener(object : CardsAdapter.onCardClickListener{
             override fun onCardClick(position: Int) {
-                startActivity(Intent(this@EditFragment.context, CardActivity::class.java))
+                //ToDo: This now needs to work with fragment
+                (activity as DeckActivity).replaceFragment(CardFragment())
+                //startActivity(Intent(this@EditFragment.context, CardActivity::class.java))
             }
         })
 
