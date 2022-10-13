@@ -84,10 +84,12 @@ class DeckFragment : Fragment() {
         shuffleBtn.setOnClickListener {
             val shuffleIndex = Random.nextInt(cards.size)
             val shuffleElement = cards[shuffleIndex]
-            val intent = Intent(this@DeckFragment.context, CardActivity::class.java)
 
-            intent.putExtra(shuffleElement.question, shuffleElement.answer)
-            startActivity(intent)
+            //ToDo: This now needs to redirect to a fragment
+            (activity as DeckActivity).replaceFragment(CardFragment())
+            //val intent = Intent(this@DeckFragment.context, CardActivity::class.java)
+            //intent.putExtra(shuffleElement.question, shuffleElement.answer)
+            //startActivity(intent)
         }
 
 
@@ -100,7 +102,9 @@ class DeckFragment : Fragment() {
         // Go to card
         cardsAdapter.setOnCardClickListener(object : CardsAdapter.onCardClickListener{
             override fun onCardClick(position: Int) {
-                startActivity(Intent(this@DeckFragment.context, CardActivity::class.java))
+                //ToDo: This now needs to work with fragment
+                (activity as DeckActivity).replaceFragment(CardFragment())
+                //startActivity(Intent(this@DeckFragment.context, CardActivity::class.java))
             }
         })
         return view
