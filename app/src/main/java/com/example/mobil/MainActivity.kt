@@ -7,17 +7,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.mobil.adapter.DecksAdapter
 import com.example.mobil.databinding.ActivityMainBinding
-import com.example.mobil.databinding.AddItemBinding
 import com.example.mobil.model.Card
 import com.example.mobil.model.Deck
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ktx.database
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -83,7 +80,7 @@ class MainActivity : AppCompatActivity() {
 
         btn.setOnClickListener{
 
-            val inflater = LayoutInflater.from(this).inflate(R.layout.add_item,null)
+            val inflater = LayoutInflater.from(this).inflate(R.layout.add_deck,null)
             val addText = inflater.findViewById<EditText>(R.id.addText)
 
             val addDialog = AlertDialog.Builder(this)

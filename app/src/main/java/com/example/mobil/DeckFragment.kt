@@ -1,7 +1,6 @@
 package com.example.mobil
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobil.adapter.CardsAdapter
 import com.example.mobil.model.Card
 import kotlin.random.Random
 
