@@ -25,8 +25,8 @@ import kotlin.collections.ArrayList
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainBinding: ActivityMainBinding
-    private lateinit var database : DatabaseReference
-    private lateinit var database2 : FirebaseFirestore
+    //private lateinit var database : DatabaseReference
+    private lateinit var database : FirebaseFirestore
     private lateinit var deck: ArrayList<Deck>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +34,6 @@ class MainActivity : AppCompatActivity() {
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         val view = mainBinding.root
         setContentView(view)
-
-        val db = Firebase.firestore
-        database = FirebaseDatabase.getInstance().getReference("Decks")
 
         //Deck list hardcoded dummy data
         val cardList = ArrayList<Card>()
@@ -69,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                 "born" to 1815
             )
 
-            db.collection("users")
+            database.collection("users")
                 .add(user)
                 .addOnSuccessListener { documentReference ->
                     Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
@@ -107,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                     "cards" to cardList
                 )
 
-                db.collection("Decks").add(deck)
+                database.collection("Decks").add(deck)
                 myAdapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
@@ -132,8 +129,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun eventChangeListener(adapter: DecksAdapter) {
-        database2 = FirebaseFirestore.getInstance()
-        database2.collection("Decks").
+        database = FirebaseFirestore.getInstance()
+        database.collection("Decks").
                 addSnapshotListener(object : EventListener<QuerySnapshot>{
                     override fun onEvent(
                         value: QuerySnapshot?,
