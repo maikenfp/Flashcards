@@ -15,13 +15,19 @@ import com.example.mobil.model.Card
 import com.example.mobil.model.Deck
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainBinding: ActivityMainBinding
     private lateinit var database : DatabaseReference
+    private lateinit var database2 : FirebaseFirestore
+    private lateinit var deck: ArrayList<Deck>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,17 +38,24 @@ class MainActivity : AppCompatActivity() {
         val db = Firebase.firestore
         database = FirebaseDatabase.getInstance().getReference("Decks")
 
-
+        //Deck list hardcoded dummy data
         val cardList = ArrayList<Card>()
-        val deckList = ArrayList<Deck>()
+        /*val deckList = ArrayList<Deck>()
         cardList.add(Card(0, "Card 0 Question", "Card 0 Answer", 0, false))
-        deckList.add(Deck(0, "Mobil programmering", cardList))
-        deckList.add(Deck(1, "History", cardList))
+        deckList.add(Deck(0, "Mobil programmering"))
+        deckList.add(Deck(1, "History"))*/
 
-        val myAdapter = DecksAdapter(this, deckList)
         val myRecycler = mainBinding.myRecyclerView
+        myRecycler.layoutManager = LinearLayoutManager(this)
 
-        val btn = mainBinding.btn
+        deck = arrayListOf()
+
+        val myAdapter = DecksAdapter(this, deck)
+        myRecycler.adapter = myAdapter
+
+        eventChangeListener(myAdapter)
+
+        val addDeckButton = mainBinding.addDeckButton
 
         val testbtn = mainBinding.test
 
@@ -75,10 +88,8 @@ class MainActivity : AppCompatActivity() {
             //myRef.setValue("Hello, World!")*/
         }
 
-        myRecycler.adapter = myAdapter
-        myRecycler.layoutManager = LinearLayoutManager(this)
-
-        btn.setOnClickListener{
+        //On "Add deck" Click
+        addDeckButton.setOnClickListener{
 
             val inflater = LayoutInflater.from(this).inflate(R.layout.add_deck,null)
             val addText = inflater.findViewById<EditText>(R.id.addText)
@@ -97,8 +108,6 @@ class MainActivity : AppCompatActivity() {
                 )
 
                 db.collection("Decks").add(deck)
-
-                deckList.add(Deck(2, deckTitle, cardList))
                 myAdapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
@@ -113,12 +122,37 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        myAdapter.setOnItemClickListener(object : DecksAdapter.onItemClickListener{
+        myAdapter.setOnItemClickListener(object : DecksAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
                 startActivity(Intent(this@MainActivity, DeckActivity::class.java))
             }
 
         })
 
+    }
+
+    private fun eventChangeListener(adapter: DecksAdapter) {
+        database2 = FirebaseFirestore.getInstance()
+        database2.collection("Decks").
+                addSnapshotListener(object : EventListener<QuerySnapshot>{
+                    override fun onEvent(
+                        value: QuerySnapshot?,
+                        error: FirebaseFirestoreException?
+                    ) {
+                        if(error != null){
+                            Log.e("Firestore Error", error.message.toString())
+                            return
+                        }
+
+                        for(dc : DocumentChange in value?.documentChanges!!){
+                            if(dc.type == DocumentChange.Type.ADDED){
+                                deck.add(dc.document.toObject(Deck::class.java))
+                            }
+                        }
+
+                        adapter.notifyDataSetChanged()
+                    }
+
+                })
     }
 }

@@ -11,14 +11,14 @@ import com.example.mobil.model.Deck
 
 class DecksAdapter(val context: Context, private val myList : ArrayList<Deck>) : RecyclerView.Adapter<DecksAdapter.ViewHolder>() {
 
-    lateinit var listener : onItemClickListener
+    lateinit var listener : OnItemClickListener
 
-    interface onItemClickListener{
+    interface OnItemClickListener{
 
         fun onItemClick(position: Int)
     }
 
-    fun setOnItemClickListener(listener: onItemClickListener){
+    fun setOnItemClickListener(listener: OnItemClickListener){
 
         this.listener = listener
 
@@ -31,22 +31,18 @@ class DecksAdapter(val context: Context, private val myList : ArrayList<Deck>) :
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val newList = myList[position]
+        val newList : Deck = myList[position]
 
-        viewHolder.bind(newList)
+        viewHolder.textItem.text = newList.title
     }
 
     override fun getItemCount(): Int {
         return myList.size
     }
 
-    inner class ViewHolder(itemView : View, listener: onItemClickListener) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView : View, listener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
 
-        private val textItem = itemView.findViewById<TextView>(R.id.testText)
-
-        fun bind(deckItem : Deck){
-            textItem.text = deckItem.title
-        }
+        val textItem : TextView = itemView.findViewById(R.id.deckTitle)
 
         init {
             itemView.setOnClickListener {
