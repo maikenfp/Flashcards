@@ -11,7 +11,7 @@ import com.example.mobil.model.Deck
 
 class DecksAdapter(val context: Context, private val myList : ArrayList<Deck>) : RecyclerView.Adapter<DecksAdapter.ViewHolder>() {
 
-    lateinit var listener : OnItemClickListener
+    private lateinit var listener : OnItemClickListener
 
     interface OnItemClickListener{
 

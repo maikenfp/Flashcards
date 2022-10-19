@@ -13,23 +13,19 @@ import com.example.mobil.adapter.DecksAdapter
 import com.example.mobil.databinding.ActivityMainBinding
 import com.example.mobil.model.Card
 import com.example.mobil.model.Deck
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainBinding: ActivityMainBinding
-    //private lateinit var database : DatabaseReference
     private lateinit var database : FirebaseFirestore
     private lateinit var deck: ArrayList<Deck>
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         val view = mainBinding.root
@@ -42,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         deckList.add(Deck(0, "Mobil programmering"))
         deckList.add(Deck(1, "History"))*/
 
+
         val myRecycler = mainBinding.myRecyclerView
         myRecycler.layoutManager = LinearLayoutManager(this)
 
@@ -50,10 +47,10 @@ class MainActivity : AppCompatActivity() {
         val myAdapter = DecksAdapter(this, deck)
         myRecycler.adapter = myAdapter
 
+
         eventChangeListener(myAdapter)
 
         val addDeckButton = mainBinding.addDeckButton
-
         val testbtn = mainBinding.test
 
         //DATABASE IMPLEMEMTATION TESTING
@@ -85,6 +82,11 @@ class MainActivity : AppCompatActivity() {
             //myRef.setValue("Hello, World!")*/
         }
 
+        //Fungerer når jeg slår av og på WiFi i emulator
+        //API 24 funker
+        //API 26 blir ikke emulator launchet engang
+        //API 32 henter data fra array
+        //API 31 henter funker ikke i det hele tatt
         //On "Add deck" Click
         addDeckButton.setOnClickListener{
 
@@ -100,8 +102,8 @@ class MainActivity : AppCompatActivity() {
 
                 val deck = hashMapOf(
                     "id" to 0,
-                    "title" to deckTitle,
-                    "cards" to cardList
+                    "title" to deckTitle
+                    //"cards" to cardList
                 )
 
                 database.collection("Decks").add(deck)
@@ -125,7 +127,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-
     }
 
     private fun eventChangeListener(adapter: DecksAdapter) {
@@ -148,8 +149,10 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         adapter.notifyDataSetChanged()
+                        Log.e("Error", deck.toString())
                     }
 
                 })
+
     }
 }
