@@ -1,12 +1,16 @@
 package com.example.mobil
 
+import android.content.ClipData
 import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
+import android.view.*
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.DecksAdapter
@@ -22,7 +26,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainBinding: ActivityMainBinding
     private lateinit var database : FirebaseFirestore
     private lateinit var deck: ArrayList<Deck>
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -52,46 +55,12 @@ class MainActivity : AppCompatActivity() {
 
         val addDeckButton = mainBinding.addDeckButton
         val testbtn = mainBinding.test
+        val editButton = findViewById<EditText>(R.id.edit_deck)
 
-        //DATABASE IMPLEMEMTATION TESTING
-        testbtn.setOnClickListener{
-
-            //Cloud Firestore TEST
-            val user = hashMapOf(
-                "first" to "Ada",
-                "last" to "Lovelace",
-                "born" to 1815
-            )
-
-            database.collection("users")
-                .add(user)
-                .addOnSuccessListener { documentReference ->
-                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-                }
-                .addOnFailureListener { e ->
-                    Log.w(TAG, "Error adding document", e)
-                }
-
-            //Realtime DB
-            /*val decktest = Deck(4, "Test 4", cardList)
-
-            val id = database.push().key!!
-            //val myRef = db.getReference("message")
-            database.child(id).setValue(decktest)
-
-            //myRef.setValue("Hello, World!")*/
-        }
-
-        //Fungerer når jeg slår av og på WiFi i emulator
-        //API 24 funker
-        //API 26 blir ikke emulator launchet engang
-        //API 32 henter data fra array
-        //API 31 henter funker ikke i det hele tatt
-        //On "Add deck" Click
         addDeckButton.setOnClickListener{
 
             val inflater = LayoutInflater.from(this).inflate(R.layout.add_deck,null)
-            val addText = inflater.findViewById<EditText>(R.id.addText)
+            val addText = inflater.findViewById<EditText>(R.id.addDeckName)
 
             val addDialog = AlertDialog.Builder(this)
             addDialog.setView(inflater)
@@ -132,27 +101,64 @@ class MainActivity : AppCompatActivity() {
     private fun eventChangeListener(adapter: DecksAdapter) {
         database = FirebaseFirestore.getInstance()
         database.collection("Decks").
-                addSnapshotListener(object : EventListener<QuerySnapshot>{
-                    override fun onEvent(
-                        value: QuerySnapshot?,
-                        error: FirebaseFirestoreException?
-                    ) {
-                        if(error != null){
-                            Log.e("Firestore Error", error.message.toString())
-                            return
-                        }
+        addSnapshotListener(object : EventListener<QuerySnapshot>{
+            override fun onEvent(
+                value: QuerySnapshot?,
+                error: FirebaseFirestoreException?
+            ) {
+                if(error != null){
+                    Log.e("Firestore Error", error.message.toString())
+                    return
+                }
 
-                        for(dc : DocumentChange in value?.documentChanges!!){
-                            if(dc.type == DocumentChange.Type.ADDED){
-                                deck.add(dc.document.toObject(Deck::class.java))
-                            }
-                        }
-
-                        adapter.notifyDataSetChanged()
-                        Log.e("Error", deck.toString())
+                for(dc : DocumentChange in value?.documentChanges!!){
+                    if(dc.type == DocumentChange.Type.ADDED){
+                        deck.add(dc.document.toObject(Deck::class.java))
                     }
+                }
 
-                })
+                adapter.notifyDataSetChanged()
+            }
+
+        })
 
     }
+
+    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.show_menu, menu)
+        return true
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        return when (item.itemId) {
+            R.id.edit_deck -> {
+                val editView = LayoutInflater.from(this).inflate(R.layout.add_deck, null)
+                val deckName = editView.findViewById<TextView>(R.id.addDeckName)
+
+                val addDialog = AlertDialog.Builder(this)
+                addDialog.setView(editView)
+
+                addDialog.setPositiveButton("Ok") { dialog, _ ->
+                    val deck = hashMapOf(
+                        "title" to deckName
+                    )
+                    database.collection("Decks").document("12").set({
+                        deck
+                    })
+                    dialog.dismiss()
+                }
+                addDialog.setNegativeButton("Cancel"){
+                        dialog,_->
+                    dialog.dismiss()
+                }
+                    .create()
+                    .show()
+                true
+            }
+                else -> super.onOptionsItemSelected(item)
+            }
+        }*/
 }

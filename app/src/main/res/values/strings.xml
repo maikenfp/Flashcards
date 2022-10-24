@@ -16,6 +16,9 @@
     <string name="testText">Test Text</string>
     <string name="new_question">Question</string>
     <string name="new_answer">Answer</string>
+    <string name="delete_deck">Delete</string>
+    <string name="edit_deck">Edit</string>
+
     <string name="enter_question">Enter question here</string>
     <string name="enter_answer">Enter answer here</string>
 
