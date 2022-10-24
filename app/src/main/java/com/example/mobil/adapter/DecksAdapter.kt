@@ -89,6 +89,20 @@ class DecksAdapter(val context: Context, private val deckList : ArrayList<Deck>)
                         true
                     }
                     R.id.delete_deck->{
+                        AlertDialog.Builder(context).setTitle("Delete").setIcon(R.drawable.ic_warning).setMessage("Are you sure you want to delete this deck?")
+                            .setPositiveButton("Yes"){
+                                    dialog,_->
+                                //Må finne ut hvordan koble til riktig dokument onclick
+                                db.collection("Decks").document("Test").delete()
+                                notifyDataSetChanged()
+                                dialog.dismiss()
+                            }
+                        .setNegativeButton("Cancel"){
+                                dialog,_->
+                            dialog.dismiss()
+                        }
+                            .create()
+                            .show()
                         true
                     }
                     else -> true
