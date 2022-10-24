@@ -1,16 +1,11 @@
 package com.example.mobil
 
-import android.content.ClipData
-import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.EditText
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.DecksAdapter
@@ -41,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         deckList.add(Deck(0, "Mobil programmering"))
         deckList.add(Deck(1, "History"))*/
 
-
         val myRecycler = mainBinding.myRecyclerView
         myRecycler.layoutManager = LinearLayoutManager(this)
 
@@ -50,12 +44,9 @@ class MainActivity : AppCompatActivity() {
         val myAdapter = DecksAdapter(this, deck)
         myRecycler.adapter = myAdapter
 
-
         eventChangeListener(myAdapter)
 
         val addDeckButton = mainBinding.addDeckButton
-        val testbtn = mainBinding.test
-        val editButton = findViewById<EditText>(R.id.edit_deck)
 
         addDeckButton.setOnClickListener{
 
@@ -96,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
-    }
+        }
 
     private fun eventChangeListener(adapter: DecksAdapter) {
         database = FirebaseFirestore.getInstance()
@@ -119,46 +110,6 @@ class MainActivity : AppCompatActivity() {
 
                 adapter.notifyDataSetChanged()
             }
-
         })
-
     }
-
-    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater: MenuInflater = menuInflater
-        inflater.inflate(R.menu.show_menu, menu)
-        return true
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
-        return when (item.itemId) {
-            R.id.edit_deck -> {
-                val editView = LayoutInflater.from(this).inflate(R.layout.add_deck, null)
-                val deckName = editView.findViewById<TextView>(R.id.addDeckName)
-
-                val addDialog = AlertDialog.Builder(this)
-                addDialog.setView(editView)
-
-                addDialog.setPositiveButton("Ok") { dialog, _ ->
-                    val deck = hashMapOf(
-                        "title" to deckName
-                    )
-                    database.collection("Decks").document("12").set({
-                        deck
-                    })
-                    dialog.dismiss()
-                }
-                addDialog.setNegativeButton("Cancel"){
-                        dialog,_->
-                    dialog.dismiss()
-                }
-                    .create()
-                    .show()
-                true
-            }
-                else -> super.onOptionsItemSelected(item)
-            }
-        }*/
 }

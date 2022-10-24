@@ -65,7 +65,7 @@ class DecksAdapter(val context: Context, private val deckList : ArrayList<Deck>)
             popupMenu.inflate(R.menu.show_menu)
             popupMenu.setOnMenuItemClickListener {
                 when(it.itemId){
-                    R.id.edit_deck->{
+                    R.id.editDeckName->{
                         val editView = LayoutInflater.from(context).inflate(R.layout.add_deck, null)
                         val deckName = editView.findViewById<TextView>(R.id.addDeckName)
 
@@ -88,7 +88,7 @@ class DecksAdapter(val context: Context, private val deckList : ArrayList<Deck>)
                             .show()
                         true
                     }
-                    R.id.delete_deck->{
+                    R.id.deleteDeck->{
                         AlertDialog.Builder(context).setTitle("Delete").setIcon(R.drawable.ic_warning).setMessage("Are you sure you want to delete this deck?")
                             .setPositiveButton("Yes"){
                                     dialog,_->

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/edit_deck"
-        android:title="@string/edit_deck"
+        android:id="@+id/editDeckName"
         android:icon="@drawable/ic_baseline_edit_24"
-        />
+        android:title="@string/edit_deck" />
     <item
-        android:id="@+id/delete_deck"
+        android:id="@+id/deleteDeck"
         android:title="@string/delete_deck"
         android:icon="@drawable/ic_baseline_delete_forever_24"
         />
