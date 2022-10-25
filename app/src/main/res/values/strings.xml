@@ -12,6 +12,8 @@
     /* Deck View */
     <string name="add_card">Add</string>
     <string name="deleteText">This action cannot be undone. Do you wish to permanently delete these cards?</string>
+    <string name="ignoreText">IGNORED</string>
+    <string name="selectText">SELECTED</string>
     <string name="edit">Edit</string>
     <string name="shuffle">Shuffle</string>
     <string name="go_back">Go Back</string>
