@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.DeckActivity
+import com.example.mobil.MainActivity
 import com.example.mobil.R
 import com.example.mobil.model.Card
 
-class CardsAdapter(val context: DeckActivity, private val cards: List<Card>) : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>() {
+class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>) : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>() {
 
     lateinit var listener : onCardClickListener
 

@@ -7,10 +7,11 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.DeckActivity
+import com.example.mobil.MainActivity
 import com.example.mobil.R
 import com.example.mobil.model.Card
 
-class EditAdapter(val context: DeckActivity, private val cards: List<Card>) : RecyclerView.Adapter<EditAdapter.CardsViewHolder>() {
+class EditAdapter(val context: MainActivity, private val cards: ArrayList<Card>) : RecyclerView.Adapter<EditAdapter.CardsViewHolder>() {
 
     private val selectedCards = arrayListOf<Card>()
 

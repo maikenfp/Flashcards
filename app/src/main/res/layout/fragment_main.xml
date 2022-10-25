@@ -11,7 +11,7 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/card_recycler"
+            android:id="@+id/deck_recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/cardView"
@@ -34,39 +34,14 @@
                 android:layout_height="match_parent">
 
                 <Button
-                    android:id="@+id/deleteCardBtn"
-                    android:layout_width="82dp"
-                    android:layout_height="85dp"
-                    android:layout_marginEnd="20dp"
-                    android:contentDescription="@string/add_card"
-                    app:icon="@drawable/ic_baseline_delete_forever_24"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0dp"
-                    app:iconSize="70dp"
+                    android:id="@+id/addDeckButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/addDeck"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.606"
-                    app:layout_constraintStart_toEndOf="@id/ignoreCardBtn"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.533"
-                    tools:ignore="DuplicateSpeakableTextCheck" />
-
-                <Button
-                    android:id="@+id/ignoreCardBtn"
-                    android:layout_width="82dp"
-                    android:layout_height="85dp"
-                    android:layout_marginStart="20dp"
-                    android:contentDescription="@string/add_card"
-                    app:icon="@drawable/ic_baseline_ignore_24"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0dp"
-                    app:iconSize="70dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/deleteCardBtn"
-                    app:layout_constraintHorizontal_bias="0.808"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.533" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
