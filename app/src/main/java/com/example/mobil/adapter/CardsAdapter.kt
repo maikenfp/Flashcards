@@ -37,7 +37,7 @@ class CardsAdapter(val context: DeckActivity, private val cards: List<Card>) : R
 
     class CardsViewHolder (cardView: View, listener: onCardClickListener) : RecyclerView.ViewHolder(cardView) {
 
-        private val textItem = cardView.findViewById<TextView>(R.id.testText)
+        private val textItem = cardView.findViewById<TextView>(R.id.deckTitle)
 
         fun bind(cardItem: Card){
             textItem.text = cardItem.toString()

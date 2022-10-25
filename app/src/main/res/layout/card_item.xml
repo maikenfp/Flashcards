@@ -1,55 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_item_box"
-    android:layout_width="350dp"
-    android:layout_height="200dp"
-    android:layout_margin="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
     app:cardBackgroundColor="#90673AB7"
     app:cardCornerRadius="10dp"
-    app:cardElevation="4dp"
-    app:cardMaxElevation="4dp">
+    app:cardElevation="8dp"
+    app:cardMaxElevation="5dp">
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        android:layoutDirection="rtl"
+        app:centerIfNoTextEnabled="false"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/testText"
-            android:layout_width="308dp"
-            android:layout_height="133dp"
-            android:layout_margin="20dp"
-            android:gravity="center"
-            android:text="@string/testText"
-            android:textSize="19sp"
-            android:textStyle="bold" />
+        android:layout_height="222dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="190dp"
+            android:layout_margin="15dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="4dp">
 
             <TextView
-                android:id="@+id/ignoreText"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="@string/ignoreText"
-                android:textStyle="bold"
-                android:visibility="invisible"/>
+                android:id="@+id/deckTitle"
+                android:layout_width="273dp"
+                android:layout_height="141dp"
+                android:layout_margin="20dp"
+                android:text="@string/testText"
+                android:textSize="19sp"
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/selectText"
-                android:layout_width="248dp"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="@string/selectText"
-                android:textStyle="bold"
-                android:visibility="invisible" />
         </LinearLayout>
-
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
