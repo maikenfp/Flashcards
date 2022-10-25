@@ -16,6 +16,7 @@ class DeckActivity : AppCompatActivity() {
         setContentView(R.layout.activity_deck)
 
         // Go back button
+        //ToDo: Go to previous fragment if in card view
         val goBackBtn = findViewById<Button>(R.id.goBackButton)
         goBackBtn.setOnClickListener{
             startActivity(Intent(this@DeckActivity, MainActivity::class.java))

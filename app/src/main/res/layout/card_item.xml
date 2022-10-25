@@ -33,7 +33,7 @@
             android:padding="4dp">
 
             <TextView
-                android:id="@+id/testText"
+                android:id="@+id/deckTitle"
                 android:layout_width="273dp"
                 android:layout_height="141dp"
                 android:layout_margin="20dp"

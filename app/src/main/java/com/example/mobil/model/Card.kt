@@ -1,9 +1,9 @@
 package com.example.mobil.model
 
 data class Card(
-    val id : Int,
-    var question : String,
-    var answer : String,
-    val deckId : Int,
+    val id : Int? = null,
+    var question : String? = null,
+    var answer : String? = null,
+    val deckId : Int? = null,
     val isIgnored : Boolean
     )
