@@ -9,6 +9,7 @@ import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.adapter.CardsAdapter
+import com.example.mobil.adapter.EditAdapter
 import com.example.mobil.model.Card
 
 // TODO: Rename parameter arguments, choose names that match
@@ -36,10 +37,10 @@ class EditFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_edit, container, false)
 
         // adapter & recycler
-        val cardsAdapter = CardsAdapter(context = DeckActivity(), cards)
-        val cardsRecycler = view.findViewById<RecyclerView>(R.id.CardsRecyclerView)
-        cardsRecycler.adapter = cardsAdapter
-        cardsRecycler.layoutManager = LinearLayoutManager(context)
+        val editAdapter = EditAdapter(context = DeckActivity(), cards)
+        val editRecycler = view.findViewById<RecyclerView>(R.id.CardsRecyclerView)
+        editRecycler.adapter = editAdapter
+        editRecycler.layoutManager = LinearLayoutManager(context)
 
         //ToDo: Load deck instead of creating cards here
         cards.add(Card(0, "Card 0 Question", "Card 0 Answer", 0, false))
@@ -62,7 +63,7 @@ class EditFragment : Fragment() {
                 for (c in cards){
                     if(c.isIgnored){
                         cards.remove(c)
-                        cardsAdapter.notifyDataSetChanged()
+                        editAdapter.notifyDataSetChanged()
                     }
                 }
                 dialog.dismiss()
@@ -84,7 +85,7 @@ class EditFragment : Fragment() {
         }
 
         // Select card
-        cardsAdapter.setOnCardClickListener(object : CardsAdapter.onCardClickListener{
+        editAdapter.setOnCardClickListener(object : EditAdapter.onCardClickListener{
             override fun onCardClick(position: Int) {
                 //ToDo: This now needs to work with fragment
                 (activity as DeckActivity).replaceFragment(CardFragment())
