@@ -29,7 +29,8 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
 
     override fun onBindViewHolder(viewHolder: CardsViewHolder, position: Int) {
         val currentCard = cards[position]
-        viewHolder.bind(currentCard)
+
+        viewHolder.textItem.text = currentCard.question
     }
 
     override fun getItemCount(): Int {
@@ -38,7 +39,7 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
 
     class CardsViewHolder (cardView: View, listener: onCardClickListener) : RecyclerView.ViewHolder(cardView) {
 
-        private val textItem = cardView.findViewById<TextView>(R.id.deckTitle)
+        val textItem = cardView.findViewById<TextView>(R.id.cardTitle)
 
         fun bind(cardItem: Card){
             textItem.text = cardItem.toString()
