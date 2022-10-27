@@ -9,8 +9,10 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.MainActivity
+import com.example.mobil.MainFragment
 import com.example.mobil.R
 import com.example.mobil.model.Deck
 import com.google.firebase.database.DatabaseReference
@@ -55,6 +57,7 @@ class DecksAdapter(val context: MainActivity, private val deckList : ArrayList<D
         init {
             itemView.setOnClickListener {
                 listener.onItemClick(adapterPosition)
+
             }
             menu.setOnClickListener{ popupMenu(menu) }
         }

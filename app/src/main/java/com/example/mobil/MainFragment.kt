@@ -12,6 +12,7 @@ import android.widget.EditText
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.adapter.DecksAdapter
+import com.example.mobil.databinding.FragmentMainBinding
 import com.example.mobil.model.Deck
 import com.google.firebase.firestore.*
 
@@ -36,6 +37,8 @@ class MainFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
@@ -62,10 +65,11 @@ class MainFragment : Fragment() {
                 val deck = hashMapOf(
                     "id" to 0,
                     "title" to deckName
-                    //"cards" to cardList
                 )
 
-                database.collection("Decks").add(deck)
+                database.collection("Decks")
+                    .add(deck)
+
                 decksAdapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
@@ -102,6 +106,7 @@ class MainFragment : Fragment() {
                 for(dc : DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
                         decks.add(dc.document.toObject(Deck::class.java))
+                        Log.e("Add Deck Error", decks.toString())
                     }
                 }
 

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.adapter.CardsAdapter
@@ -29,6 +30,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class DeckFragment : Fragment() {
+
     private var cards = ArrayList<Card>()
     private lateinit var database : FirebaseFirestore
 
@@ -50,13 +52,14 @@ class DeckFragment : Fragment() {
 
         eventChangeListener(cardsAdapter)
 
+        /*
         //ToDo: Load deck instead of creating cards here
         cards.add(Card(0, "Card 0 Question", "Card 0 Answer", 0, false))
         cards.add(Card(1, "Card 1 Question", "Card 1 Answer", 0, false))
         cards.add(Card(2, "Card 2 Question", "Card 2 Answer", 0, false))
         cards.add(Card(3, "Card 3 Question", "Card 3 Answer", 0, false))
         cards.add(Card(4, "Card 4 Question", "Card 4 Answer", 0, false))
-
+         */
 
         // Add Card
         val addCardBtn = view.findViewById<Button>(R.id.addCardBtn)
@@ -72,7 +75,17 @@ class DeckFragment : Fragment() {
                     dialog,_->
                 val question = addQuestion.text.toString()
                 val answer = addAnswer.text.toString()
-                cards.add(Card(1, question, answer, 1, false))
+                val card = hashMapOf(
+                    "id" to 0,
+                    "question" to question,
+                    "answer" to answer,
+                    "isIgnored" to false
+                )
+                database.collection("Decks")
+                    .document("t5FymczpG1QDecwshBDw")
+                    .collection("cards")
+                    .add(card)
+
                 cardsAdapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
@@ -117,7 +130,7 @@ class DeckFragment : Fragment() {
 
     private fun eventChangeListener(adapter: CardsAdapter) {
         database = FirebaseFirestore.getInstance()
-        database.collection("Cards").
+        database.collection("Decks").document("t5FymczpG1QDecwshBDw").collection("cards").
         addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
                 value: QuerySnapshot?,
@@ -131,6 +144,7 @@ class DeckFragment : Fragment() {
                 for(dc : DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
                         cards.add(dc.document.toObject(Card::class.java))
+                        Log.e("Add Card Error", cards.toString())
                     }
                 }
 
@@ -138,6 +152,7 @@ class DeckFragment : Fragment() {
             }
         })
     }
+
 
     companion object {
         /**
