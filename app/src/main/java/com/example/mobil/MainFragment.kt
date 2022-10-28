@@ -27,6 +27,9 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MainFragment : Fragment() {
+    private var _mainBinding: FragmentMainBinding? = null
+    private val mainBinding get() = _mainBinding!!
+
     private var decks = ArrayList<Deck>()
     private lateinit var database : FirebaseFirestore
 
@@ -36,7 +39,67 @@ class MainFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _mainBinding = FragmentMainBinding.inflate(layoutInflater)
+
+        // Adapter & Recycler
+        val decksRecycler = mainBinding.deckRecycler
+        decksRecycler.layoutManager = LinearLayoutManager(context)
+
+        val decksAdapter = DecksAdapter(context = MainActivity(), decks)
+        decksRecycler.adapter = decksAdapter
+
+        eventChangeListener(decksAdapter)
+
+        //BUTTONS
+        val addDeckBtn = mainBinding.addDeckButton
+
+        addDeckBtn.setOnClickListener{
+
+            val inflater = LayoutInflater.from(context).inflate(R.layout.add_deck, null)
+            val addText = inflater.findViewById<EditText>(R.id.addDeckName)
+
+            val addDialog = AlertDialog.Builder(context)
+            addDialog.setView(inflater)
+
+            addDialog.setPositiveButton("Ok"){
+                    dialog,_->
+
+                val deckTitle = addText.text.toString()
+
+                val deck = hashMapOf(
+                    "id" to 0,
+                    "title" to deckTitle
+                )
+
+                database.collection("Decks")
+                    .add(deck)
+
+                decksAdapter.notifyDataSetChanged()
+                dialog.dismiss()
+            }
+            addDialog.setNegativeButton("Cancel"){
+                    dialog,_->
+                dialog.dismiss()
+            }
+            addDialog.create()
+            addDialog.show()
+        }
+
+        decksAdapter.setOnItemClickListener(object : DecksAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int) {
+                (activity as MainActivity).replaceFragment(DeckFragment())
+            }
+        })
+
+        return mainBinding.root
+    }
+
+
+    /*override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
 
         // Inflate the layout for this fragment
@@ -88,7 +151,7 @@ class MainFragment : Fragment() {
         })
 
         return view
-    }
+    }*/
 
     private fun eventChangeListener(adapter: DecksAdapter) {
         database = FirebaseFirestore.getInstance()
@@ -109,7 +172,6 @@ class MainFragment : Fragment() {
                         Log.e("Add Deck Error", decks.toString())
                     }
                 }
-
                 adapter.notifyDataSetChanged()
             }
         })

@@ -28,9 +28,7 @@ class DecksAdapter(val context: MainActivity, private val deckList : ArrayList<D
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener){
-
         this.listener = listener
-
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): ViewHolder {
