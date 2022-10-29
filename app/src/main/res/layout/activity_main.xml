@@ -8,21 +8,21 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_fragment_container"
-        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
-        app:defaltNavHost="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.444"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_cardview"
+        app:layout_constraintTop_toBottomOf="@+id/main_cardView"
         app:layout_constraintVertical_bias="0.0"
-        app:navGraph="@navigation/my_nav"/>
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:navGraph="@navigation/my_nav"
+        app:defaultNavHost="true"/>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/main_cardview"
+        android:id="@+id/main_cardView"
         android:layout_width="match_parent"
         android:layout_height="70dp"
         app:layout_constraintEnd_toEndOf="parent"

@@ -11,8 +11,8 @@
         android:label="fragment_main"
         tools:layout="@layout/fragment_main">
         <action
-            android:id="@+id/action_main_to_deck"
-            app:destination="@+id/deckFragment" />
+            android:id="@+id/action_mainFragment_to_deckFragment"
+            app:destination="@id/deckFragment" />
     </fragment>
 
     <fragment
@@ -23,7 +23,23 @@
         <argument
             android:name="docId"
             app:argType="string"
+            app:nullable="true"
             android:defaultValue="1"/>
+        <action
+            android:id="@+id/action_deckFragment_to_cardFragment"
+            app:destination="@id/cardFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/cardFragment"
+        android:name="com.example.mobil.CardFragment"
+        android:label="fragment_card"
+        tools:layout="@layout/fragment_card">
+        <argument
+            android:name="docId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null"/>
     </fragment>
 
 </navigation>

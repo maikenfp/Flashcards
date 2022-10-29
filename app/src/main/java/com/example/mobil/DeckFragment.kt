@@ -7,15 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.EditText
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.adapter.CardsAdapter
-import com.example.mobil.adapter.DecksAdapter
+import com.example.mobil.databinding.FragmentDeckBinding
 import com.example.mobil.model.Card
-import com.example.mobil.model.Deck
 import com.google.firebase.firestore.*
 import kotlin.random.Random
 
@@ -31,6 +28,13 @@ private const val ARG_PARAM2 = "param2"
  */
 class DeckFragment : Fragment() {
 
+    //testing ********************
+    private val args: DeckFragmentArgs by navArgs()
+    //testing ********************
+
+    private var _deckBinding: FragmentDeckBinding? = null
+    private val deckBinding get() = _deckBinding!!
+
     private var cards = ArrayList<Card>()
     private lateinit var database : FirebaseFirestore
 
@@ -40,7 +44,88 @@ class DeckFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _deckBinding = FragmentDeckBinding.inflate(layoutInflater)
+
+        // Adapter & Recycler
+        val cardsRecycler = deckBinding.cardRecycler
+        cardsRecycler.layoutManager = LinearLayoutManager(context)
+
+        val cardsAdapter = CardsAdapter(context = MainActivity(), cards)
+        cardsRecycler.adapter = cardsAdapter
+
+        eventChangeListener(cardsAdapter)
+
+        //BUTTONS
+        val addCardBtn = deckBinding.addCardBtn
+        val shuffleBtn = deckBinding.shuffleBtn
+        val editBtn = deckBinding.editModeBtn
+
+        // ADD CARD
+        addCardBtn.setOnClickListener {
+            val inflater = LayoutInflater.from(context).inflate(R.layout.add_card, null)
+            val addQuestion = inflater.findViewById<EditText>(R.id.enter_question)
+            val addAnswer = inflater.findViewById<EditText>(R.id.enter_answer)
+
+            val addCardDialog = AlertDialog.Builder(context)
+            addCardDialog.setView(inflater)
+
+            addCardDialog.setPositiveButton("Save") {
+                    dialog,_->
+                val question = addQuestion.text.toString()
+                val answer = addAnswer.text.toString()
+                val card = hashMapOf(
+                    "id" to 0,
+                    "question" to question,
+                    "answer" to answer,
+                    "isIgnored" to false
+                )
+                database.collection("Decks")
+                    .document("TEST")
+                    .collection("cards")
+                    .add(card)
+
+                cardsAdapter.notifyDataSetChanged()
+                dialog.dismiss()
+            }
+
+            addCardDialog.setNegativeButton("Cancel") {
+                    dialog,_->
+                dialog.dismiss()
+            }
+            addCardDialog.create()
+            addCardDialog.show()
+        }
+
+        // Shuffle button
+        shuffleBtn.setOnClickListener {
+            //ToDo: NEEDS FUNCTIONALITY
+            val shuffleIndex = Random.nextInt(cards.size)
+            val shuffleElement = cards[shuffleIndex]
+
+            (activity as MainActivity).replaceFragment(CardFragment())
+        }
+
+        // Edit button
+        editBtn.setOnClickListener {
+            (activity as MainActivity).replaceFragment(EditFragment())
+        }
+
+        // Go to card
+        cardsAdapter.setOnCardClickListener(object : CardsAdapter.onCardClickListener{
+            override fun onCardClick(position: Int) {
+                //ToDo: This now needs to work with fragment
+                (activity as MainActivity).replaceFragment(CardFragment())
+            }
+        })
+
+        return deckBinding.root
+    }
+
+    /*override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_deck, container, false)
 
@@ -52,14 +137,14 @@ class DeckFragment : Fragment() {
 
         eventChangeListener(cardsAdapter)
 
-        /*
+        *//*
         //ToDo: Load deck instead of creating cards here
         cards.add(Card(0, "Card 0 Question", "Card 0 Answer", 0, false))
         cards.add(Card(1, "Card 1 Question", "Card 1 Answer", 0, false))
         cards.add(Card(2, "Card 2 Question", "Card 2 Answer", 0, false))
         cards.add(Card(3, "Card 3 Question", "Card 3 Answer", 0, false))
         cards.add(Card(4, "Card 4 Question", "Card 4 Answer", 0, false))
-         */
+         *//*
 
         // Add Card
         val addCardBtn = view.findViewById<Button>(R.id.addCardBtn)
@@ -127,10 +212,10 @@ class DeckFragment : Fragment() {
         })
         return view
     }
-
+*/
     private fun eventChangeListener(adapter: CardsAdapter) {
         database = FirebaseFirestore.getInstance()
-        database.collection("Decks").document("t5FymczpG1QDecwshBDw").collection("cards").
+        database.collection("Decks").document(args.docId.toString()).collection("cards").
         addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
                 value: QuerySnapshot?,
@@ -144,7 +229,7 @@ class DeckFragment : Fragment() {
                 for(dc : DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
                         cards.add(dc.document.toObject(Card::class.java))
-                        Log.e("Add Card Error", cards.toString())
+                        Log.e("Load Decks LOG", cards.toString())
                     }
                 }
 

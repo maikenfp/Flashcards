@@ -1,29 +1,22 @@
 package com.example.mobil.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobil.MainActivity
-import com.example.mobil.MainFragment
-import com.example.mobil.R
+import com.example.mobil.*
 import com.example.mobil.model.Deck
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.FirebaseFirestore
 
-class DecksAdapter(val context: MainActivity, private val deckList : ArrayList<Deck>) : RecyclerView.Adapter<DecksAdapter.ViewHolder>() {
+class DecksAdapter(val context: MainActivity, private val decks : ArrayList<Deck>) : RecyclerView.Adapter<DecksAdapter.ViewHolder>() {
 
     private lateinit var listener : OnItemClickListener
 
     interface OnItemClickListener{
-
         fun onItemClick(position: Int)
     }
 
@@ -33,18 +26,16 @@ class DecksAdapter(val context: MainActivity, private val deckList : ArrayList<D
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): ViewHolder {
         val myDecksItem = LayoutInflater.from(viewGroup.context).inflate(R.layout.deck_item, viewGroup, false)
-
         return ViewHolder(myDecksItem, listener)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val newList : Deck = deckList[position]
-
-        viewHolder.textItem.text = newList.title
+        val currentDeck = decks[position]
+        viewHolder.textItem.text = currentDeck.title
     }
 
     override fun getItemCount(): Int {
-        return deckList.size
+        return decks.size
     }
 
     inner class ViewHolder(itemView : View, listener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
@@ -55,14 +46,13 @@ class DecksAdapter(val context: MainActivity, private val deckList : ArrayList<D
         init {
             itemView.setOnClickListener {
                 listener.onItemClick(adapterPosition)
-
             }
             menu.setOnClickListener{ popupMenu(menu) }
         }
 
         private fun popupMenu(view : View) {
             val db = FirebaseFirestore.getInstance()
-            val position = deckList[adapterPosition]
+            val position = decks[adapterPosition]
             val popupMenu = PopupMenu(context, view)
             popupMenu.inflate(R.menu.show_menu)
             popupMenu.setOnMenuItemClickListener {
