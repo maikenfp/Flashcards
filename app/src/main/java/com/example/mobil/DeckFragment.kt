@@ -109,13 +109,19 @@ class DeckFragment : Fragment() {
 
         // Edit button
         editBtn.setOnClickListener {
-            //ToDo: This now needs to work with fragment
+
+            (activity as MainActivity).navigateToFragment("toEdit", "")
+
+            Log.e("NAVIGATE TO DECK ID: ", "Test")
         }
 
         // Go to card
         cardsAdapter.setOnCardClickListener(object : CardsAdapter.onCardClickListener{
             override fun onCardClick(position: Int) {
-                //ToDo: This now needs to work with fragment
+                val currentId = database.collection("Decks").document().collection("cards").document(cards[position].docId.toString()).id
+                (activity as MainActivity).navigateToFragment("toACard", currentId)
+
+                Log.e("NAVIGATE TO CARD ID: ", currentId)
             }
         })
 
