@@ -1,5 +1,6 @@
 package com.example.mobil
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
@@ -19,17 +20,17 @@ class MainActivity : AppCompatActivity() {
         // Go back button
         val goBackBtn = findViewById<ImageView>(R.id.goBackButton)
         goBackBtn.setOnClickListener{
-            this.replaceFragment(MainFragment())
+
         }
     }
 
-    fun replaceFragment(fragment: Fragment) {
+    /*fun replaceFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
         fragmentTransaction.replace(R.id.main_fragment_container, fragment)
         fragmentTransaction.commit()
-    }
+    }*/
 
 
 }

@@ -112,34 +112,17 @@ class MainFragment : Fragment() {
         decksAdapter.setOnItemClickListener(object : DecksAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
 
-                /*val currentId = database.collection("Decks").document().id
+                val currentId = database.collection("Decks").document(decks[position].docId.toString()).id
                 val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(currentId)
                 val navHostFragment = (activity as MainActivity).supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
                 val navController = navHostFragment.navController
 
                 navController.navigate(directions)
 
-                Log.e("NAVIGATE Error", currentId)
-                */
+                Log.e("NAVIGATE TO DECK ID: ", currentId)
+
 
                 //(activity as MainActivity).replaceFragment(DeckFragment())
-
-                //testing ********************
-                val currentId = database.collection("Decks").document().id
-
-                val navHostFragment = (activity as MainActivity).supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
-                val navController = navHostFragment.navController
-
-                for (d in decks) {
-                    if (currentId == d.docId){
-                        val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(currentId)
-                        navController.navigate(directions)
-                    }
-                    else {
-                        Log.e("IT DIDNT WORK", currentId)
-                    }
-                }
-                //testing ********************
 
             }
         })
@@ -161,7 +144,7 @@ class MainFragment : Fragment() {
                 for(dc : DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
                         decks.add(dc.document.toObject(Deck::class.java))
-                        Log.e("Load Decks LOG", decks.toString())
+                        Log.e("Load LOG", decks.toString())
                     }
                 }
                 adapter.notifyDataSetChanged()

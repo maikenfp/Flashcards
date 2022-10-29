@@ -106,19 +106,17 @@ class DeckFragment : Fragment() {
             val shuffleIndex = Random.nextInt(cards.size)
             val shuffleElement = cards[shuffleIndex]
 
-            (activity as MainActivity).replaceFragment(CardFragment())
         }
 
         // Edit button
         editBtn.setOnClickListener {
-            (activity as MainActivity).replaceFragment(EditFragment())
+            //ToDo: This now needs to work with fragment
         }
 
         // Go to card
         cardsAdapter.setOnCardClickListener(object : CardsAdapter.onCardClickListener{
             override fun onCardClick(position: Int) {
                 //ToDo: This now needs to work with fragment
-                (activity as MainActivity).replaceFragment(CardFragment())
             }
         })
 
