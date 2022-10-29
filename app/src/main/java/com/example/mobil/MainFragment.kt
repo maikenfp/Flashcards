@@ -68,7 +68,6 @@ class MainFragment : Fragment() {
                     dialog,_->
                 val deckName = addTxt.text.toString()
                 val deck = hashMapOf(
-                    "id" to 0,
                     "title" to deckName
                     //"cards" to cardList
                 )
