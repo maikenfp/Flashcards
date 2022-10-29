@@ -102,7 +102,7 @@ class EditFragment : Fragment() {
         editAdapter.setOnCardClickListener(object : EditAdapter.onCardClickListener{
             override fun onCardClick(position: Int) {
                 //ToDo: This now needs to work with fragment
-                (activity as DeckActivity).replaceFragment(CardFragment())
+                //(activity as DeckActivity).replaceFragment(CardFragment())
                 //startActivity(Intent(this@EditFragment.context, CardActivity::class.java))
             }
         })
@@ -191,7 +191,7 @@ class EditFragment : Fragment() {
         editAdapter.setOnCardClickListener(object : EditAdapter.onCardClickListener{
             override fun onCardClick(position: Int) {
                 //ToDo: This now needs to work with fragment
-                (activity as DeckActivity).replaceFragment(CardFragment())
+                //activity as DeckActivity).replaceFragment(CardFragment())
                 //startActivity(Intent(this@EditFragment.context, CardActivity::class.java))
             }
         })

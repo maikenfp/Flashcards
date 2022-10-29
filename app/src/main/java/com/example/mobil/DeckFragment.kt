@@ -188,7 +188,7 @@ class DeckFragment : Fragment() {
             val shuffleElement = cards[shuffleIndex]
 
             //ToDo: This now needs to redirect to a fragment
-            (activity as MainActivity).replaceFragment(CardFragment())
+            //(activity as MainActivity).replaceFragment(CardFragment())
             //val intent = Intent(this@DeckFragment.context, CardActivity::class.java)
             //intent.putExtra(shuffleElement.question, shuffleElement.answer)
             //startActivity(intent)
@@ -198,14 +198,14 @@ class DeckFragment : Fragment() {
         // Edit button
         val editBtn = view.findViewById<Button>(R.id.editModeBtn)
         editBtn.setOnClickListener {
-            (activity as MainActivity).replaceFragment(EditFragment())
+            //(activity as MainActivity).replaceFragment(EditFragment())
         }
 
         // Go to card
         cardsAdapter.setOnCardClickListener(object : CardsAdapter.onCardClickListener{
             override fun onCardClick(position: Int) {
                 //ToDo: This now needs to work with fragment
-                (activity as MainActivity).replaceFragment(CardFragment())
+                //(activity as MainActivity).replaceFragment(CardFragment())
             }
         })
         return view
