@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobil.adapter.CardsAdapter
 import com.example.mobil.adapter.EditAdapter
 import com.example.mobil.model.Card
 
@@ -37,8 +36,8 @@ class EditFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_edit, container, false)
 
         // adapter & recycler
-        val editAdapter = EditAdapter(context = DeckActivity(), cards)
-        val editRecycler = view.findViewById<RecyclerView>(R.id.CardsRecyclerView)
+        val editAdapter = EditAdapter(context = MainActivity(), cards)
+        val editRecycler = view.findViewById<RecyclerView>(R.id.card_recycler)
         editRecycler.adapter = editAdapter
         editRecycler.layoutManager = LinearLayoutManager(context)
 
@@ -51,7 +50,7 @@ class EditFragment : Fragment() {
 
 
         // Delete button
-        val deleteBtn = view.findViewById<Button>(R.id.deleteCardButton)
+        val deleteBtn = view.findViewById<Button>(R.id.deleteCardBtn)
         deleteBtn.setOnClickListener {
             val inflater = LayoutInflater.from(context).inflate(R.layout.delete_card, null)
 
@@ -79,7 +78,7 @@ class EditFragment : Fragment() {
 
 
         // Ignore button
-        val ignoreBtn = view.findViewById<Button>(R.id.ignoreCardButton)
+        val ignoreBtn = view.findViewById<Button>(R.id.ignoreCardBtn)
         ignoreBtn.setOnClickListener {
 
         }

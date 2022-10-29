@@ -10,12 +10,13 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mobil.MainActivity
 import com.example.mobil.R
 import com.example.mobil.model.Deck
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.firestore.FirebaseFirestore
 
-class DecksAdapter(val context: Context, private val deckList : ArrayList<Deck>) : RecyclerView.Adapter<DecksAdapter.ViewHolder>() {
+class DecksAdapter(val context: MainActivity, private val deckList : ArrayList<Deck>) : RecyclerView.Adapter<DecksAdapter.ViewHolder>() {
 
     private lateinit var listener : OnItemClickListener
 
