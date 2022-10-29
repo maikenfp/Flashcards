@@ -9,9 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.adapter.DecksAdapter
+import com.example.mobil.databinding.FragmentMainBinding
 import com.example.mobil.model.Deck
 import com.google.firebase.firestore.*
 
@@ -26,6 +33,10 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MainFragment : Fragment() {
+
+    private var _mainBinding: FragmentMainBinding? = null
+    private val mainBinding get() = _mainBinding!!
+
     private var decks = ArrayList<Deck>()
     private lateinit var database : FirebaseFirestore
 
@@ -35,55 +46,86 @@ class MainFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _mainBinding = FragmentMainBinding.inflate(layoutInflater)
+
+        return mainBinding.root
+    }
+
+    /*override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
-        // adapter & recycler
-        val decksAdapter = DecksAdapter(context = MainActivity(), decks)
-        val decksRecycler = view.findViewById<RecyclerView>(R.id.deck_recycler)
-        decksRecycler.adapter = decksAdapter
+        return view
+    }*/
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Adapter & Recycler
+        val decksRecycler = mainBinding.deckRecycler
         decksRecycler.layoutManager = LinearLayoutManager(context)
+        val decksAdapter = DecksAdapter(context = MainActivity(), decks)
+        decksRecycler.adapter = decksAdapter
 
         eventChangeListener(decksAdapter)
 
-        //Add Deck
-        val addDeckBtn = view.findViewById<Button>(R.id.addDeckButton)
-        addDeckBtn.setOnClickListener {
+        //BUTTONS
+        val addDeckBtn = mainBinding.addDeckButton
+
+        addDeckBtn.setOnClickListener{
+
             val inflater = LayoutInflater.from(context).inflate(R.layout.add_deck, null)
-            val addTxt = inflater.findViewById<EditText>(R.id.addDeckName)
+            val addText = inflater.findViewById<EditText>(R.id.addDeckName)
 
-            val addDeckDialog = AlertDialog.Builder(context)
-            addDeckDialog.setView(inflater)
+            val addDialog = AlertDialog.Builder(context)
+            addDialog.setView(inflater)
 
-            addDeckDialog.setPositiveButton("Ok") {
+            addDialog.setPositiveButton("Ok"){
                     dialog,_->
-                val deckName = addTxt.text.toString()
+
+                val deckTitle = addText.text.toString()
+
                 val deck = hashMapOf(
                     "id" to 0,
-                    "title" to deckName
-                    //"cards" to cardList
+                    "title" to deckTitle
                 )
 
-                database.collection("Decks").add(deck)
+                database.collection("Decks")
+                    .add(deck)
+
                 decksAdapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
-            addDeckDialog.setNegativeButton("Cancel") {
+            addDialog.setNegativeButton("Cancel"){
                     dialog,_->
                 dialog.dismiss()
             }
-            addDeckDialog.create()
-            addDeckDialog.show()
+            addDialog.create()
+            addDialog.show()
         }
 
         decksAdapter.setOnItemClickListener(object : DecksAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
-                (activity as MainActivity).replaceFragment(DeckFragment())
+
+                val currentId = database.collection("Decks").document(decks[position].docId.toString()).id
+                val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(currentId)
+                val navHostFragment = (activity as MainActivity).supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
+                val navController = navHostFragment.navController
+
+                navController.navigate(directions)
+
+                Log.e("NAVIGATE TO DECK ID: ", currentId)
+
+
+                //(activity as MainActivity).replaceFragment(DeckFragment())
+
             }
         })
-
-        return view
     }
 
     private fun eventChangeListener(adapter: DecksAdapter) {
@@ -102,9 +144,9 @@ class MainFragment : Fragment() {
                 for(dc : DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
                         decks.add(dc.document.toObject(Deck::class.java))
+                        Log.e("Load LOG", decks.toString())
                     }
                 }
-
                 adapter.notifyDataSetChanged()
             }
         })

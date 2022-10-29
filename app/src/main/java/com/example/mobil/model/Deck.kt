@@ -1,9 +1,12 @@
 package com.example.mobil.model
 
+import com.google.firebase.firestore.DocumentId
+
 data class Deck(
     val id : Int? = null,
     var title : String? = null,
-    //var cards : List<Card>? = null
+    @DocumentId
+    val docId: String? = null
     )
 
 
