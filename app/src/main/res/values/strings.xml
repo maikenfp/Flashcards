@@ -24,6 +24,7 @@
 
     <string name="enter_question">Enter question here</string>
     <string name="enter_answer">Enter answer here</string>
+    <string name="my_image_description">Image description</string>
 
 
     <string name="card_fragment">Question</string>

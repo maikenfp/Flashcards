@@ -9,16 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.FrameLayout
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.setFragmentResultListener
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.adapter.DecksAdapter
-import com.example.mobil.databinding.FragmentMainBinding
 import com.example.mobil.model.Deck
 import com.google.firebase.firestore.*
 
@@ -34,96 +27,67 @@ private const val ARG_PARAM2 = "param2"
  */
 class MainFragment : Fragment() {
 
-    private var _mainBinding: FragmentMainBinding? = null
-    private val mainBinding get() = _mainBinding!!
-
-    private var decks = ArrayList<Deck>()
-    private lateinit var database : FirebaseFirestore
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _mainBinding = FragmentMainBinding.inflate(layoutInflater)
+    private var decks = ArrayList<Deck>()
+    private lateinit var database : FirebaseFirestore
 
-        return mainBinding.root
-    }
-
-    /*override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_main, container, false)
 
         return view
-    }*/
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val query : Query = FirebaseFirestore.getInstance().collection("Decks")
 
-        // Adapter & Recycler
-        val decksRecycler = mainBinding.deckRecycler
-        decksRecycler.layoutManager = LinearLayoutManager(context)
-        val decksAdapter = DecksAdapter(context = MainActivity(), decks)
+        // adapter & recycler
+        val decksAdapter = DecksAdapter(context = MainActivity(), decks, query)
+        val decksRecycler = view.findViewById<RecyclerView>(R.id.deck_recycler)
         decksRecycler.adapter = decksAdapter
+        decksRecycler.layoutManager = LinearLayoutManager(context)
 
         eventChangeListener(decksAdapter)
 
-        //BUTTONS
-        val addDeckBtn = mainBinding.addDeckButton
-
-        addDeckBtn.setOnClickListener{
-
+        //Add Deck
+        val addDeckBtn = view.findViewById<Button>(R.id.addDeckButton)
+        addDeckBtn.setOnClickListener {
             val inflater = LayoutInflater.from(context).inflate(R.layout.add_deck, null)
-            val addText = inflater.findViewById<EditText>(R.id.addDeckName)
+            val addTxt = inflater.findViewById<EditText>(R.id.addDeckName)
 
-            val addDialog = AlertDialog.Builder(context)
-            addDialog.setView(inflater)
+            val addDeckDialog = AlertDialog.Builder(context)
+            addDeckDialog.setView(inflater)
 
-            addDialog.setPositiveButton("Ok"){
+            addDeckDialog.setPositiveButton("Ok") {
                     dialog,_->
-
-                val deckTitle = addText.text.toString()
-
+                val deckName = addTxt.text.toString()
                 val deck = hashMapOf(
                     "id" to 0,
-                    "title" to deckTitle
+                    "title" to deckName
+                    //"cards" to cardList
                 )
 
-                database.collection("Decks")
-                    .add(deck)
-
+                database.collection("Decks").add(deck)
                 decksAdapter.notifyDataSetChanged()
                 dialog.dismiss()
             }
-            addDialog.setNegativeButton("Cancel"){
+            addDeckDialog.setNegativeButton("Cancel") {
                     dialog,_->
                 dialog.dismiss()
             }
-            addDialog.create()
-            addDialog.show()
+            addDeckDialog.create()
+            addDeckDialog.show()
         }
 
         decksAdapter.setOnItemClickListener(object : DecksAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
-
-                val currentId = database.collection("Decks").document(decks[position].docId.toString()).id
-                val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(currentId)
-                val navHostFragment = (activity as MainActivity).supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
-                val navController = navHostFragment.navController
-
-                navController.navigate(directions)
-
-                Log.e("NAVIGATE TO DECK ID: ", currentId)
-
-
                 //(activity as MainActivity).replaceFragment(DeckFragment())
-
             }
         })
     }
@@ -144,9 +108,9 @@ class MainFragment : Fragment() {
                 for(dc : DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
                         decks.add(dc.document.toObject(Deck::class.java))
-                        Log.e("Load LOG", decks.toString())
                     }
                 }
+
                 adapter.notifyDataSetChanged()
             }
         })

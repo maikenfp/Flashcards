@@ -1,36 +1,19 @@
 package com.example.mobil
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import com.google.firebase.firestore.*
-
+import com.example.mobil.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var database : FirebaseFirestore
+
+    private lateinit var mainBinding : ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        mainBinding = ActivityMainBinding.inflate(layoutInflater)
+        val view = mainBinding.root
+        setContentView(view)
 
-        // Go back button
-        val goBackBtn = findViewById<ImageView>(R.id.goBackButton)
-        goBackBtn.setOnClickListener{
-
-        }
     }
-
-    /*fun replaceFragment(fragment: Fragment) {
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-
-        fragmentTransaction.replace(R.id.main_fragment_container, fragment)
-        fragmentTransaction.commit()
-    }*/
-
-
 }
