@@ -60,4 +60,8 @@
     <color name="md_theme_dark_surfaceTint">#FEABF4</color>
     <color name="md_theme_dark_surfaceTintColor">#FEABF4</color>
     <color name="CustomColor1">#A85873</color>
+    <color name="blue_200">#448AFF</color>
+    <color name="amber_200">#FBB255</color>
+    <color name="blue_dark_primary">#141A20</color>
+    <color name="blue_light_variant">#1D262E</color>
 </resources>

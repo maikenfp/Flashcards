@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobil.DeckActivity
+import com.example.mobil.MainActivity
 import com.example.mobil.R
 import com.example.mobil.model.Card
 
-class EditAdapter(val context: DeckActivity, private val cards: List<Card>) : RecyclerView.Adapter<EditAdapter.CardsViewHolder>() {
+class EditAdapter(val context: MainActivity, private val cards: ArrayList<Card>) : RecyclerView.Adapter<EditAdapter.CardsViewHolder>() {
 
     private val selectedCards = arrayListOf<Card>()
 
@@ -44,7 +44,6 @@ class EditAdapter(val context: DeckActivity, private val cards: List<Card>) : Re
             selectText.visibility = View.INVISIBLE
         }
 
-        // handler to define what happens when an item is tapped
         viewHolder.itemView.findViewById<CardView>(R.id.card_item_box).setOnClickListener {
             // if the user is in multi-select mode, add it to the multi select list
             selectCard(viewHolder, currentCard)
@@ -54,12 +53,12 @@ class EditAdapter(val context: DeckActivity, private val cards: List<Card>) : Re
     // helper function that adds/removes an item to the list depending on the app's state
     private fun selectCard(holder: CardsViewHolder, card: Card) {
         val selectText = holder.itemView.findViewById<TextView>(R.id.selectText)
-        // If the "selectedItems" list contains the item, remove it and set it's state to normal
+        // If the "selectedCards" list contains the card, remove from list and set Invisible
         if (selectedCards.contains(card)) {
             selectedCards.remove(card)
             selectText.visibility = View.INVISIBLE
         } else {
-            // Else, add it to the list and add a darker shade over the image, letting the user know that it was selected
+            // else, add the card to "selectedCards" and set visible
             selectedCards.add(card)
             selectText.visibility = View.VISIBLE
         }
@@ -71,10 +70,10 @@ class EditAdapter(val context: DeckActivity, private val cards: List<Card>) : Re
 
     class CardsViewHolder (cardView: View, listener: onCardClickListener) : RecyclerView.ViewHolder(cardView) {
 
-        private val textItem = cardView.findViewById<TextView>(R.id.testText)
+        private val textItem = cardView.findViewById<TextView>(R.id.cardTitle)
 
         fun bind(cardItem: Card){
-            textItem.text = cardItem.toString()
+            textItem.text = cardItem.question
         }
 
         init {

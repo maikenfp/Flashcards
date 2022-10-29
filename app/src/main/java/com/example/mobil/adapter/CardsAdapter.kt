@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.DeckActivity
+import com.example.mobil.MainActivity
 import com.example.mobil.R
 import com.example.mobil.model.Card
 
-class CardsAdapter(val context: DeckActivity, private val cards: List<Card>) : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>() {
+class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>) : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>() {
 
     lateinit var listener : onCardClickListener
 
@@ -28,7 +29,8 @@ class CardsAdapter(val context: DeckActivity, private val cards: List<Card>) : R
 
     override fun onBindViewHolder(viewHolder: CardsViewHolder, position: Int) {
         val currentCard = cards[position]
-        viewHolder.bind(currentCard)
+
+        viewHolder.textItem.text = currentCard.question
     }
 
     override fun getItemCount(): Int {
@@ -37,7 +39,7 @@ class CardsAdapter(val context: DeckActivity, private val cards: List<Card>) : R
 
     class CardsViewHolder (cardView: View, listener: onCardClickListener) : RecyclerView.ViewHolder(cardView) {
 
-        private val textItem = cardView.findViewById<TextView>(R.id.testText)
+        val textItem = cardView.findViewById<TextView>(R.id.cardTitle)
 
         fun bind(cardItem: Card){
             textItem.text = cardItem.toString()

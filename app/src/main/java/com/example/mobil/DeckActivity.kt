@@ -23,11 +23,11 @@ class DeckActivity : AppCompatActivity() {
         }
     }
 
-    fun replaceFragment(fragment: Fragment) {
+    /*fun replaceFragment(fragment: Fragment) {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        fragmentTransaction.replace(R.id.deck_frame_fragment, fragment)
+        fragmentTransaction.replace(R.id.main_fragment_container, fragment)
         fragmentTransaction.commit()
-    }
+    }*/
 }
