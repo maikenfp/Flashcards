@@ -37,12 +37,12 @@ class CardFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_card, container, false)
 
-        //ToDo: Load deck instead of creating cards here
-        cards.add(Card(0, "Card 0 Question", "Card 0 Answer", false))
-        cards.add(Card(1, "Card 1 Question", "Card 1 Answer", false))
-        cards.add(Card(2, "Card 2 Question", "Card 2 Answer", false))
-        cards.add(Card(3, "Card 3 Question", "Card 3 Answer", false))
-        cards.add(Card(4, "Card 4 Question", "Card 4 Answer", false))
+/*        //ToDo: Load deck instead of creating cards here
+        cards.add(Card("Card 0 Question", "Card 0 Answer", false))
+        cards.add(Card("Card 1 Question", "Card 1 Answer", false))
+        cards.add(Card("Card 2 Question", "Card 2 Answer", false))
+        cards.add(Card("Card 3 Question", "Card 3 Answer", false))
+        cards.add(Card("Card 4 Question", "Card 4 Answer", false))*/
 
         val cardText = view.findViewById<TextView>(R.id.cardTextView)
         cardText.setText(cards[index].question)

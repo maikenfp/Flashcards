@@ -6,8 +6,6 @@ data class Deck(
     var title : String? = null,
     @DocumentId
     var docId : String? = null
-
-    //var cards : List<Card>? = null
     )
 
 

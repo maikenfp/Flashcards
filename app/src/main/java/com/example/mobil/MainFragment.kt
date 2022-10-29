@@ -68,7 +68,6 @@ class MainFragment : Fragment() {
                     dialog,_->
                 val deckName = addTxt.text.toString()
                 val deck = hashMapOf(
-                    "id" to 0,
                     "title" to deckName
                     //"cards" to cardList
                 )
@@ -88,6 +87,10 @@ class MainFragment : Fragment() {
         decksAdapter.setOnItemClickListener(object : DecksAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 //(activity as MainActivity).replaceFragment(DeckFragment())
+                val currentId = database.collection("Decks").document(decks[position].docId.toString()).id
+                (activity as MainActivity).navigateToFragment("toCards", currentId)
+
+                Log.e("NAVIGATE TO DECK ID: ", currentId)
             }
         })
     }
