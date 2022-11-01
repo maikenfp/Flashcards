@@ -33,6 +33,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/edit_toolbar"
+                    android:layout_width="410dp"
+                    android:layout_height="103dp"
+                    android:background="?attr/colorPrimary"
+                    android:minHeight="?attr/actionBarSize"
+                    android:theme="?attr/actionBarTheme"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <Button
                     android:id="@+id/addCardBtn"
                     android:layout_width="82dp"

@@ -14,7 +14,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class DecksAdapter(val context: MainActivity, private val decks : ArrayList<Deck>, query : com.google.firebase.firestore.Query) : FirestoreAdapter<DecksAdapter.ViewHolder>(query) {
 
-
     private lateinit var listener : OnItemClickListener
 
     interface OnItemClickListener{

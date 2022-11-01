@@ -12,6 +12,7 @@
     /* Deck View */
     <string name="add_card">Add</string>
     <string name="deleteText">This action cannot be undone. Do you wish to permanently delete these cards?</string>
+    <string name="delete_cards">Delete Cards</string>
     <string name="ignoreText">IGNORED</string>
     <string name="selectText">SELECTED</string>
     <string name="edit">Edit</string>
@@ -30,4 +31,5 @@
     <string name="card_fragment">Question</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ignore_cards">Ignore Cards</string>
 </resources>
