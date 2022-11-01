@@ -1,25 +1,18 @@
 package com.example.mobil
 
 import android.app.AlertDialog
-import android.graphics.drawable.Drawable
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.View.*
 import androidx.fragment.app.Fragment
 import android.widget.EditText
-import android.widget.Toolbar
 import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintSet.VISIBLE
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.CardsAdapter
-import com.example.mobil.databinding.ActivityTestBinding.inflate
-import com.example.mobil.databinding.DeckItemBinding.inflate
 import com.example.mobil.databinding.FragmentDeckBinding
 import com.example.mobil.model.Card
 import com.google.firebase.firestore.*

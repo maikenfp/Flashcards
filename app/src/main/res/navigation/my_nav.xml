@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_deckFragment_to_cardFragment"
             app:destination="@id/cardFragment" />
+        <action
+            android:id="@+id/action_deckFragment_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
 
     <fragment
@@ -40,6 +43,9 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null"/>
+        <action
+            android:id="@+id/action_cardFragment_to_deckFragment"
+            app:destination="@id/deckFragment" />
     </fragment>
 
 </navigation>

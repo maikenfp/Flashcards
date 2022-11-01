@@ -1,26 +1,12 @@
 package com.example.mobil.adapter
 
-import android.graphics.drawable.Drawable
 import android.view.*
-import android.view.View.GONE
-import android.view.View.INVISIBLE
-import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.cardview.widget.CardView
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.findFragment
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobil.DeckActivity
-import com.example.mobil.DeckFragment
 import com.example.mobil.MainActivity
 import com.example.mobil.R
 import com.example.mobil.model.Card
-import com.google.firebase.firestore.FirebaseFirestore
-import java.util.zip.Inflater
 
 class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>, val editMenu: () -> Unit) : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>() {
 

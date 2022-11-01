@@ -7,22 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import androidx.core.view.isVisible
-import androidx.core.view.iterator
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.mobil.adapter.CardsAdapter
 import com.example.mobil.adapter.EditAdapter
-import com.example.mobil.databinding.FragmentDeckBinding
 import com.example.mobil.databinding.FragmentEditBinding
-import com.example.mobil.databinding.FragmentMainBinding
 import com.example.mobil.model.Card
 import com.google.firebase.firestore.*
-import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
