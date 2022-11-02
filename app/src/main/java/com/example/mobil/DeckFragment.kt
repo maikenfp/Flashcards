@@ -3,11 +3,13 @@ package com.example.mobil
 import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import android.view.View.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
+import androidx.cardview.widget.CardView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.CardsAdapter
@@ -49,12 +51,17 @@ class DeckFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _deckBinding = FragmentDeckBinding.inflate(layoutInflater)
+        return deckBinding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         // Adapter & Recycler
         val cardsRecycler = deckBinding.cardRecycler
         cardsRecycler.layoutManager = LinearLayoutManager(context)
 
-        val cardsAdapter = CardsAdapter(context = MainActivity(), cards)
+        val cardsAdapter = CardsAdapter(context = MainActivity(), cards, ::editMenu)
         cardsRecycler.adapter = cardsAdapter
 
         eventChangeListener(cardsAdapter)
@@ -62,7 +69,6 @@ class DeckFragment : Fragment() {
         //BUTTONS
         val addCardBtn = deckBinding.addCardBtn
         val shuffleBtn = deckBinding.shuffleBtn
-        val editBtn = deckBinding.editModeBtn
 
         // ADD CARD
         addCardBtn.setOnClickListener {
@@ -107,19 +113,42 @@ class DeckFragment : Fragment() {
 
         }
 
-        // Edit button
-        editBtn.setOnClickListener {
-            //ToDo: This now needs to work with fragment
-        }
-
-        // Go to card
-        cardsAdapter.setOnCardClickListener(object : CardsAdapter.onCardClickListener{
+        // Go to card (might be useless)
+        cardsAdapter.setOnCardClickListener(object : CardsAdapter.OnCardClickListener{
             override fun onCardClick(position: Int) {
-                //ToDo: This now needs to work with fragment
+                val currentId = database.collection("Decks").document().collection("cards").document(cards[position].docId.toString()).id
+                (activity as MainActivity).navigateToFragment("toACard", currentId, "")
+
+                Log.e("NAVIGATE TO CARD ID: ", currentId)
             }
         })
+    }
 
-        return deckBinding.root
+    fun editMenu() {
+        val buttonBox = view?.findViewById<CardView>(R.id.cardView)
+        if (buttonBox != null) {
+            buttonBox.visibility = GONE
+        }
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.edit_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.delete_cards -> {
+                        //TODO()
+                        return true
+                    }
+                    R.id.ignore_cards -> {
+                        //TODO()
+                        return true
+                    }
+                }
+                return false
+            }
+        }, viewLifecycleOwner)
     }
 
     private fun eventChangeListener(adapter: CardsAdapter) {
@@ -138,7 +167,7 @@ class DeckFragment : Fragment() {
                 for(dc : DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
                         cards.add(dc.document.toObject(Card::class.java))
-                        Log.e("Load Decks LOG", cards.toString())
+                        Log.e("Load Decks TEST", cards.toString())
                     }
                 }
 
@@ -146,7 +175,6 @@ class DeckFragment : Fragment() {
             }
         })
     }
-
 
     companion object {
         /**

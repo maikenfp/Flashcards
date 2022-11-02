@@ -7,21 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import androidx.core.view.isVisible
-import androidx.core.view.iterator
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.mobil.adapter.CardsAdapter
 import com.example.mobil.adapter.EditAdapter
-import com.example.mobil.databinding.FragmentDeckBinding
 import com.example.mobil.databinding.FragmentEditBinding
-import com.example.mobil.databinding.FragmentMainBinding
 import com.example.mobil.model.Card
 import com.google.firebase.firestore.*
-import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,6 +25,10 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class EditFragment : Fragment() {
+    //testing ********************
+    private val args: DeckFragmentArgs by navArgs()
+    //testing ********************
+
     private var _editBinding: FragmentEditBinding? = null
     private val editBinding get() = _editBinding!!
 
@@ -68,7 +63,7 @@ class EditFragment : Fragment() {
 
         // Delete button
         deleteBtn.setOnClickListener {
-            val inflater = LayoutInflater.from(context).inflate(R.layout.delete_card, null)
+            /*val inflater = LayoutInflater.from(context).inflate(R.layout.delete_card, null)
             val selected = editBinding.cardView.findViewById<TextView>(R.id.selectText)
 
             val deleteDialog = AlertDialog.Builder(context)
@@ -76,9 +71,13 @@ class EditFragment : Fragment() {
 
             deleteDialog.setPositiveButton("Delete") {
                     dialog,_->
-                for (position in cardsRecycler){
+                for (c in cards){
                     if(selected.isVisible){
-                        database.collection("Decks").document("t5FymczpG1QDecwshBDw").collection("cards").document("9uGwW8TwVuqDIlPJuyzp").delete()
+                        database.collection("Decks")
+                            .document(args.docId.toString())
+                            .collection("cards")
+                            .document(cards[position].docId.toString())
+                            .delete()
                         editAdapter.notifyDataSetChanged()
                     }
                 }
@@ -90,7 +89,7 @@ class EditFragment : Fragment() {
                 dialog.dismiss()
             }
             deleteDialog.create()
-            deleteDialog.show()
+            deleteDialog.show()*/
         }
 
         // Ignore button
@@ -112,7 +111,7 @@ class EditFragment : Fragment() {
 
     private fun eventChangeListener(adapter: EditAdapter) {
         database = FirebaseFirestore.getInstance()
-        database.collection("Decks").document("t5FymczpG1QDecwshBDw").collection("cards").
+        database.collection("Decks").document(args.docId.toString()).collection("cards").
         addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
                 value: QuerySnapshot?,
@@ -134,70 +133,6 @@ class EditFragment : Fragment() {
             }
         })
     }
-
-    /*override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_edit, container, false)
-
-        // adapter & recycler
-        val editAdapter = EditAdapter(context = MainActivity(), cards)
-        val editRecycler = view.findViewById<RecyclerView>(R.id.card_recycler)
-        editRecycler.adapter = editAdapter
-        editRecycler.layoutManager = LinearLayoutManager(context)
-
-        //ToDo: Load deck instead of creating cards here
-        cards.add(Card(0, "Card 0 Question", "Card 0 Answer", false))
-        cards.add(Card(1, "Card 1 Question", "Card 1 Answer", false))
-        cards.add(Card(2, "Card 2 Question", "Card 2 Answer", false))
-        cards.add(Card(3, "Card 3 Question", "Card 3 Answer", false))
-        cards.add(Card(4, "Card 4 Question", "Card 4 Answer", false))
-
-
-        // Delete button
-        val deleteBtn = view.findViewById<Button>(R.id.deleteCardBtn)
-        deleteBtn.setOnClickListener {
-            val inflater = LayoutInflater.from(context).inflate(R.layout.delete_card, null)
-
-            val deleteDialog = android.app.AlertDialog.Builder(context)
-            deleteDialog.setView(inflater)
-
-            deleteDialog.setPositiveButton("Delete") {
-                    dialog,_->
-                for (c in cards){
-                    if(c.isIgnored == true){
-                        cards.remove(c)
-                        editAdapter.notifyDataSetChanged()
-                    }
-                }
-                dialog.dismiss()
-            }
-
-            deleteDialog.setNegativeButton("Cancel"){
-                    dialog,_->
-                dialog.dismiss()
-            }
-            deleteDialog.create()
-            deleteDialog.show()
-        }
-
-
-        // Ignore button
-        val ignoreBtn = view.findViewById<Button>(R.id.ignoreCardBtn)
-        ignoreBtn.setOnClickListener {
-
-        }
-
-        // Select card
-        editAdapter.setOnCardClickListener(object : EditAdapter.onCardClickListener{
-            override fun onCardClick(position: Int) {
-                //ToDo: This now needs to work with fragment
-                //activity as DeckActivity).replaceFragment(CardFragment())
-                //startActivity(Intent(this@EditFragment.context, CardActivity::class.java))
-            }
-        })
-
-        return view
-    }*/
 
     companion object {
         /**

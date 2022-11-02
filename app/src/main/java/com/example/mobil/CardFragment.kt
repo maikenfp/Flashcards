@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import com.example.mobil.model.Card
 
@@ -45,7 +44,7 @@ class CardFragment : Fragment() {
         cards.add(Card("Card 4 Question", "Card 4 Answer", false))*/
 
         val cardText = view.findViewById<TextView>(R.id.cardTextView)
-        cardText.setText(cards[index].question)
+        cardText.text = cards[index].question
 
 
         // Previous Card button
@@ -57,7 +56,7 @@ class CardFragment : Fragment() {
             else {
                 index -= 1
             }
-            cardText.setText(cards[index].question)
+            cardText.text = cards[index].question
 
         }
 
@@ -71,17 +70,17 @@ class CardFragment : Fragment() {
             else {
                 index += 1
             }
-            cardText.setText(cards[index].question)
+            cardText.text = cards[index].question
         }
 
         // Flip Card Button
         val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
         flipCardBtn.setOnClickListener{
             if (cardText.text == cards[index].question) {
-                cardText.setText(cards[index].answer)
+                cardText.text = cards[index].answer
             }
             else {
-                cardText.setText(cards[index].question)
+                cardText.text = cards[index].question
             }
         }
         return view

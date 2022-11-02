@@ -1,24 +1,27 @@
 package com.example.mobil.adapter
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mobil.DeckActivity
 import com.example.mobil.MainActivity
 import com.example.mobil.R
 import com.example.mobil.model.Card
 
-class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>) : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>() {
+class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>, val editMenu: () -> Unit) : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>() {
 
-    lateinit var listener : onCardClickListener
+    private lateinit var listener : OnCardClickListener
 
-    interface onCardClickListener{
+    // *****************EDIT*******************
+    private val selectedCards = arrayListOf<Card>()
+    private var editMode = false
+    // *****************EDIT*******************
+
+    interface OnCardClickListener{
         fun onCardClick(position: Int)
     }
 
-    fun setOnCardClickListener(listener: onCardClickListener){
+    fun setOnCardClickListener(listener: OnCardClickListener){
         this.listener = listener
     }
 
@@ -29,16 +32,57 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
 
     override fun onBindViewHolder(viewHolder: CardsViewHolder, position: Int) {
         val currentCard = cards[position]
-
         viewHolder.textItem.text = currentCard.question
+
+        // **************************************EDIT**************************************
+        val selectText = viewHolder.itemView.findViewById<TextView>(R.id.selectText)
+
+        if (selectedCards.contains(currentCard)) {
+            selectText.visibility = View.VISIBLE
+        } else {
+            selectText.visibility = View.INVISIBLE
+        }
+
+        viewHolder.itemView.findViewById<CardView>(R.id.card_item_box).setOnClickListener {
+            if (editMode) {
+                selectCard(viewHolder, currentCard)
+            } else {
+                context.navigateToFragment("toACard", "", "")
+            }
+        }
+
+        viewHolder.itemView.findViewById<CardView>(R.id.card_item_box).setOnLongClickListener {
+            if (!editMode) {
+                editMode = true
+                editMenu()
+                selectCard(viewHolder, currentCard)
+            }
+            true
+        }
+        // **************************************EDIT**************************************
     }
+
+    // **************************************EDIT**************************************
+    private fun selectCard(holder: CardsViewHolder, card: Card) {
+        val selectText = holder.itemView.findViewById<TextView>(R.id.selectText)
+        // If the "selectedCards" list contains the card, remove from list and set Invisible
+        if (selectedCards.contains(card)) {
+            selectedCards.remove(card)
+            selectText.visibility = View.INVISIBLE
+        } else {
+            // else, add the card to "selectedCards" and set visible
+            selectedCards.add(card)
+            selectText.visibility = View.VISIBLE
+        }
+    }
+
+    // **************************************EDIT**************************************
 
     override fun getItemCount(): Int {
         return cards.size
     }
 
-    class CardsViewHolder (cardView: View, listener: onCardClickListener) : RecyclerView.ViewHolder(cardView) {
-
+    inner class CardsViewHolder (cardView: View, listener: OnCardClickListener) : RecyclerView.ViewHolder(cardView) {
         val textItem = cardView.findViewById<TextView>(R.id.cardTitle)
 
         fun bind(cardItem: Card){
@@ -50,7 +94,7 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
                 listener.onCardClick(adapterPosition)
             }
         }
-
     }
+
 
 }

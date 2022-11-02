@@ -34,7 +34,8 @@ class EditAdapter(val context: MainActivity, private val cards: ArrayList<Card>)
 
         // Get the current card
         val currentCard = cards[position]
-        viewHolder.bind(currentCard)
+        viewHolder.textItem.text = currentCard.question
+
         // for every card, check to see if it exists in the array
         if (selectedCards.contains(currentCard)) {
             // if the card is selected, let the user know by making text visible
@@ -70,7 +71,7 @@ class EditAdapter(val context: MainActivity, private val cards: ArrayList<Card>)
 
     class CardsViewHolder (cardView: View, listener: onCardClickListener) : RecyclerView.ViewHolder(cardView) {
 
-        private val textItem = cardView.findViewById<TextView>(R.id.cardTitle)
+        val textItem = cardView.findViewById<TextView>(R.id.cardTitle)
 
         fun bind(cardItem: Card){
             textItem.text = cardItem.question
