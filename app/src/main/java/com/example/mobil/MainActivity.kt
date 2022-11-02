@@ -48,18 +48,16 @@ class MainActivity : AppCompatActivity() {
         navController = navHostFragment.navController
     }
 
-    fun navigateToFragment(refString: String, string: String) {
-
+    fun navigateToFragment(refString: String, deckID: String, deckTitle: String) {
         getController()
-
         // Navigate to DeckFragment using ref: "toCards"
         if (refString == "toCards") {
-            val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(string)
+            val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(deckID, deckTitle)
             navController.navigate(directions)
         }
         // Navigate to CardFragment using ref: "toACard"
         if (refString == "toACard") {
-            val directions = DeckFragmentDirections.actionDeckFragmentToCardFragment(string)
+            val directions = DeckFragmentDirections.actionDeckFragmentToCardFragment(deckID)
             navController.navigate(directions)
         }
     }

@@ -47,7 +47,7 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
             if (editMode) {
                 selectCard(viewHolder, currentCard)
             } else {
-                context.navigateToFragment("toACard", "")
+                context.navigateToFragment("toACard", "", "")
             }
         }
 

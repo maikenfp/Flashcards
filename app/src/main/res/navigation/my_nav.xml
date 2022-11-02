@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.mobil.MainFragment"
-        android:label="fragment_main"
+        android:label="My Decks"
         tools:layout="@layout/fragment_main">
         <action
             android:id="@+id/action_mainFragment_to_deckFragment"
@@ -18,10 +18,15 @@
     <fragment
         android:id="@+id/deckFragment"
         android:name="com.example.mobil.DeckFragment"
-        android:label="fragment_deck"
+        android:label="{deckTitle}"
         tools:layout="@layout/fragment_deck">
         <argument
             android:name="docId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="1"/>
+        <argument
+            android:name="deckTitle"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="1"/>
