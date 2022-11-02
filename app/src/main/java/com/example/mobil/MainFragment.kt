@@ -34,7 +34,22 @@ class MainFragment : Fragment() {
     }
 
     private var decks = ArrayList<Deck>()
-    private lateinit var database : FirebaseFirestore
+    private var database : FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    val query : Query = database.collection("Decks")
+
+    // adapter & recycler
+    val decksAdapter = DecksAdapter(context = MainActivity(), decks, query)
+
+    override fun onResume() {
+        super.onResume()
+        decksAdapter.startListening()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        decksAdapter.stopListening()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -45,10 +60,6 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val query : Query = FirebaseFirestore.getInstance().collection("Decks")
-
-        // adapter & recycler
-        val decksAdapter = DecksAdapter(context = MainActivity(), decks, query)
         val decksRecycler = view.findViewById<RecyclerView>(R.id.deck_recycler)
         decksRecycler.adapter = decksAdapter
         decksRecycler.layoutManager = LinearLayoutManager(context)
