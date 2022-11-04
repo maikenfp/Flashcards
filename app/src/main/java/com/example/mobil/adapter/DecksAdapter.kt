@@ -1,5 +1,6 @@
 package com.example.mobil.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.*
 import com.example.mobil.model.Deck
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 
 class DecksAdapter(val context: MainActivity, private val decks : ArrayList<Deck>, query : com.google.firebase.firestore.Query) : FirestoreAdapter<DecksAdapter.ViewHolder>(query) {
@@ -30,8 +32,7 @@ class DecksAdapter(val context: MainActivity, private val decks : ArrayList<Deck
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        val currentDeck = decks[position]
-        viewHolder.textItem.text = currentDeck.title
+        getSnapshot(position)?.let { snapshot -> viewHolder.bind(snapshot) }
     }
 
     override fun getItemCount(): Int {
@@ -42,6 +43,11 @@ class DecksAdapter(val context: MainActivity, private val decks : ArrayList<Deck
 
         var menu : ImageView = itemView.findViewById(R.id.hamburger_menu)
         val textItem : TextView = itemView.findViewById(R.id.deckTitle)
+
+        fun bind(snapshot: DocumentSnapshot) {
+            val deck: Deck? = snapshot.toObject(Deck::class.java)
+            textItem.text = deck?.title
+        }
 
         init {
             itemView.setOnClickListener {
@@ -66,6 +72,7 @@ class DecksAdapter(val context: MainActivity, private val decks : ArrayList<Deck
 
                         addDialog.setPositiveButton("Ok"){
                                 dialog,_->
+                            Log.e("HELLO", position.toString())
                             position.title = deckName.text.toString()
                             db.collection("Decks").document(position.docId.toString()).update("title", position.title)
                             notifyDataSetChanged()
