@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     fun navigateToFragment(refString: String, deckID: String, deckTitle: String) {
         getController()
         // Navigate to DeckFragment using ref: "toCards"
-        /*if (refString == "toCards") {
+        if (refString == "toCards") {
             val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(deckID, deckTitle)
             navController.navigate(directions)
         }
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         if (refString == "toACard") {
             val directions = DeckFragmentDirections.actionDeckFragmentToCardFragment(deckID)
             navController.navigate(directions)
-        }*/
+        }
     }
 
 }

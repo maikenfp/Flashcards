@@ -35,10 +35,6 @@ class DecksAdapter(val context: MainActivity, private val decks : ArrayList<Deck
         getSnapshot(position)?.let { snapshot -> viewHolder.bind(snapshot) }
     }
 
-    override fun getItemCount(): Int {
-        return decks.size
-    }
-
     inner class ViewHolder(itemView : View, listener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
 
         var menu : ImageView = itemView.findViewById(R.id.hamburger_menu)
