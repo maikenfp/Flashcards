@@ -14,7 +14,7 @@ import com.example.mobil.model.Deck
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 
-class DecksAdapter(val context: MainActivity, private val decks : ArrayList<Deck>, query : com.google.firebase.firestore.Query) : FirestoreAdapter<DecksAdapter.ViewHolder>(query) {
+class DecksAdapter(val context: MainActivity, query : com.google.firebase.firestore.Query) : FirestoreAdapter<DecksAdapter.ViewHolder>(query) {
 
     private lateinit var listener : OnItemClickListener
 
@@ -54,7 +54,7 @@ class DecksAdapter(val context: MainActivity, private val decks : ArrayList<Deck
 
         private fun popupMenu(view : View) {
             val db = FirebaseFirestore.getInstance()
-            val position = decks[adapterPosition]
+            val position = getSnapshot(adapterPosition)
             val popupMenu = PopupMenu(view.context, view)
             popupMenu.inflate(R.menu.show_menu)
             popupMenu.setOnMenuItemClickListener {
@@ -69,8 +69,10 @@ class DecksAdapter(val context: MainActivity, private val decks : ArrayList<Deck
                         addDialog.setPositiveButton("Ok"){
                                 dialog,_->
                             Log.e("HELLO", position.toString())
-                            position.title = deckName.text.toString()
-                            db.collection("Decks").document(position.docId.toString()).update("title", position.title)
+                            val title = deckName.text.toString()
+                            if (position != null) {
+                                db.collection("Decks").document(position.id).update("title", title)
+                            }
                             notifyDataSetChanged()
                             dialog.dismiss()
                         }
@@ -87,7 +89,9 @@ class DecksAdapter(val context: MainActivity, private val decks : ArrayList<Deck
                             .setPositiveButton("Yes"){
                                     dialog,_->
                                 //Må finne ut hvordan koble til riktig dokument onclick
-                                db.collection("Decks").document(position.docId.toString()).delete()
+                                if (position != null) {
+                                    db.collection("Decks").document(position.id).delete()
+                                }
                                 notifyDataSetChanged()
                                 dialog.dismiss()
                             }
