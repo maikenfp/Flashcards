@@ -64,10 +64,10 @@ class MainFragment : Fragment() {
             override fun onItemClick(position: Int) {
                 val currentTitle = decks[position].title.toString()
                 val currentId = database.collection("Decks").document(decks[position].docId.toString()).id
-                (activity as MainActivity).navigateToFragment("toCards", currentId, currentTitle)
+                (activity as MainActivity).navigateToFragment("toCards", currentId, "", currentTitle)
 
-                Log.e("NAVIGATE TO ID: ", currentId)
-                Log.e("NAVIGATE TO TITLE: ", currentTitle)
+                Log.e("NAVIGATE TO DECKID: ", currentId)
+                Log.e("NAVIGATE TO DECKTITLE: ", currentTitle)
             }
         })
     }

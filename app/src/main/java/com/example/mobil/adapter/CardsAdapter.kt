@@ -1,5 +1,6 @@
 package com.example.mobil.adapter
 
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -47,7 +48,10 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
             if (editMode) {
                 selectCard(viewHolder, currentCard)
             } else {
-                context.navigateToFragment("toACard", "", "")
+                // Testing: Hardcoded the navigation to the deck "asdfasdf" to the card "What was the original color of cola?"
+                Log.e("NAVCONTROLLER: ", "Before navigating to card in CardsAdapter")
+                context.navigateToFragment("toACard", "7WSKo54rMuN24r5lEc9W", "do3Dp9tMrCmT7CnqDE5L", "asdfasdf")
+                Log.e("NAVCONTROLLER: ", "After navigating to card in CardsAdapter")
             }
         }
 
