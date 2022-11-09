@@ -51,8 +51,8 @@ class MainActivity : AppCompatActivity() {
         // Du kan kjøre getController() hvor mange gange du vil med å gå frem og tilbake mellom kortstokker
         // Men når man klikker på et kort, så stopper koden her av en eller annen grunn
         // Jeg forstår ikke hvorfor
-        // *****************************************************************
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
+        // *****************************************************************
 
         Log.e("NAVCONTROLLER: ", "After potential error")
         navController = navHostFragment.navController
