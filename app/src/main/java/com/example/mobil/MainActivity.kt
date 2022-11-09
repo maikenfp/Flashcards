@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getController() {
         // Retrieve NavController from the NavHostFragment
-        Log.e("NAVCONTROLLER: ", "Test")
+        Log.e("NAVCONTROLLER: ", "Before potential error")
 
         // *********************** Feilen skjer her ************************
         // Du kan kjøre getController() hvor mange gange du vil med å gå frem og tilbake mellom kortstokker
@@ -54,12 +54,14 @@ class MainActivity : AppCompatActivity() {
         // *****************************************************************
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
 
-        Log.e("NAVCONTROLLER: ", "Test2")
+        Log.e("NAVCONTROLLER: ", "After potential error")
         navController = navHostFragment.navController
         Log.e("NAVCONTROLLER: ", navController.toString())
     }
 
-    fun navigateToFragment(refString: String, deckID: String, deckTitle: String) {
+
+    // This might be better split up into two functions
+    fun navigateToFragment(refString: String, deckID: String, cardID : String,  deckTitle: String) {
         Log.e("NAVCONTROLLER", "Before getController()")
         getController()
         Log.e("NAVCONTROLLER", "After getController()")
@@ -71,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         // Navigate to CardFragment using ref: "toACard"
         if (refString == "toACard") {
             Log.e("NAVIGATE TO CARD", deckID)
-            val directions = DeckFragmentDirections.actionDeckFragmentToCardFragment(deckID)
+            val directions = DeckFragmentDirections.actionDeckFragmentToCardFragment(deckID, cardID, deckTitle)
             navController.navigate(directions)
         }
     }

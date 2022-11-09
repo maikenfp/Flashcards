@@ -117,7 +117,7 @@ class DeckFragment : Fragment() {
         cardsAdapter.setOnCardClickListener(object : CardsAdapter.OnCardClickListener{
             override fun onCardClick(position: Int) {
                 val currentId = database.collection("Decks").document().collection("cards").document(cards[position].docId.toString()).id
-                (activity as MainActivity).navigateToFragment("toACard", currentId, "")
+                (activity as MainActivity).navigateToFragment("toACard", currentId, "", "")
 
                 Log.e("NAVIGATE TO CARD ID: ", currentId)
             }

@@ -28,6 +28,7 @@ class CardFragment : Fragment() {
     //testing ********************
     private var cards = ArrayList<Card>()
     private lateinit var database : FirebaseFirestore
+    private val cardText = view?.findViewById<TextView>(R.id.cardTextView)
 
 
 
@@ -45,39 +46,57 @@ class CardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val db = Firebase.firestore
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_card, container, false)
-        database = FirebaseFirestore.getInstance()
-        val cardCollection : CollectionReference = db.collection("Decks").document(argsDeck.docId.toString()).collection("cards")
 
-        val card = cardCollection.document(argsCard.docId.toString())
-        Log.d("TAG", "cardId: ${cardCollection}")
-        cardCollection.get().addOnCompleteListener {
-            val result: StringBuffer = StringBuffer()
-            for (document in it.result)
-                result.append(document.data.getValue("question")).append("")
-
-            val cardText = view.findViewById<TextView>(R.id.cardTextView)
-            cardText.setText(result)
-        }
+        val db = Firebase.firestore
+        //database = FirebaseFirestore.getInstance()
 
 
-        val cardId = card.get()
-        val cardQuestion = cardId
+        // filling (cards) up with all cards in the deck, in order to get a navigatable list
+        var cardIndex = 0
+        db.collection("Decks").document(argsCard.deckID.toString()).collection("cards").get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d("TAG", "${document.id} => ${document.data}")
+                    if (document.data.getValue("isIgnored") == false) {
+                        cards.add(
+                            Card(
+                                document.data.getValue("question") as String?,
+                                document.data.getValue("answer") as String?,
+                                false
+                            )
+                        )
+                        if (document.id == argsCard.cardID){
+                            cardText?.setText(cards[cardIndex].question)
+                        }
+                        cardIndex++
+                    }
 
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("TAG", "Error getting documents: ", exception)
+            }
 
 
 /*        //ToDo: Load deck instead of creating cards here
         cards.add(Card("Card 0 Question", "Card 0 Answer", false))
+
         cards.add(Card("Card 1 Question", "Card 1 Answer", false))
+
         cards.add(Card("Card 2 Question", "Card 2 Answer", false))
+
         cards.add(Card("Card 3 Question", "Card 3 Answer", false))
+
         cards.add(Card("Card 4 Question", "Card 4 Answer", false))
+
+
 
         val cardText = view.findViewById<TextView>(R.id.cardTextView)
         cardText.setText(cards[index].question)
+
+
 
 
         // Previous Card button
@@ -112,6 +131,8 @@ class CardFragment : Fragment() {
 
 
 
+
+
         // Flip Card Button
         val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
         flipCardBtn.setOnClickListener{
@@ -123,6 +144,11 @@ class CardFragment : Fragment() {
             }
         }
         */
+
+
+
+
+
 
 
 
@@ -181,6 +207,7 @@ class CardFragment : Fragment() {
         return view
     }
 
+    /*
     private fun eventChangeListener(adapter: CardsAdapter) {
         database = FirebaseFirestore.getInstance()
         Log.e("Load Decks LOG", database.toString())
@@ -206,6 +233,7 @@ class CardFragment : Fragment() {
                 }
             })
     }
+    */
 
 
 
