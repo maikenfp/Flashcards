@@ -45,12 +45,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun getController() {
         // Retrieve NavController from the NavHostFragment
+        Log.e("NAVCONTROLLER: ", "Test")
+
+        // *********************** Feilen skjer her ************************
+        // Du kan kjøre getController() hvor mange gange du vil med å gå frem og tilbake mellom kortstokker
+        // Men når man klikker på et kort, så stopper koden her av en eller annen grunn
+        // Jeg forstår ikke hvorfor
+        // *****************************************************************
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
+
+        Log.e("NAVCONTROLLER: ", "Test2")
         navController = navHostFragment.navController
+        Log.e("NAVCONTROLLER: ", navController.toString())
     }
 
     fun navigateToFragment(refString: String, deckID: String, deckTitle: String) {
+        Log.e("NAVCONTROLLER", "Before getController()")
         getController()
+        Log.e("NAVCONTROLLER", "After getController()")
         // Navigate to DeckFragment using ref: "toCards"
         if (refString == "toCards") {
             val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(deckID, deckTitle)
@@ -65,3 +77,5 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+
+
