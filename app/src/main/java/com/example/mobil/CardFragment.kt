@@ -53,12 +53,17 @@ class CardFragment : Fragment() {
         //database = FirebaseFirestore.getInstance()
 
 
-        // filling (cards) up with all cards in the deck, in order to get a navigatable list
+        // filling (cards) up with all cards in the deck, in order to get a navigatable ArrayList
+        var index = 0
         var cardIndex = 0
         db.collection("Decks").document(argsCard.deckID.toString()).collection("cards").get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     Log.d("TAG", "${document.id} => ${document.data}")
+
+                    // ToDo: This doesn't prevent the user to click on a ignored card, which will mess up the indexing
+                    // Todo: Possible fix is to present the first card directly without the using the arraylist
+                    // Todo: Then when you navigate, you cannot navigate back to this card
                     if (document.data.getValue("isIgnored") == false) {
                         cards.add(
                             Card(
@@ -68,7 +73,7 @@ class CardFragment : Fragment() {
                             )
                         )
                         if (document.id == argsCard.cardID){
-                            cardText?.setText(cards[cardIndex].question)
+                            index = cardIndex
                         }
                         cardIndex++
                     }
@@ -80,25 +85,11 @@ class CardFragment : Fragment() {
             }
 
 
-/*        //ToDo: Load deck instead of creating cards here
-        cards.add(Card("Card 0 Question", "Card 0 Answer", false))
-
-        cards.add(Card("Card 1 Question", "Card 1 Answer", false))
-
-        cards.add(Card("Card 2 Question", "Card 2 Answer", false))
-
-        cards.add(Card("Card 3 Question", "Card 3 Answer", false))
-
-        cards.add(Card("Card 4 Question", "Card 4 Answer", false))
-
-
 
         val cardText = view.findViewById<TextView>(R.id.cardTextView)
         cardText.setText(cards[index].question)
 
-
-
-
+        /*
         // Previous Card button
         val previousCardBtn = view.findViewById<Button>(R.id.previousCardButton)
         previousCardBtn.setOnClickListener{
@@ -112,10 +103,6 @@ class CardFragment : Fragment() {
 
         }
 
-
-
-
-
         // Next Card Button
         val nextCardBtn = view.findViewById<Button>(R.id.nextCardButton)
         nextCardBtn.setOnClickListener{
@@ -127,11 +114,6 @@ class CardFragment : Fragment() {
             }
             cardText.setText(cards[index].question)
         }
-
-
-
-
-
 
         // Flip Card Button
         val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
@@ -153,7 +135,10 @@ class CardFragment : Fragment() {
 
 
 
-        /*        //ToDo: Load deck instead of creating cards here
+
+        /*
+
+        //ToDo: Load deck instead of creating cards here
         cards.add(Card("Card 0 Question", "Card 0 Answer", false))
         cards.add(Card("Card 1 Question", "Card 1 Answer", false))
         cards.add(Card("Card 2 Question", "Card 2 Answer", false))
@@ -162,6 +147,9 @@ class CardFragment : Fragment() {
 
         val cardText = view.findViewById<TextView>(R.id.cardTextView)
         cardText.setText(cards[index].question)
+
+
+
 
 
         // Previous Card button
@@ -181,6 +169,10 @@ class CardFragment : Fragment() {
         }
 
 
+
+
+
+
         // Next Card Button
         val nextCardBtn = view.findViewById<Button>(R.id.nextCardButton)
         nextCardBtn.setOnClickListener{
@@ -193,13 +185,27 @@ class CardFragment : Fragment() {
             cardText.setText(cards[index].question)
         }
 
+
+
+
+
         // Flip Card Button
+
+
+
         val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
         flipCardBtn.setOnClickListener{
+
+
+
+
             if (cardText.text == cards[index].question) {
                 cardText.setText(cards[index].answer)
             }
+
             else {
+
+
                 cardText.setText(cards[index].question)
             }
         }
@@ -208,44 +214,109 @@ class CardFragment : Fragment() {
     }
 
     /*
+
+
     private fun eventChangeListener(adapter: CardsAdapter) {
+
+
+
         database = FirebaseFirestore.getInstance()
         Log.e("Load Decks LOG", database.toString())
+
+
         database.collection("Decks").document(argsDeck.docId.toString()).collection("cards")
             .addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(
                     value: QuerySnapshot?,
                     error: FirebaseFirestoreException?
                 ) {
+
+
                     if (error != null) {
                         Log.e("Firestore Error", error.message.toString())
                         return
+
                     }
+
+
 
                     for (dc: DocumentChange in value?.documentChanges!!) {
                         if (dc.type == DocumentChange.Type.ADDED) {
                             cards.add(dc.document.toObject(Card::class.java))
                             Log.e("Load Decks LOG", cards.toString())
                         }
+
+
                     }
+
+
 
                     adapter.notifyDataSetChanged()
                 }
+
             })
+
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     */
-
-
-
-
-
-
-
-
-
-
-
-
     companion object {
         /**
          * Use this factory method to create a new instance of
