@@ -50,9 +50,10 @@ class CardFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_card, container, false)
         database = FirebaseFirestore.getInstance()
-        val cardCollection : CollectionReference= db.collection("Decks").document(argsDeck.docId.toString()).collection("cards")
+        val cardCollection : CollectionReference = db.collection("Decks").document(argsDeck.docId.toString()).collection("cards")
+
         val card = cardCollection.document(argsCard.docId.toString())
-        Log.d("TAG", "cardId: ${card.id}")
+        Log.d("TAG", "cardId: ${cardCollection}")
         cardCollection.get().addOnCompleteListener {
             val result: StringBuffer = StringBuffer()
             for (document in it.result)
@@ -93,6 +94,67 @@ class CardFragment : Fragment() {
         }
 
 
+
+
+
+        // Next Card Button
+        val nextCardBtn = view.findViewById<Button>(R.id.nextCardButton)
+        nextCardBtn.setOnClickListener{
+            if (index == cards.size -1) {
+                index = 0
+            }
+            else {
+                index += 1
+            }
+            cardText.setText(cards[index].question)
+        }
+
+
+
+
+        // Flip Card Button
+        val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
+        flipCardBtn.setOnClickListener{
+            if (cardText.text == cards[index].question) {
+                cardText.setText(cards[index].answer)
+            }
+            else {
+                cardText.setText(cards[index].question)
+            }
+        }
+        */
+
+
+
+
+        /*        //ToDo: Load deck instead of creating cards here
+        cards.add(Card("Card 0 Question", "Card 0 Answer", false))
+        cards.add(Card("Card 1 Question", "Card 1 Answer", false))
+        cards.add(Card("Card 2 Question", "Card 2 Answer", false))
+        cards.add(Card("Card 3 Question", "Card 3 Answer", false))
+        cards.add(Card("Card 4 Question", "Card 4 Answer", false))
+
+        val cardText = view.findViewById<TextView>(R.id.cardTextView)
+        cardText.setText(cards[index].question)
+
+
+        // Previous Card button
+        val previousCardBtn = view.findViewById<Button>(R.id.previousCardButton)
+        previousCardBtn.setOnClickListener{
+            if (index == 0) {
+                index = cards.size -1
+            }
+            else {
+                index -= 1
+            }
+            cardText.setText(cards[index].question)
+
+
+
+
+        }
+
+
         // Next Card Button
         val nextCardBtn = view.findViewById<Button>(R.id.nextCardButton)
         nextCardBtn.setOnClickListener{
@@ -116,7 +178,6 @@ class CardFragment : Fragment() {
             }
         }
         */
-
         return view
     }
 
@@ -148,6 +209,15 @@ class CardFragment : Fragment() {
 
 
 
+
+
+
+
+
+
+
+
+
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -168,3 +238,93 @@ class CardFragment : Fragment() {
             }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

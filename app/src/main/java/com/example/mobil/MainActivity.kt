@@ -2,6 +2,7 @@ package com.example.mobil
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Button
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         }
         // Navigate to CardFragment using ref: "toACard"
         if (refString == "toACard") {
+            Log.e("NAVIGATE TO CARD", deckID)
             val directions = DeckFragmentDirections.actionDeckFragmentToCardFragment(deckID)
             navController.navigate(directions)
         }
