@@ -7,6 +7,7 @@ import android.view.*
 import android.view.View.*
 import androidx.fragment.app.Fragment
 import android.widget.EditText
+import android.widget.TextView
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.CardsAdapter
@@ -36,6 +37,8 @@ class DeckFragment : Fragment() {
 
     private var cards = ArrayList<Card>()
     private var database : FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    private var shuffle = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +83,7 @@ class DeckFragment : Fragment() {
 
             addCardDialog.setPositiveButton("Save") {
                     dialog,_->
+                val cardID = System.currentTimeMillis().toString()
                 val question = addQuestion.text.toString()
                 val answer = addAnswer.text.toString()
                 val card = hashMapOf(
@@ -90,7 +94,8 @@ class DeckFragment : Fragment() {
                 database.collection("Decks")
                     .document(args.deckId.toString())
                     .collection("cards")
-                    .add(card)
+                    .document(cardID)
+                    .set(card)
 
                 cardsAdapter.notifyDataSetChanged()
                 dialog.dismiss()
@@ -106,10 +111,15 @@ class DeckFragment : Fragment() {
 
         // Shuffle button
         shuffleBtn.setOnClickListener {
-            //ToDo: NEEDS FUNCTIONALITY
-            val shuffleIndex = Random.nextInt(cards.size)
-            val shuffleElement = cards[shuffleIndex]
-
+            if (shuffle == true) {
+                shuffle = false
+            }
+            else if (shuffle == false) {
+                shuffle = true
+            }
+            else {
+                Log.e("Shufflebutton Error", "Idiotsikkert er ikke sikkert nok")
+            }
         }
 
         //Go to Edit
@@ -126,7 +136,7 @@ class DeckFragment : Fragment() {
             override fun onCardClick(position: Int) {
                 val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
                 val currentCardId = database.collection("Decks").document(args.deckId.toString()).collection("cards").document(cards[position].docId.toString()).id
-                (activity as MainActivity).navigateToFragment("toACard", currentDeckId, currentCardId, "")
+                (activity as MainActivity).navigateToCardFragment(currentDeckId, currentCardId, "", shuffle)
 
                 Log.e("NAVIGATE TO CARD ID: ", currentCardId)
             }
