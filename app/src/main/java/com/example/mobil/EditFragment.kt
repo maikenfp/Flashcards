@@ -6,7 +6,12 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.view.isVisible
+import androidx.core.view.iterator
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.EditAdapter
@@ -55,6 +60,8 @@ class EditFragment : Fragment() {
         val editAdapter = EditAdapter(context = MainActivity(), cards)
         cardsRecycler.adapter = editAdapter
 
+        val selected = editAdapter.selectedCards
+
         eventChangeListener(editAdapter)
 
         //BUTTONS
@@ -63,25 +70,23 @@ class EditFragment : Fragment() {
 
         // Delete button
         deleteBtn.setOnClickListener {
-            /*val inflater = LayoutInflater.from(context).inflate(R.layout.delete_card, null)
-            val selected = editBinding.cardView.findViewById<TextView>(R.id.selectText)
+            val inflater = LayoutInflater.from(context).inflate(R.layout.delete_card, null)
 
             val deleteDialog = AlertDialog.Builder(context)
             deleteDialog.setView(inflater)
 
             deleteDialog.setPositiveButton("Delete") {
                     dialog,_->
-                for (c in cards){
-                    if(selected.isVisible){
-                        database.collection("Decks")
-                            .document(args.docId.toString())
-                            .collection("cards")
-                            .document(cards[position].docId.toString())
-                            .delete()
-                        editAdapter.notifyDataSetChanged()
-                    }
+                for (card in selected){
+                    database.collection("Decks")
+                        .document(args.deckId.toString())
+                        .collection("cards")
+                        .document(card.docId.toString())
+                        .delete()
+                    editAdapter.notifyDataSetChanged()
                 }
                 dialog.dismiss()
+                (activity as MainActivity).onSupportNavigateUp()
             }
 
             deleteDialog.setNegativeButton("Cancel"){
@@ -89,22 +94,13 @@ class EditFragment : Fragment() {
                 dialog.dismiss()
             }
             deleteDialog.create()
-            deleteDialog.show()*/
+            deleteDialog.show()
         }
 
         // Ignore button
         ignoreBtn.setOnClickListener {
-            //ToDo: NEEDS FUNCTIONALITY
+            TODO()
         }
-
-        // Select card
-        editAdapter.setOnCardClickListener(object : EditAdapter.onCardClickListener{
-            override fun onCardClick(position: Int) {
-                //ToDo: This now needs to work with fragment
-                //(activity as DeckActivity).replaceFragment(CardFragment())
-                //startActivity(Intent(this@EditFragment.context, CardActivity::class.java))
-            }
-        })
 
         return editBinding.root
     }

@@ -12,21 +12,11 @@ import com.example.mobil.model.Card
 
 class EditAdapter(val context: MainActivity, private val cards: ArrayList<Card>) : RecyclerView.Adapter<EditAdapter.CardsViewHolder>() {
 
-    private val selectedCards = arrayListOf<Card>()
-
-    lateinit var listener : onCardClickListener
-
-    interface onCardClickListener{
-        fun onCardClick(position: Int)
-    }
-
-    fun setOnCardClickListener(listener: onCardClickListener){
-        this.listener = listener
-    }
+    val selectedCards = arrayListOf<Card>()
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): CardsViewHolder {
         val myCardsItem = LayoutInflater.from(viewGroup.context).inflate(R.layout.card_item, viewGroup, false)
-        return CardsViewHolder(myCardsItem, listener)
+        return CardsViewHolder(myCardsItem)
     }
 
     override fun onBindViewHolder(viewHolder: CardsViewHolder, position: Int) {
@@ -69,20 +59,13 @@ class EditAdapter(val context: MainActivity, private val cards: ArrayList<Card>)
         return cards.size
     }
 
-    class CardsViewHolder (cardView: View, listener: onCardClickListener) : RecyclerView.ViewHolder(cardView) {
+    class CardsViewHolder (cardView: View) : RecyclerView.ViewHolder(cardView) {
 
         val textItem = cardView.findViewById<TextView>(R.id.cardTitle)
 
         fun bind(cardItem: Card){
             textItem.text = cardItem.question
         }
-
-        init {
-            cardView.setOnClickListener{
-                listener.onCardClick(adapterPosition)
-            }
-        }
-
     }
 
 }
