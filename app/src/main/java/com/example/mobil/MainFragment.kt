@@ -81,13 +81,13 @@ class MainFragment : Fragment() {
 
         addDeckDialog.setPositiveButton("Ok") {
                 dialog,_->
+            val deckID = System.currentTimeMillis().toString()
             val deckName = addTxt.text.toString()
             val deck = hashMapOf(
                 "title" to deckName
                 //"cards" to cardList
             )
-
-            database.collection("Decks").add(deck)
+            database.collection("Decks").document(deckID).set(deck)
             decksAdapter.notifyDataSetChanged()
             dialog.dismiss()
         }
