@@ -7,6 +7,7 @@ import android.view.*
 import android.view.View.*
 import androidx.fragment.app.Fragment
 import android.widget.EditText
+import android.widget.TextView
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.CardsAdapter
@@ -80,6 +81,7 @@ class DeckFragment : Fragment() {
 
             addCardDialog.setPositiveButton("Save") {
                     dialog,_->
+                val cardID = System.currentTimeMillis().toString()
                 val question = addQuestion.text.toString()
                 val answer = addAnswer.text.toString()
                 val card = hashMapOf(
@@ -90,7 +92,8 @@ class DeckFragment : Fragment() {
                 database.collection("Decks")
                     .document(args.deckId.toString())
                     .collection("cards")
-                    .add(card)
+                    .document(cardID)
+                    .set(card)
 
                 cardsAdapter.notifyDataSetChanged()
                 dialog.dismiss()
