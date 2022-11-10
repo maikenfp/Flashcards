@@ -111,10 +111,10 @@ class DeckFragment : Fragment() {
 
         // Shuffle button
         shuffleBtn.setOnClickListener {
-            if (shuffle == true) {
+            if (shuffle) {
                 shuffle = false
             }
-            else if (shuffle == false) {
+            else if (!shuffle) {
                 shuffle = true
             }
             else {
@@ -126,8 +126,8 @@ class DeckFragment : Fragment() {
         cardsAdapter.setOnLongClickListener(object : CardsAdapter.OnLongClickListener{
             override fun onLongClick(position: Int) {
                 val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
-                val currentCardId = database.collection("Decks").document(args.deckId.toString()).collection("cards").document(cards[position].docId.toString()).id
-                (activity as MainActivity).navigateToFragment("toEdit", currentDeckId, currentCardId, "")
+                val currentTitle = args.deckTitle.toString()
+                (activity as MainActivity).navigateToFragment("toEdit", currentDeckId, currentTitle)
             }
         })
 
@@ -163,7 +163,6 @@ class DeckFragment : Fragment() {
                         Log.e("Load Decks TEST", cards.toString())
                     }
                 }
-
                 adapter.notifyDataSetChanged()
             }
         })

@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
 
     // This might be better split up into two functions
-    fun navigateToFragment(refString: String, deckID: String, cardID : String,  deckTitle: String) {
+    fun navigateToFragment(refString: String, deckID: String, deckTitle: String) {
         getController()
         // Navigate to DeckFragment using ref: "toCards"
         if (refString == "toCards") {
