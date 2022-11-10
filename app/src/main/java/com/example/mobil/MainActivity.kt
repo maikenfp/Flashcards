@@ -70,6 +70,11 @@ class MainActivity : AppCompatActivity() {
             val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(deckID, deckTitle)
             navController.navigate(directions)
         }
+        // Navigate to EditFragment using ref: "toEdit"
+        if (refString == "toEdit") {
+            val directions = DeckFragmentDirections.actionDeckFragmentToEditFragment(deckID, deckTitle)
+            navController.navigate(directions)
+        }
         // Navigate to CardFragment using ref: "toACard"
         if (refString == "toACard") {
             Log.e("NAVIGATE TO CARD", deckID)

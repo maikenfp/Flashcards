@@ -7,14 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import androidx.navigation.fragment.navArgs
-import com.example.mobil.adapter.CardsAdapter
 import com.example.mobil.model.Card
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 
 // TODO: Use parameters?
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,7 +19,6 @@ private const val ARG_PARAM2 = "param2"
 
 class CardFragment : Fragment() {
     //testing ********************
-    private val argsDeck: DeckFragmentArgs by navArgs()
     private val argsCard: CardFragmentArgs by navArgs()
     //testing ********************
     private var cards = ArrayList<Card>()
@@ -49,14 +44,100 @@ class CardFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_card, container, false)
 
-        val db = Firebase.firestore
-        //database = FirebaseFirestore.getInstance()
+        return view
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        // filling (cards) up with all cards in the deck, in order to get a navigatable ArrayList
+        eventChangeListener()
+
         var index = 0
         var cardIndex = 0
-        db.collection("Decks").document(argsCard.deckID.toString()).collection("cards").get()
+
+        // Previous Card button
+        val previousCardBtn = view.findViewById<Button>(R.id.previousCardButton)
+        previousCardBtn.setOnClickListener{
+            if (index == 0) {
+                index = cards.size -1
+            }
+            else {
+                index -= 1
+            }
+            cardText?.text = cards[index].question
+
+        }
+
+        // Next Card Button
+        val nextCardBtn = view.findViewById<Button>(R.id.nextCardButton)
+        nextCardBtn.setOnClickListener{
+            if (index == cards.size -1) {
+                index = 0
+            }
+            else {
+                index += 1
+            }
+            cardText?.text = cards[index].question
+        }
+
+        // Flip Card Button
+        val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
+        flipCardBtn.setOnClickListener{
+            if (cardText?.text == cards[index].question) {
+                cardText?.text = cards[index].answer
+            }
+            else {
+                cardText?.text = cards[index].question
+            }
+        }
+
+        /*val cardText = view.findViewById<TextView>(R.id.cardTextView)
+        cardText.setText(cards[index].question)*/
+
+        /*// Previous Card button
+        val previousCardBtn = view.findViewById<Button>(R.id.previousCardButton)
+        previousCardBtn.setOnClickListener{
+            if (index == 0) {
+                index = cards.size -1
+            }
+            else {
+                index -= 1
+            }
+            cardText?.text = cards[index].question
+        }
+
+        // Next Card Button
+        val nextCardBtn = view.findViewById<Button>(R.id.nextCardButton)
+        nextCardBtn.setOnClickListener{
+            if (index == cards.size -1) {
+                index = 0
+            }
+            else {
+                index += 1
+            }
+            cardText?.text = cards[index].question
+        }
+
+        // Flip Card Button
+        val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
+        flipCardBtn.setOnClickListener{
+            if (cardText?.text == cards[index].question) {
+                cardText?.text = cards[index].answer
+            }
+            else {
+                cardText?.text = cards[index].question
+            }
+        }*/
+
+    }
+
+    private fun eventChangeListener() {
+        database = FirebaseFirestore.getInstance()
+        Log.e("Load Decks LOG", database.toString())
+        var index = 0
+        var cardIndex = 0
+
+        database.collection("Decks").document(argsCard.deckId.toString()).collection("cards").get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     Log.d("TAG", "${document.id} => ${document.data}")
@@ -72,12 +153,12 @@ class CardFragment : Fragment() {
                                 false
                             )
                         )
-                        if (document.id == argsCard.cardID){
+                        if (document.id == argsCard.cardId) {
                             index = cardIndex
                         }
                         cardIndex++
+                        view?.findViewById<TextView>(R.id.cardTextView)?.text = cards[index].question
                     }
-
                 }
             }
             .addOnFailureListener { exception ->
@@ -86,237 +167,10 @@ class CardFragment : Fragment() {
 
 
 
-        val cardText = view.findViewById<TextView>(R.id.cardTextView)
-        cardText.setText(cards[index].question)
-
-        /*
-        // Previous Card button
-        val previousCardBtn = view.findViewById<Button>(R.id.previousCardButton)
-        previousCardBtn.setOnClickListener{
-            if (index == 0) {
-                index = cards.size -1
-            }
-            else {
-                index -= 1
-            }
-            cardText.setText(cards[index].question)
-
-        }
-
-        // Next Card Button
-        val nextCardBtn = view.findViewById<Button>(R.id.nextCardButton)
-        nextCardBtn.setOnClickListener{
-            if (index == cards.size -1) {
-                index = 0
-            }
-            else {
-                index += 1
-            }
-            cardText.setText(cards[index].question)
-        }
-
-        // Flip Card Button
-        val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
-        flipCardBtn.setOnClickListener{
-            if (cardText.text == cards[index].question) {
-                cardText.setText(cards[index].answer)
-            }
-            else {
-                cardText.setText(cards[index].question)
-            }
-        }
-        */
-
-
-
-
-
-
-
-
-
-
-        /*
-
-        //ToDo: Load deck instead of creating cards here
-        cards.add(Card("Card 0 Question", "Card 0 Answer", false))
-        cards.add(Card("Card 1 Question", "Card 1 Answer", false))
-        cards.add(Card("Card 2 Question", "Card 2 Answer", false))
-        cards.add(Card("Card 3 Question", "Card 3 Answer", false))
-        cards.add(Card("Card 4 Question", "Card 4 Answer", false))
-
-        val cardText = view.findViewById<TextView>(R.id.cardTextView)
-        cardText.setText(cards[index].question)
-
-
-
-
-
-        // Previous Card button
-        val previousCardBtn = view.findViewById<Button>(R.id.previousCardButton)
-        previousCardBtn.setOnClickListener{
-            if (index == 0) {
-                index = cards.size -1
-            }
-            else {
-                index -= 1
-            }
-            cardText.setText(cards[index].question)
-
-
-
-
-        }
-
-
-
-
-
-
-        // Next Card Button
-        val nextCardBtn = view.findViewById<Button>(R.id.nextCardButton)
-        nextCardBtn.setOnClickListener{
-            if (index == cards.size -1) {
-                index = 0
-            }
-            else {
-                index += 1
-            }
-            cardText.setText(cards[index].question)
-        }
-
-
-
-
-
-        // Flip Card Button
-
-
-
-        val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
-        flipCardBtn.setOnClickListener{
-
-
-
-
-            if (cardText.text == cards[index].question) {
-                cardText.setText(cards[index].answer)
-            }
-
-            else {
-
-
-                cardText.setText(cards[index].question)
-            }
-        }
-        */
-        return view
-    }
-
-    /*
-
-
-    private fun eventChangeListener(adapter: CardsAdapter) {
-
-
-
-        database = FirebaseFirestore.getInstance()
-        Log.e("Load Decks LOG", database.toString())
-
-
-        database.collection("Decks").document(argsDeck.docId.toString()).collection("cards")
-            .addSnapshotListener(object : EventListener<QuerySnapshot> {
-                override fun onEvent(
-                    value: QuerySnapshot?,
-                    error: FirebaseFirestoreException?
-                ) {
-
-
-                    if (error != null) {
-                        Log.e("Firestore Error", error.message.toString())
-                        return
-
-                    }
-
-
-
-                    for (dc: DocumentChange in value?.documentChanges!!) {
-                        if (dc.type == DocumentChange.Type.ADDED) {
-                            cards.add(dc.document.toObject(Card::class.java))
-                            Log.e("Load Decks LOG", cards.toString())
-                        }
-
-
-                    }
-
-
-
-                    adapter.notifyDataSetChanged()
-                }
-
-            })
 
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    */
     companion object {
         /**
          * Use this factory method to create a new instance of
