@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.navigation.fragment.navArgs
 import com.example.mobil.model.Card
@@ -50,41 +51,9 @@ class CardFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         eventChangeListener()
-        /*val db = Firebase.firestore
-        //database = FirebaseFirestore.getInstance()
 
-        // filling (cards) up with all cards in the deck, in order to get a navigatable ArrayList
         var index = 0
         var cardIndex = 0
-        db.collection("Decks").document(argsCard.deckId.toString()).collection("cards").get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d("TAG", "${document.id} => ${document.data}")
-
-                    // ToDo: This doesn't prevent the user to click on a ignored card, which will mess up the indexing
-                    // Todo: Possible fix is to present the first card directly without the using the arraylist
-                    // Todo: Then when you navigate, you cannot navigate back to this card
-                    if (document.data.getValue("isIgnored") == false) {
-                        cards.add(
-                            Card(
-                                document.data.getValue("question") as String?,
-                                document.data.getValue("answer") as String?,
-                                false
-                            )
-                        )
-                        if (document.id == argsCard.cardId){
-                            index = cardIndex
-                        }
-                        cardIndex++
-                    }
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d("TAG", "Error getting documents: ", exception)
-            }
-
-        val cardText = view.findViewById<TextView>(R.id.cardTextView)
-        cardText.setText(cards[index].question)
 
         // Previous Card button
         val previousCardBtn = view.findViewById<Button>(R.id.previousCardButton)
@@ -95,7 +64,7 @@ class CardFragment : Fragment() {
             else {
                 index -= 1
             }
-            cardText.setText(cards[index].question)
+            cardText?.text = cards[index].question
 
         }
 
@@ -108,24 +77,24 @@ class CardFragment : Fragment() {
             else {
                 index += 1
             }
-            cardText.setText(cards[index].question)
+            cardText?.text = cards[index].question
         }
 
         // Flip Card Button
         val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
         flipCardBtn.setOnClickListener{
-            if (cardText.text == cards[index].question) {
-                cardText.setText(cards[index].answer)
+            if (cardText?.text == cards[index].question) {
+                cardText?.text = cards[index].answer
             }
             else {
-                cardText.setText(cards[index].question)
+                cardText?.text = cards[index].question
             }
         }
 
-        val cardText = view.findViewById<TextView>(R.id.cardTextView)
-        cardText.setText(cards[index].question)
+        /*val cardText = view.findViewById<TextView>(R.id.cardTextView)
+        cardText.setText(cards[index].question)*/
 
-        // Previous Card button
+        /*// Previous Card button
         val previousCardBtn = view.findViewById<Button>(R.id.previousCardButton)
         previousCardBtn.setOnClickListener{
             if (index == 0) {
@@ -134,7 +103,7 @@ class CardFragment : Fragment() {
             else {
                 index -= 1
             }
-            cardText.setText(cards[index].question)
+            cardText?.text = cards[index].question
         }
 
         // Next Card Button
@@ -146,20 +115,20 @@ class CardFragment : Fragment() {
             else {
                 index += 1
             }
-            cardText.setText(cards[index].question)
+            cardText?.text = cards[index].question
         }
 
         // Flip Card Button
         val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
         flipCardBtn.setOnClickListener{
-            if (cardText.text == cards[index].question) {
-                cardText.setText(cards[index].answer)
+            if (cardText?.text == cards[index].question) {
+                cardText?.text = cards[index].answer
             }
             else {
-                cardText.setText(cards[index].question)
+                cardText?.text = cards[index].question
             }
-        }
-        */
+        }*/
+
     }
 
     private fun eventChangeListener() {
@@ -168,8 +137,7 @@ class CardFragment : Fragment() {
         var index = 0
         var cardIndex = 0
 
-        database.collection("Decks").document(argsCard.deckId.toString()).collection("cards")
-            .document(argsCard.cardId.toString()).get()
+        database.collection("Decks").document(argsCard.deckId.toString()).collection("cards").get()
             .addOnSuccessListener { result ->
                 for (document in result) {
                     Log.d("TAG", "${document.id} => ${document.data}")
@@ -189,6 +157,7 @@ class CardFragment : Fragment() {
                             index = cardIndex
                         }
                         cardIndex++
+                        view?.findViewById<TextView>(R.id.cardTextView)?.text = cards[index].question
                     }
                 }
             }
@@ -196,7 +165,7 @@ class CardFragment : Fragment() {
                 Log.d("TAG", "Error getting documents: ", exception)
             }
 
-        view?.findViewById<TextView>(R.id.cardTextView)?.text = cards[index].question
+
 
 
     }
