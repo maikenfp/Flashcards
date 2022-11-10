@@ -38,6 +38,8 @@ class DeckFragment : Fragment() {
     private var cards = ArrayList<Card>()
     private var database : FirebaseFirestore = FirebaseFirestore.getInstance()
 
+    private var shuffle = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -109,10 +111,15 @@ class DeckFragment : Fragment() {
 
         // Shuffle button
         shuffleBtn.setOnClickListener {
-            //ToDo: NEEDS FUNCTIONALITY
-            val shuffleIndex = Random.nextInt(cards.size)
-            val shuffleElement = cards[shuffleIndex]
-
+            if (shuffle == true) {
+                shuffle = false
+            }
+            else if (shuffle == false) {
+                shuffle = true
+            }
+            else {
+                Log.e("Shufflebutton Error", "Idiotsikkert er ikke sikkert nok")
+            }
         }
 
         //Go to Edit
@@ -129,7 +136,7 @@ class DeckFragment : Fragment() {
             override fun onCardClick(position: Int) {
                 val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
                 val currentCardId = database.collection("Decks").document(args.deckId.toString()).collection("cards").document(cards[position].docId.toString()).id
-                (activity as MainActivity).navigateToFragment("toACard", currentDeckId, currentCardId, "")
+                (activity as MainActivity).navigateToCardFragment(currentDeckId, currentCardId, "", shuffle)
 
                 Log.e("NAVIGATE TO CARD ID: ", currentCardId)
             }

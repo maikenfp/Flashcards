@@ -81,6 +81,11 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="Deck Title"/>
+        <argument
+            android:name="shuffle"
+            app:argType="boolean"
+            app:nullable="false"
+            android:defaultValue="false"/>
         <action
             android:id="@+id/action_cardFragment_to_deckFragment"
             app:destination="@id/deckFragment" />
