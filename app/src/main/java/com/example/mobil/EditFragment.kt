@@ -26,7 +26,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class EditFragment : Fragment() {
     //testing ********************
-    private val args: DeckFragmentArgs by navArgs()
+    private val args: EditFragmentArgs by navArgs()
     //testing ********************
 
     private var _editBinding: FragmentEditBinding? = null
@@ -111,7 +111,7 @@ class EditFragment : Fragment() {
 
     private fun eventChangeListener(adapter: EditAdapter) {
         database = FirebaseFirestore.getInstance()
-        database.collection("Decks").document(args.docId.toString()).collection("cards").
+        database.collection("Decks").document(args.deckId.toString()).collection("cards").
         addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
                 value: QuerySnapshot?,

@@ -7,9 +7,6 @@ import android.view.*
 import android.view.View.*
 import androidx.fragment.app.Fragment
 import android.widget.EditText
-import androidx.cardview.widget.CardView
-import androidx.core.view.MenuHost
-import androidx.core.view.MenuProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.CardsAdapter
@@ -38,13 +35,16 @@ class DeckFragment : Fragment() {
     private val deckBinding get() = _deckBinding!!
 
     private var cards = ArrayList<Card>()
-    private lateinit var database : FirebaseFirestore
+    private var database : FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
     }
+
+    val query : Query = database.collection("Decks")
+    val cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,8 +60,6 @@ class DeckFragment : Fragment() {
         // Adapter & Recycler
         val cardsRecycler = deckBinding.cardRecycler
         cardsRecycler.layoutManager = LinearLayoutManager(context)
-
-        val cardsAdapter = CardsAdapter(context = MainActivity(), cards, ::editMenu)
         cardsRecycler.adapter = cardsAdapter
 
         eventChangeListener(cardsAdapter)
@@ -69,6 +67,7 @@ class DeckFragment : Fragment() {
         //BUTTONS
         val addCardBtn = deckBinding.addCardBtn
         val shuffleBtn = deckBinding.shuffleBtn
+        val editBtn = deckBinding.editModeBtn
 
         // ADD CARD
         addCardBtn.setOnClickListener {
@@ -89,7 +88,7 @@ class DeckFragment : Fragment() {
                     "isIgnored" to false
                 )
                 database.collection("Decks")
-                    .document(args.docId.toString())
+                    .document(args.deckId.toString())
                     .collection("cards")
                     .add(card)
 
@@ -113,47 +112,30 @@ class DeckFragment : Fragment() {
 
         }
 
-        // Go to card (might be useless)
+        //Go to Edit
+        cardsAdapter.setOnLongClickListener(object : CardsAdapter.OnLongClickListener{
+            override fun onLongClick(position: Int) {
+                val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
+                val currentCardId = database.collection("Decks").document(args.deckId.toString()).collection("cards").document(cards[position].docId.toString()).id
+                (activity as MainActivity).navigateToFragment("toEdit", currentDeckId, currentCardId, "")
+            }
+        })
+
+        // Go to card
         cardsAdapter.setOnCardClickListener(object : CardsAdapter.OnCardClickListener{
             override fun onCardClick(position: Int) {
-                val currentId = database.collection("Decks").document().collection("cards").document(cards[position].docId.toString()).id
-                (activity as MainActivity).navigateToFragment("toACard", currentId, "", "")
+                val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
+                val currentCardId = database.collection("Decks").document(args.deckId.toString()).collection("cards").document(cards[position].docId.toString()).id
+                (activity as MainActivity).navigateToFragment("toACard", currentDeckId, currentCardId, "")
 
-                Log.e("NAVIGATE TO CARD ID: ", currentId)
+                Log.e("NAVIGATE TO CARD ID: ", currentCardId)
             }
         })
     }
 
-    fun editMenu() {
-        val buttonBox = view?.findViewById<CardView>(R.id.cardView)
-        if (buttonBox != null) {
-            buttonBox.visibility = GONE
-        }
-        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
-
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.edit_menu, menu)
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                when (menuItem.itemId) {
-                    R.id.delete_cards -> {
-                        //TODO()
-                        return true
-                    }
-                    R.id.ignore_cards -> {
-                        //TODO()
-                        return true
-                    }
-                }
-                return false
-            }
-        }, viewLifecycleOwner)
-    }
-
     private fun eventChangeListener(adapter: CardsAdapter) {
         database = FirebaseFirestore.getInstance()
-        database.collection("Decks").document(args.docId.toString()).collection("cards").
+        database.collection("Decks").document(args.deckId.toString()).collection("cards").
         addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
                 value: QuerySnapshot?,
