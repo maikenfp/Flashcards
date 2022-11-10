@@ -2,6 +2,7 @@ package com.example.mobil
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Button
@@ -44,22 +45,44 @@ class MainActivity : AppCompatActivity() {
 
     private fun getController() {
         // Retrieve NavController from the NavHostFragment
+        Log.e("NAVCONTROLLER: ", "Before potential error")
+
+        // *********************** Feilen skjer her ************************
+        // Du kan kjøre getController() hvor mange gange du vil med å gå frem og tilbake mellom kortstokker
+        // Men når man klikker på et kort, så stopper koden her av en eller annen grunn
+        // Jeg forstår ikke hvorfor
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
+        // *****************************************************************
+
+        Log.e("NAVCONTROLLER: ", "After potential error")
         navController = navHostFragment.navController
+        Log.e("NAVCONTROLLER: ", navController.toString())
     }
 
-    fun navigateToFragment(refString: String, deckID: String, deckTitle: String) {
+
+    // This might be better split up into two functions
+    fun navigateToFragment(refString: String, deckID: String, cardID : String,  deckTitle: String) {
+        Log.e("NAVCONTROLLER", "Before getController()")
         getController()
+        Log.e("NAVCONTROLLER", "After getController()")
         // Navigate to DeckFragment using ref: "toCards"
         if (refString == "toCards") {
             val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(deckID, deckTitle)
             navController.navigate(directions)
         }
+        // Navigate to EditFragment using ref: "toEdit"
+        if (refString == "toEdit") {
+            val directions = DeckFragmentDirections.actionDeckFragmentToEditFragment(deckID, deckTitle)
+            navController.navigate(directions)
+        }
         // Navigate to CardFragment using ref: "toACard"
         if (refString == "toACard") {
-            val directions = DeckFragmentDirections.actionDeckFragmentToCardFragment(deckID)
+            Log.e("NAVIGATE TO CARD", deckID)
+            val directions = DeckFragmentDirections.actionDeckFragmentToCardFragment(deckID, cardID, deckTitle)
             navController.navigate(directions)
         }
     }
 
 }
+
+

@@ -21,7 +21,7 @@
         android:label="{deckTitle}"
         tools:layout="@layout/fragment_deck">
         <argument
-            android:name="docId"
+            android:name="deckId"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="1"/>
@@ -36,18 +36,51 @@
         <action
             android:id="@+id/action_deckFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_deckFragment_to_editFragment"
+            app:destination="@id/editFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editFragment"
+        android:name="com.example.mobil.EditFragment"
+        android:label="{deckTitle}"
+        tools:layout="@layout/fragment_edit">
+        <argument
+            android:name="deckId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="1"/>
+        <argument
+            android:name="deckTitle"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="1"/>
+        <action
+            android:id="@+id/action_editFragment_to_deckFragment"
+            app:destination="@id/deckFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/cardFragment"
         android:name="com.example.mobil.CardFragment"
-        android:label="fragment_card"
+        android:label="{deckTitle}"
         tools:layout="@layout/fragment_card">
         <argument
-            android:name="docId"
+            android:name="deckId"
             app:argType="string"
             app:nullable="true"
-            android:defaultValue="@null"/>
+            android:defaultValue="1"/>
+        <argument
+            android:name="cardId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="1"/>
+        <argument
+            android:name="deckTitle"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="Deck Title"/>
         <action
             android:id="@+id/action_cardFragment_to_deckFragment"
             app:destination="@id/deckFragment" />

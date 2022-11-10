@@ -1,5 +1,6 @@
 package com.example.mobil.adapter
 
+import android.util.Log
 import android.view.*
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -7,15 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.MainActivity
 import com.example.mobil.R
 import com.example.mobil.model.Card
+import com.google.firebase.firestore.Query
 
-class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>, val editMenu: () -> Unit) : RecyclerView.Adapter<CardsAdapter.CardsViewHolder>() {
+class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>, query : com.google.firebase.firestore.Query) : FirestoreAdapter<CardsAdapter.CardsViewHolder>(query) {
 
     private lateinit var listener : OnCardClickListener
-
-    // *****************EDIT*******************
-    private val selectedCards = arrayListOf<Card>()
-    private var editMode = false
-    // *****************EDIT*******************
+    private lateinit var longListener : OnLongClickListener
 
     interface OnCardClickListener{
         fun onCardClick(position: Int)
@@ -25,64 +23,29 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
         this.listener = listener
     }
 
+    interface OnLongClickListener{
+        fun onLongClick(position: Int)
+    }
+
+    fun setOnLongClickListener(longListener: OnLongClickListener){
+        this.longListener = longListener
+    }
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, position: Int): CardsViewHolder {
         val myCardsItem = LayoutInflater.from(viewGroup.context).inflate(R.layout.card_item, viewGroup, false)
-        return CardsViewHolder(myCardsItem, listener)
+        return CardsViewHolder(myCardsItem, listener, longListener)
     }
 
     override fun onBindViewHolder(viewHolder: CardsViewHolder, position: Int) {
         val currentCard = cards[position]
         viewHolder.textItem.text = currentCard.question
-
-        // **************************************EDIT**************************************
-        val selectText = viewHolder.itemView.findViewById<TextView>(R.id.selectText)
-
-        if (selectedCards.contains(currentCard)) {
-            selectText.visibility = View.VISIBLE
-        } else {
-            selectText.visibility = View.INVISIBLE
-        }
-
-        viewHolder.itemView.findViewById<CardView>(R.id.card_item_box).setOnClickListener {
-            if (editMode) {
-                selectCard(viewHolder, currentCard)
-            } else {
-                context.navigateToFragment("toACard", "", "")
-            }
-        }
-
-        viewHolder.itemView.findViewById<CardView>(R.id.card_item_box).setOnLongClickListener {
-            if (!editMode) {
-                editMode = true
-                editMenu()
-                selectCard(viewHolder, currentCard)
-            }
-            true
-        }
-        // **************************************EDIT**************************************
     }
-
-    // **************************************EDIT**************************************
-    private fun selectCard(holder: CardsViewHolder, card: Card) {
-        val selectText = holder.itemView.findViewById<TextView>(R.id.selectText)
-        // If the "selectedCards" list contains the card, remove from list and set Invisible
-        if (selectedCards.contains(card)) {
-            selectedCards.remove(card)
-            selectText.visibility = View.INVISIBLE
-        } else {
-            // else, add the card to "selectedCards" and set visible
-            selectedCards.add(card)
-            selectText.visibility = View.VISIBLE
-        }
-    }
-
-    // **************************************EDIT**************************************
 
     override fun getItemCount(): Int {
         return cards.size
     }
 
-    inner class CardsViewHolder (cardView: View, listener: OnCardClickListener) : RecyclerView.ViewHolder(cardView) {
+    inner class CardsViewHolder (cardView: View, listener: OnCardClickListener, longListener: OnLongClickListener) : RecyclerView.ViewHolder(cardView) {
         val textItem = cardView.findViewById<TextView>(R.id.cardTitle)
 
         fun bind(cardItem: Card){
@@ -92,6 +55,10 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
         init {
             cardView.setOnClickListener{
                 listener.onCardClick(adapterPosition)
+            }
+            cardView.setOnLongClickListener {
+                longListener.onLongClick(adapterPosition)
+                return@setOnLongClickListener true
             }
         }
     }

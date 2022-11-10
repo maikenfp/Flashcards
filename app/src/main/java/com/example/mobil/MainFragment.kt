@@ -34,7 +34,10 @@ class MainFragment : Fragment() {
     }
 
     private var decks = ArrayList<Deck>()
-    private lateinit var database : FirebaseFirestore
+    private var database : FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    val query : Query = database.collection("Decks")
+    val decksAdapter = DecksAdapter(context = MainActivity(), query)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -45,10 +48,6 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val query : Query = FirebaseFirestore.getInstance().collection("Decks")
-
-        // adapter & recycler
-        val decksAdapter = DecksAdapter(context = MainActivity(), decks, query)
         val decksRecycler = view.findViewById<RecyclerView>(R.id.deck_recycler)
         decksRecycler.adapter = decksAdapter
         decksRecycler.layoutManager = LinearLayoutManager(context)
@@ -58,43 +57,46 @@ class MainFragment : Fragment() {
         //Add Deck
         val addDeckBtn = view.findViewById<Button>(R.id.addDeckButton)
         addDeckBtn.setOnClickListener {
-            val inflater = LayoutInflater.from(context).inflate(R.layout.add_deck, null)
-            val addTxt = inflater.findViewById<EditText>(R.id.addDeckName)
-
-            val addDeckDialog = AlertDialog.Builder(context)
-            addDeckDialog.setView(inflater)
-
-            addDeckDialog.setPositiveButton("Ok") {
-                    dialog,_->
-                val deckName = addTxt.text.toString()
-                val deck = hashMapOf(
-                    "title" to deckName
-                    //"cards" to cardList
-                )
-
-                database.collection("Decks").add(deck)
-                decksAdapter.notifyDataSetChanged()
-                dialog.dismiss()
-            }
-            addDeckDialog.setNegativeButton("Cancel") {
-                    dialog,_->
-                dialog.dismiss()
-            }
-            addDeckDialog.create()
-            addDeckDialog.show()
+            addDeck()
         }
 
         decksAdapter.setOnItemClickListener(object : DecksAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
-                //(activity as MainActivity).replaceFragment(DeckFragment())
                 val currentTitle = decks[position].title.toString()
                 val currentId = database.collection("Decks").document(decks[position].docId.toString()).id
-                (activity as MainActivity).navigateToFragment("toCards", currentId, currentTitle)
+                (activity as MainActivity).navigateToFragment("toCards", currentId, "", currentTitle)
 
-                Log.e("NAVIGATE TO ID: ", currentId)
-                Log.e("NAVIGATE TO TITLE: ", currentTitle)
+                Log.e("NAVIGATE TO DECKID: ", currentId)
+                Log.e("NAVIGATE TO DECKTITLE: ", currentTitle)
             }
         })
+    }
+
+    private fun addDeck() {
+        val inflater = LayoutInflater.from(context).inflate(R.layout.add_deck, null)
+        val addTxt = inflater.findViewById<EditText>(R.id.addDeckName)
+
+        val addDeckDialog = AlertDialog.Builder(context)
+        addDeckDialog.setView(inflater)
+
+        addDeckDialog.setPositiveButton("Ok") {
+                dialog,_->
+            val deckName = addTxt.text.toString()
+            val deck = hashMapOf(
+                "title" to deckName
+                //"cards" to cardList
+            )
+
+            database.collection("Decks").add(deck)
+            decksAdapter.notifyDataSetChanged()
+            dialog.dismiss()
+        }
+        addDeckDialog.setNegativeButton("Cancel") {
+                dialog,_->
+            dialog.dismiss()
+        }
+        addDeckDialog.create()
+        addDeckDialog.show()
     }
 
     private fun eventChangeListener(adapter: DecksAdapter) {
@@ -119,6 +121,16 @@ class MainFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        decksAdapter.startListening()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        decksAdapter.stopListening()
     }
 
     companion object {
