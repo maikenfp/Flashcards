@@ -136,7 +136,8 @@ class DeckFragment : Fragment() {
             override fun onCardClick(position: Int) {
                 val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
                 val currentCardId = database.collection("Decks").document(args.deckId.toString()).collection("cards").document(cards[position].docId.toString()).id
-                (activity as MainActivity).navigateToCardFragment(currentDeckId, currentCardId, "", shuffle)
+                val currentDeckTitle = args.deckTitle.toString()
+                (activity as MainActivity).navigateToCardFragment(currentDeckId, currentCardId, currentDeckTitle, shuffle)
 
                 Log.e("NAVIGATE TO CARD ID: ", currentCardId)
             }
