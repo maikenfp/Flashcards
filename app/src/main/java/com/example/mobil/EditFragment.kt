@@ -99,9 +99,24 @@ class EditFragment : Fragment() {
 
         // Ignore button
         ignoreBtn.setOnClickListener {
-            TODO()
-        }
 
+                for (card in selected){
+                    Log.e("SELECTED CARD", card.toString())
+                    var ignored = card.isIgnored
+                    ignored = !ignored!!
+                    val cardHash = hashMapOf(
+                        "question" to card.question,
+                        "answer" to card.answer,
+                        "isIgnored" to ignored
+                    )
+                    database.collection("Decks")
+                        .document(args.deckId.toString())
+                        .collection("cards")
+                        .document(card.docId.toString())
+                        .set(cardHash)
+                }
+                (activity as MainActivity).onSupportNavigateUp()
+            }
         return editBinding.root
     }
 
@@ -121,6 +136,7 @@ class EditFragment : Fragment() {
                 for(dc : DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
                         cards.add(dc.document.toObject(Card::class.java))
+                        //cards.add(Card(dc.document.data.getValue("question").toString(),dc.document.data.getValue("answer").toString(),dc.document.data.getValue("isIgnored").toString()
                         Log.e("Add Card Error", cards.toString())
                     }
                 }
