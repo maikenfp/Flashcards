@@ -85,8 +85,74 @@ class CardFragment : Fragment() {
                 view?.findViewById<TextView>(R.id.cardTextView)?.text = cards[index].question
             }
         }
+
+        var menu : ImageView = view.findViewById(R.id.cardHamburgerMenu)
+        menu.setOnClickListener{ popupMenu(menu) }
+
     }
 
+    private fun popupMenu(menuView : View) {
+        //val db = FirebaseFirestore.getInstance()
+        val popupMenu = PopupMenu(menuView.context, menuView)
+        popupMenu.inflate(R.menu.card_hamburger_menu)
+        popupMenu.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.cardIgnore->{
+                    Log.e("CARD HAMBURGER MENU","IGNORE")
+                    true
+                }
+                R.id.cardEdit->{
+                    Log.e("CARD HAMBURGER MENU","EDIT")
+                    true
+                }
+                R.id.cardDelete->{
+                    Log.e("CARD HAMBURGER MENU","DELETE")
+                    val inflater = LayoutInflater.from(context).inflate(R.layout.delete_card, null)
+
+                    val deleteDialog = android.app.AlertDialog.Builder(context)
+                    deleteDialog.setView(inflater)
+
+                    deleteDialog.setPositiveButton("Delete") {
+                            dialog,_->
+
+                        Log.e("INDEX", index.toString())
+                        Log.e("DELETING", cards[index].docId.toString())
+                        database.collection("Decks")
+                            .document(argsCard.deckId.toString())
+                            .collection("cards")
+                            .document(cards[index].docId.toString())
+                            .delete()
+                        Log.e("B4 REMOVE INDEX", index.toString())
+                        cards.removeAt(index)
+                        Log.e("AFTER REMOVE INDEX", index.toString())
+                        if (index == 0) {
+                            index = cards.size - 1
+                        } else {
+                            index -= 1
+                        }
+                        Log.e("TextViewUpdate Before", index.toString())
+                        view?.findViewById<TextView>(R.id.cardTextView)?.text = cards[index].question
+                        Log.e("TextViewUpdate After", index.toString())
+                        dialog.dismiss()
+                    }
+
+                    deleteDialog.setNegativeButton("Cancel"){
+                            dialog,_->
+                        dialog.dismiss()
+                    }
+                    deleteDialog.create()
+                    deleteDialog.show()
+                    true
+                }
+
+
+                else -> true
+            }
+
+        }
+
+        popupMenu.show()
+    }
     //Loads deck from firestore
     private fun loadDeck() {
         database = FirebaseFirestore.getInstance()
@@ -110,7 +176,8 @@ class CardFragment : Fragment() {
                             Card(
                                 document.data.getValue("question") as String?,
                                 document.data.getValue("answer") as String?,
-                                false
+                                false,
+                                document.id
                             )
                         )
                         cardIndex++
@@ -132,100 +199,8 @@ class CardFragment : Fragment() {
             .addOnFailureListener { exception ->
                 Log.d("TAG", "Error getting documents: ", exception)
             }
-
-
-
-    }
-
-
-    inner class ViewHolder(itemView : View, listener: DecksAdapter.OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
-
-        var menu : ImageView = itemView.findViewById(R.id.cardHamburgerMenu)
-        val textItem : TextView = itemView.findViewById(R.id.deckTitle)
-
-
-        init {
-            itemView.setOnClickListener {
-                listener.onItemClick(adapterPosition)
-            }
-            menu.setOnClickListener{ popupMenu(menu) }
-        }
-
-        private fun popupMenu(view : View) {
-            val db = FirebaseFirestore.getInstance()
-            val popupMenu = PopupMenu(view.context, view)
-            popupMenu.inflate(R.menu.card_hamburger_menu)
-            popupMenu.setOnMenuItemClickListener {
-                when(it.itemId){
-                    R.id.cardIgnore->{
-
-                        cards[index].question = "test"
-
-
-
-
-
-                        val editView = LayoutInflater.from(view.context).inflate(R.layout.add_deck, null)
-                        val deckName = editView.findViewById<TextView>(R.id.addDeckName)
-
-                        val addDialog = AlertDialog.Builder(view.context)
-                        addDialog.setView(editView)
-
-                        addDialog.setPositiveButton("Ok"){
-                                dialog,_->
-                            Log.e("HELLO", position.toString())
-                            val title = deckName.text.toString()
-
-
-                            dialog.dismiss()
-                        }
-                        addDialog.setNegativeButton("Cancel"){
-                                dialog,_->
-                            dialog.dismiss()
-                        }
-                            .create()
-                            .show()
-
-
-                        true
-
-
-                    }
-
-
-                    else -> true
-                }
-            }
-
-            popupMenu.show()
-        }
     }
 }
-
-/*
-                    R.id.deleteDeck->{
-                        AlertDialog.Builder(view.context).setTitle("Delete").setIcon(R.drawable.ic_warning).setMessage("Are you sure you want to delete this deck?")
-                            .setPositiveButton("Yes"){
-                                    dialog,_->
-                                //Må finne ut hvordan koble til riktig dokument onclick
-                                if (position != null) {
-                                    db.collection("Decks").document(position.id).delete()
-                                }
-                                notifyDataSetChanged()
-                                dialog.dismiss()
-                            }
-                            .setNegativeButton("Cancel"){
-                                    dialog,_->
-                                dialog.dismiss()
-                            }
-                            .create()
-                            .show()
-                        true
-                    }
- */
-
-
-
 /*
 class CardFragment : Fragment() {
 private val argsCard: CardFragmentArgs by navArgs()
@@ -371,3 +346,28 @@ flipCardBtn.setOnClickListener{
         cardText?.text = cards[index].question
     }
 }*/
+/*
+                    R.id.deleteDeck->{
+                        AlertDialog.Builder(view.context).setTitle("Delete").setIcon(R.drawable.ic_warning).setMessage("Are you sure you want to delete this deck?")
+                            .setPositiveButton("Yes"){
+                                    dialog,_->
+                                //Må finne ut hvordan koble til riktig dokument onclick
+                                if (position != null) {
+                                    db.collection("Decks").document(position.id).delete()
+                                }
+                                notifyDataSetChanged()
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton("Cancel"){
+                                    dialog,_->
+                                dialog.dismiss()
+                            }
+                            .create()
+                            .show()
+                        true
+                    }
+ */
+
+
+
+
