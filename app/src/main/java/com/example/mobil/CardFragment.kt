@@ -6,10 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.PopupMenu
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
@@ -99,10 +96,79 @@ class CardFragment : Fragment() {
             when(it.itemId){
                 R.id.cardIgnore->{
                     Log.e("CARD HAMBURGER MENU","IGNORE")
+                    // guaranteed
+                    val cardID = cards[index].docId
+                    var ignored = cards[index].isIgnored
+
+                    Log.e("IGNORED", ignored.toString())
+                    ignored = !ignored!!
+                    Log.e("IGNORED", ignored.toString())
+
+
+                    val card = hashMapOf(
+                        "question" to cards[index].question,
+                        "answer" to cards[index].answer,
+                        "isIgnored" to ignored
+                    )
+                    database.collection("Decks")
+                        .document(argsCard.deckId.toString())
+                        .collection("cards")
+                        .document(cardID.toString())
+                        .set(card)
+
+                    Log.e("IGNORED", ignored.toString())
+                    if (ignored) {
+                        cards.removeAt(index)
+                        index--
+                        view?.findViewById<TextView>(R.id.cardTextView)?.text =
+                            cards[index].question
+                    }
+                    else {
+                        cards[index].isIgnored = ignored
+                    }
                     true
                 }
                 R.id.cardEdit->{
                     Log.e("CARD HAMBURGER MENU","EDIT")
+                    val inflater = LayoutInflater.from(context).inflate(R.layout.add_card, null)
+                    val addQuestion = inflater.findViewById<EditText>(R.id.enter_question)
+                    val addAnswer = inflater.findViewById<EditText>(R.id.enter_answer)
+
+                    addQuestion.setText(cards[index].question)
+                    addAnswer.setText(cards[index].answer)
+
+                    val addCardDialog = android.app.AlertDialog.Builder(context)
+                    addCardDialog.setView(inflater)
+
+                    addCardDialog.setPositiveButton("Save") {
+                            dialog,_->
+                        val cardID = cards[index].docId
+                        val question = addQuestion.text.toString()
+                        val answer = addAnswer.text.toString()
+                        val card = hashMapOf(
+                            "question" to question,
+                            "answer" to answer,
+                            "isIgnored" to cards[index].isIgnored,
+                        )
+                        database.collection("Decks")
+                            .document(argsCard.deckId.toString())
+                            .collection("cards")
+                            .document(cardID.toString())
+                            .set(card)
+
+
+                        cards[index] = Card(question, answer, cards[index].isIgnored, cardID)
+                        view?.findViewById<TextView>(R.id.cardTextView)?.text = cards[index].question
+                        dialog.dismiss()
+                    }
+
+                    addCardDialog.setNegativeButton("Cancel") {
+                            dialog,_->
+                        dialog.dismiss()
+                    }
+                    addCardDialog.create()
+                    addCardDialog.show()
+
                     true
                 }
                 R.id.cardDelete->{
@@ -115,24 +181,19 @@ class CardFragment : Fragment() {
                     deleteDialog.setPositiveButton("Delete") {
                             dialog,_->
 
-                        Log.e("INDEX", index.toString())
                         Log.e("DELETING", cards[index].docId.toString())
                         database.collection("Decks")
                             .document(argsCard.deckId.toString())
                             .collection("cards")
                             .document(cards[index].docId.toString())
                             .delete()
-                        Log.e("B4 REMOVE INDEX", index.toString())
                         cards.removeAt(index)
-                        Log.e("AFTER REMOVE INDEX", index.toString())
                         if (index == 0) {
                             index = cards.size - 1
                         } else {
                             index -= 1
                         }
-                        Log.e("TextViewUpdate Before", index.toString())
                         view?.findViewById<TextView>(R.id.cardTextView)?.text = cards[index].question
-                        Log.e("TextViewUpdate After", index.toString())
                         dialog.dismiss()
                     }
 
@@ -176,7 +237,7 @@ class CardFragment : Fragment() {
                             Card(
                                 document.data.getValue("question") as String?,
                                 document.data.getValue("answer") as String?,
-                                false,
+                                document.data.getValue("isIgnored") as Boolean?,
                                 document.id
                             )
                         )
@@ -200,8 +261,7 @@ class CardFragment : Fragment() {
                 Log.d("TAG", "Error getting documents: ", exception)
             }
     }
-}
-/*
+    /*
 class CardFragment : Fragment() {
 private val argsCard: CardFragmentArgs by navArgs()
 private var cards = ArrayList<Card>()
@@ -308,7 +368,6 @@ private fun loadDeck() {
         }
 }
 */
-
 /*val cardText = view.findViewById<TextView>(R.id.cardTextView)
 cardText.setText(cards[index].question)*/
 
@@ -370,4 +429,7 @@ flipCardBtn.setOnClickListener{
 
 
 
+
+
+}
 
