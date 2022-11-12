@@ -2,6 +2,7 @@ package com.example.mobil.adapter
 
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +40,14 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
     override fun onBindViewHolder(viewHolder: CardsViewHolder, position: Int) {
         val currentCard = cards[position]
         viewHolder.textItem.text = currentCard.question
+        if (currentCard.isIgnored == true) {
+            viewHolder.imageItem.visibility = View.VISIBLE
+        }
+        else{
+            viewHolder.imageItem.visibility = View.INVISIBLE
+        }
+
+
     }
 
     override fun getItemCount(): Int {
@@ -47,9 +56,11 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
 
     inner class CardsViewHolder (cardView: View, listener: OnCardClickListener, longListener: OnLongClickListener) : RecyclerView.ViewHolder(cardView) {
         val textItem = cardView.findViewById<TextView>(R.id.cardTitle)
+        val imageItem = cardView.findViewById<ImageView>(R.id.cardImage)
 
         fun bind(cardItem: Card){
             textItem.text = cardItem.toString()
+
         }
 
         init {

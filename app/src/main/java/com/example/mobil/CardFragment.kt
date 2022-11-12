@@ -259,9 +259,7 @@ class CardFragment : Fragment() {
         // Checks if card is ignored, to determine if we are displaying the "ignored" icon
         var cardImage = view?.findViewById<ImageView>(R.id.cardIgnoreImageView)
         if(cards[index].isIgnored == true) {
-            if (cardImage != null) {
-                cardImage.setImageResource(R.drawable.ic_baseline_ignore_24)
-            }
+            cardImage?.setImageResource(R.drawable.ic_baseline_ignore_24)
         }
         else if (view?.findViewById<TextView>(R.id.cardTextView)?.text == cards[index].question) {
             cardImage?.setImageResource(R.drawable.ic_question_mark)
