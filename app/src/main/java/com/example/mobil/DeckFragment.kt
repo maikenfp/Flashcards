@@ -160,6 +160,16 @@ class DeckFragment : Fragment() {
         })
     }
 
+    override fun onResume() {
+        super.onResume()
+        cardsAdapter.startListening()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        cardsAdapter.stopListening()
+    }
+
     companion object {
         /**
          * Use this factory method to create a new instance of

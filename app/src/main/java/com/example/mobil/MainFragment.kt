@@ -52,8 +52,6 @@ class MainFragment : Fragment() {
         decksRecycler.adapter = decksAdapter
         decksRecycler.layoutManager = LinearLayoutManager(context)
 
-        eventChangeListener(decksAdapter)
-
         //Add Deck
         val addDeckBtn = view.findViewById<Button>(R.id.addDeckButton)
         addDeckBtn.setOnClickListener {
@@ -97,30 +95,6 @@ class MainFragment : Fragment() {
         }
         addDeckDialog.create()
         addDeckDialog.show()
-    }
-
-    private fun eventChangeListener(adapter: DecksAdapter) {
-        database = FirebaseFirestore.getInstance()
-        database.collection("Decks").
-        addSnapshotListener(object : EventListener<QuerySnapshot> {
-            override fun onEvent(
-                value: QuerySnapshot?,
-                error: FirebaseFirestoreException?
-            ) {
-                if(error != null){
-                    Log.e("Firestore Error", error.message.toString())
-                    return
-                }
-
-                for(dc : DocumentChange in value?.documentChanges!!){
-                    if(dc.type == DocumentChange.Type.ADDED){
-                        decks.add(dc.document.toObject(Deck::class.java))
-                    }
-                }
-
-                adapter.notifyDataSetChanged()
-            }
-        })
     }
 
     override fun onResume() {
