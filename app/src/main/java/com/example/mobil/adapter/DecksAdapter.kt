@@ -37,18 +37,16 @@ class DecksAdapter(val context: MainActivity, query : com.google.firebase.firest
 
     inner class ViewHolder(itemView : View, listener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
 
-        var menu : ImageView = itemView.findViewById(R.id.hamburger_menu)
-        val textItem : TextView = itemView.findViewById(R.id.deckTitle)
+        private var menu : ImageView = itemView.findViewById(R.id.hamburger_menu)
+        private val deckTitle : TextView = itemView.findViewById(R.id.deckTitle)
 
         fun bind(snapshot: DocumentSnapshot) {
             val deck: Deck? = snapshot.toObject(Deck::class.java)
-            textItem.text = deck?.title
+            deckTitle.text = deck?.title
         }
 
         init {
-            itemView.setOnClickListener {
-                listener.onItemClick(adapterPosition)
-            }
+            itemView.setOnClickListener { listener.onItemClick(adapterPosition) }
             menu.setOnClickListener{ popupMenu(menu) }
         }
 
@@ -68,12 +66,10 @@ class DecksAdapter(val context: MainActivity, query : com.google.firebase.firest
 
                         addDialog.setPositiveButton("Ok"){
                                 dialog,_->
-                            Log.e("HELLO", position.toString())
-                            val title = deckName.text.toString()
+                            val addedDeckName = deckName.text.toString()
                             if (position != null) {
-                                db.collection("Decks").document(position.id).update("title", title)
+                                db.collection("Decks").document(position.id).update("title", addedDeckName)
                             }
-                            notifyDataSetChanged()
                             dialog.dismiss()
                         }
                         addDialog.setNegativeButton("Cancel"){
@@ -85,14 +81,13 @@ class DecksAdapter(val context: MainActivity, query : com.google.firebase.firest
                         true
                     }
                     R.id.deleteDeck->{
-                        AlertDialog.Builder(view.context).setTitle("Delete").setIcon(R.drawable.ic_warning).setMessage("Are you sure you want to delete this deck?")
+                        AlertDialog.Builder(view.context).setTitle("Delete").setIcon(R.drawable.ic_warning)
+                            .setMessage("Are you sure you want to delete this deck? This can not be undone.")
                             .setPositiveButton("Yes"){
                                     dialog,_->
-                                //Må finne ut hvordan koble til riktig dokument onclick
                                 if (position != null) {
                                     db.collection("Decks").document(position.id).delete()
                                 }
-                                notifyDataSetChanged()
                                 dialog.dismiss()
                             }
                         .setNegativeButton("Cancel"){
