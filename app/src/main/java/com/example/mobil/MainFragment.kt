@@ -85,7 +85,6 @@ class MainFragment : Fragment() {
             val deckName = addTxt.text.toString()
             val deck = hashMapOf(
                 "title" to deckName
-                //"cards" to cardList
             )
             database.collection("Decks").document(deckID).set(deck)
             decksAdapter.notifyDataSetChanged()

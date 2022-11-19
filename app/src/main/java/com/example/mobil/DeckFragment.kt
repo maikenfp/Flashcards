@@ -111,15 +111,7 @@ class DeckFragment : Fragment() {
 
         // Shuffle button
         shuffleBtn.setOnClickListener {
-            if (shuffle) {
-                shuffle = false
-            }
-            else if (!shuffle) {
-                shuffle = true
-            }
-            else {
-                Log.e("Shufflebutton Error", "Idiotsikkert er ikke sikkert nok")
-            }
+            shuffle = !shuffle
         }
 
         //Go to Edit
@@ -166,6 +158,16 @@ class DeckFragment : Fragment() {
                 adapter.notifyDataSetChanged()
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cardsAdapter.startListening()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        cardsAdapter.stopListening()
     }
 
     companion object {

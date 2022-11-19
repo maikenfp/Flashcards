@@ -31,15 +31,15 @@ abstract class FirestoreAdapter<VH : RecyclerView.ViewHolder>(private val query:
         exception: FirebaseFirestoreException?
     ) {
         if (exception != null) {
-            Log.e("onEvent:error", exception.toString())
+            Log.e("ErrorInFirestoreAdapter", exception.toString())
             return
         }
 
-        for (change in documentSnapshots!!.documentChanges) {
-            when (change.type) {
-                DocumentChange.Type.ADDED -> onDocumentAdded(change)
-                DocumentChange.Type.MODIFIED -> onDocumentModified(change)
-                DocumentChange.Type.REMOVED -> onDocumentRemoved(change)
+        for (document in documentSnapshots!!.documentChanges) {
+            when (document.type) {
+                DocumentChange.Type.ADDED -> onDocumentAdded(document)
+                DocumentChange.Type.MODIFIED -> onDocumentModified(document)
+                DocumentChange.Type.REMOVED -> onDocumentRemoved(document)
             }
         }
     }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/cardIgnore"
+        android:title="Ignore" />
+    <item
+        android:id="@+id/cardEdit"
+        android:title="Edit" />
+    <item
+        android:id="@+id/cardDelete"
+        android:title="Delete" />
+</menu>
