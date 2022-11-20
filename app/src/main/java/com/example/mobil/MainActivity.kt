@@ -1,17 +1,18 @@
 package com.example.mobil
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.fragment.NavHostFragment
 import com.example.mobil.databinding.ActivityMainBinding
-import androidx.appcompat.widget.Toolbar
-import androidx.navigation.NavController
-import androidx.navigation.ui.setupActionBarWithNavController
+import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mainBinding : ActivityMainBinding
-    private lateinit var navController: NavController
+    private lateinit var firebaseAuth : FirebaseAuth
+    private var database : FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -20,26 +21,47 @@ class MainActivity : AppCompatActivity() {
         val view = mainBinding.root
         setContentView(view)
 
-        findViewById<Toolbar>(R.id.main_toolbar)?.let { toolbar: Toolbar ->
-            setSupportActionBar(toolbar)
-            title = "My Decks"
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        mainBinding.switchSignInButtonSignIn.setOnClickListener {
+            val intent = Intent(this, SignInActivity::class.java)
+            startActivity(intent)
         }
 
-        getController()
-        setupActionBarWithNavController(navController)
-    }
+        mainBinding.signUpButton.setOnClickListener {
+            val email = mainBinding.email.text.toString()
+            val pass = mainBinding.password.text.toString()
+            val confirmPass = mainBinding.repeatPassword.text.toString()
 
-    override fun onSupportNavigateUp(): Boolean {
-        getController()
-        return navController.navigateUp() || super.onSupportNavigateUp()
-    }
+            if (email.isNotEmpty() && pass.isNotEmpty() && confirmPass.isNotEmpty()) {
+                if (pass == confirmPass) {
 
-    private fun getController() {
-        // Retrieve NavController from the NavHostFragment
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.main_fragment_container) as NavHostFragment
-        navController = navHostFragment.navController
-    }
+                    firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener {
+                        if (it.isSuccessful) {
 
+                            val user = hashMapOf(
+                                "userID" to firebaseAuth.currentUser?.uid,
+                                "email" to email
+                            )
+                            database.collection("Users").add(user)
+
+                            val intent = Intent(this, FlashcardContainer::class.java)
+                            startActivity(intent)
+                        }
+                        else {
+                            Toast.makeText(this, "Email is not correct or already exists", Toast.LENGTH_SHORT).show()
+
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "Passwords are not matching", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Empty fields are not allowed", Toast.LENGTH_SHORT).show()
+
+            }
+        }
+    }
 }
 
 
