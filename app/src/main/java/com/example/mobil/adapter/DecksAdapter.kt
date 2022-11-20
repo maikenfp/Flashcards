@@ -1,6 +1,5 @@
 package com.example.mobil.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -101,7 +100,6 @@ class DecksAdapter(val context: MainActivity, query : com.google.firebase.firest
                     else -> true
                 }
             }
-
             popupMenu.show()
         }
     }

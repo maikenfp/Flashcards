@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.adapter.DecksAdapter
@@ -64,7 +65,8 @@ class MainFragment : Fragment() {
             override fun onItemClick(position: Int) {
                 val currentTitle = decks[position].title.toString()
                 val currentId = database.collection("Decks").document(decks[position].docId.toString()).id
-                (activity as MainActivity).navigateToFragment("toCards", currentId, currentTitle)
+                val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(currentId, currentTitle)
+                findNavController().navigate(directions)
 
                 Log.e("NAVIGATE TO DECKID: ", currentId)
                 Log.e("NAVIGATE TO DECKTITLE: ", currentTitle)

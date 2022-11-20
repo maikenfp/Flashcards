@@ -6,12 +6,7 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.cardview.widget.CardView
-import androidx.core.view.isVisible
-import androidx.core.view.iterator
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.EditAdapter
@@ -30,9 +25,9 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class EditFragment : Fragment() {
-    //testing ********************
+
+    // NAV ARGS
     private val args: EditFragmentArgs by navArgs()
-    //testing ********************
 
     private var _editBinding: FragmentEditBinding? = null
     private val editBinding get() = _editBinding!!
@@ -40,10 +35,12 @@ class EditFragment : Fragment() {
     private var cards = ArrayList<Card>()
     private lateinit var database : FirebaseFirestore
 
+    private val editAdapter = EditAdapter(context = MainActivity(), cards)
+    private val selected = editAdapter.selectedCards
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-
         }
     }
 
@@ -56,11 +53,7 @@ class EditFragment : Fragment() {
         // Adapter & Recycler
         val cardsRecycler = editBinding.cardRecycler
         cardsRecycler.layoutManager = LinearLayoutManager(context)
-
-        val editAdapter = EditAdapter(context = MainActivity(), cards)
         cardsRecycler.adapter = editAdapter
-
-        val selected = editAdapter.selectedCards
 
         eventChangeListener(editAdapter)
 
@@ -70,54 +63,61 @@ class EditFragment : Fragment() {
 
         // Delete button
         deleteBtn.setOnClickListener {
-            val inflater = LayoutInflater.from(context).inflate(R.layout.delete_card, null)
-
-            val deleteDialog = AlertDialog.Builder(context)
-            deleteDialog.setView(inflater)
-
-            deleteDialog.setPositiveButton("Delete") {
-                    dialog,_->
-                for (card in selected){
-                    database.collection("Decks")
-                        .document(args.deckId.toString())
-                        .collection("cards")
-                        .document(card.docId.toString())
-                        .delete()
-                    editAdapter.notifyDataSetChanged()
-                }
-                dialog.dismiss()
-                (activity as MainActivity).onSupportNavigateUp()
-            }
-
-            deleteDialog.setNegativeButton("Cancel"){
-                    dialog,_->
-                dialog.dismiss()
-            }
-            deleteDialog.create()
-            deleteDialog.show()
+            deleteCards()
         }
 
         // Ignore button
         ignoreBtn.setOnClickListener {
-
-                for (card in selected){
-                    Log.e("SELECTED CARD", card.toString())
-                    var ignored = card.isIgnored
-                    ignored = !ignored!!
-                    val cardHash = hashMapOf(
-                        "question" to card.question,
-                        "answer" to card.answer,
-                        "isIgnored" to ignored
-                    )
-                    database.collection("Decks")
-                        .document(args.deckId.toString())
-                        .collection("cards")
-                        .document(card.docId.toString())
-                        .set(cardHash)
-                }
-                (activity as MainActivity).onSupportNavigateUp()
-            }
+            ignoreCards()
+        }
         return editBinding.root
+    }
+
+    private fun deleteCards() {
+        val inflater = LayoutInflater.from(context).inflate(R.layout.delete_card, null)
+
+        val deleteDialog = AlertDialog.Builder(context)
+        deleteDialog.setView(inflater)
+
+        deleteDialog.setPositiveButton("Delete") {
+                dialog,_->
+            for (card in selected){
+                database.collection("Decks")
+                    .document(args.deckId.toString())
+                    .collection("cards")
+                    .document(card.docId.toString())
+                    .delete()
+                editAdapter.notifyDataSetChanged()
+            }
+            dialog.dismiss()
+            (activity as MainActivity).onSupportNavigateUp()
+        }
+
+        deleteDialog.setNegativeButton("Cancel"){
+                dialog,_->
+            dialog.dismiss()
+        }
+        deleteDialog.create()
+        deleteDialog.show()
+    }
+
+    private fun ignoreCards() {
+        for (card in selected){
+            Log.e("SELECTED CARD", card.toString())
+            var ignored = card.isIgnored
+            ignored = !ignored!!
+            val cardHash = hashMapOf(
+                "question" to card.question,
+                "answer" to card.answer,
+                "isIgnored" to ignored
+            )
+            database.collection("Decks")
+                .document(args.deckId.toString())
+                .collection("cards")
+                .document(card.docId.toString())
+                .set(cardHash)
+        }
+        (activity as MainActivity).onSupportNavigateUp()
     }
 
     private fun eventChangeListener(adapter: EditAdapter) {

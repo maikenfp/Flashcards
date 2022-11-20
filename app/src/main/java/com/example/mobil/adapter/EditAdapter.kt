@@ -43,15 +43,15 @@ class EditAdapter(val context: MainActivity, private val cards: ArrayList<Card>)
         }
 
         viewHolder.itemView.findViewById<CardView>(R.id.card_item_box).setOnClickListener {
-            // if the user is in multi-select mode, add it to the multi select list
+            // if the user is in multi-select mode, add it to the selected cards list
             selectCard(viewHolder, currentCard)
         }
     }
 
-    // helper function that adds/removes an item to the list depending on the app's state
+    // helper function that adds/removes a card to the array depending on the app's state
     private fun selectCard(holder: CardsViewHolder, card: Card) {
         val selectText = holder.itemView.findViewById<TextView>(R.id.selectText)
-        // If the "selectedCards" list contains the card, remove from list and set Invisible
+        // If the "selectedCards" zarray contains the card, remove from array and set Invisible
         if (selectedCards.contains(card)) {
             selectedCards.remove(card)
             selectText.visibility = View.INVISIBLE

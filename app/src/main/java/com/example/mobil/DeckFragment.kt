@@ -4,17 +4,15 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.view.View.*
 import androidx.fragment.app.Fragment
 import android.widget.EditText
-import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.CardsAdapter
 import com.example.mobil.databinding.FragmentDeckBinding
 import com.example.mobil.model.Card
 import com.google.firebase.firestore.*
-import kotlin.random.Random
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -74,39 +72,7 @@ class DeckFragment : Fragment() {
 
         // ADD CARD
         addCardBtn.setOnClickListener {
-            val inflater = LayoutInflater.from(context).inflate(R.layout.add_card, null)
-            val addQuestion = inflater.findViewById<EditText>(R.id.enter_question)
-            val addAnswer = inflater.findViewById<EditText>(R.id.enter_answer)
-
-            val addCardDialog = AlertDialog.Builder(context)
-            addCardDialog.setView(inflater)
-
-            addCardDialog.setPositiveButton("Save") {
-                    dialog,_->
-                val cardID = System.currentTimeMillis().toString()
-                val question = addQuestion.text.toString()
-                val answer = addAnswer.text.toString()
-                val card = hashMapOf(
-                    "question" to question,
-                    "answer" to answer,
-                    "isIgnored" to false
-                )
-                database.collection("Decks")
-                    .document(args.deckId.toString())
-                    .collection("cards")
-                    .document(cardID)
-                    .set(card)
-
-                cardsAdapter.notifyDataSetChanged()
-                dialog.dismiss()
-            }
-
-            addCardDialog.setNegativeButton("Cancel") {
-                    dialog,_->
-                dialog.dismiss()
-            }
-            addCardDialog.create()
-            addCardDialog.show()
+            addCard()
         }
 
         // Shuffle button
@@ -114,12 +80,21 @@ class DeckFragment : Fragment() {
             shuffle = !shuffle
         }
 
-        //Go to Edit
+        //Go to Edit by edit button
+        editBtn.setOnClickListener {
+            val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
+            val currentTitle = args.deckTitle.toString()
+            val directions = DeckFragmentDirections.actionDeckFragmentToEditFragment(currentDeckId, currentTitle)
+            findNavController().navigate(directions)
+        }
+
+        //Go to Edit by longclick
         cardsAdapter.setOnLongClickListener(object : CardsAdapter.OnLongClickListener{
             override fun onLongClick(position: Int) {
                 val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
                 val currentTitle = args.deckTitle.toString()
-                (activity as MainActivity).navigateToFragment("toEdit", currentDeckId, currentTitle)
+                val directions = DeckFragmentDirections.actionDeckFragmentToEditFragment(currentDeckId, currentTitle)
+                findNavController().navigate(directions)
             }
         })
 
@@ -129,11 +104,48 @@ class DeckFragment : Fragment() {
                 val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
                 val currentCardId = database.collection("Decks").document(args.deckId.toString()).collection("cards").document(cards[position].docId.toString()).id
                 val currentDeckTitle = args.deckTitle.toString()
-                (activity as MainActivity).navigateToCardFragment(currentDeckId, currentCardId, currentDeckTitle, shuffle)
+                val directions = DeckFragmentDirections.actionDeckFragmentToCardFragment(currentDeckId, currentCardId, currentDeckTitle, shuffle)
+                findNavController().navigate(directions)
 
                 Log.e("NAVIGATE TO CARD ID: ", currentCardId)
             }
         })
+    }
+
+    private fun addCard() {
+        val inflater = LayoutInflater.from(context).inflate(R.layout.add_card, null)
+        val addQuestion = inflater.findViewById<EditText>(R.id.enter_question)
+        val addAnswer = inflater.findViewById<EditText>(R.id.enter_answer)
+
+        val addCardDialog = AlertDialog.Builder(context)
+        addCardDialog.setView(inflater)
+
+        addCardDialog.setPositiveButton("Save") {
+                dialog,_->
+            val cardID = System.currentTimeMillis().toString()
+            val question = addQuestion.text.toString()
+            val answer = addAnswer.text.toString()
+            val card = hashMapOf(
+                "question" to question,
+                "answer" to answer,
+                "isIgnored" to false
+            )
+            database.collection("Decks")
+                .document(args.deckId.toString())
+                .collection("cards")
+                .document(cardID)
+                .set(card)
+
+            cardsAdapter.notifyDataSetChanged()
+            dialog.dismiss()
+        }
+
+        addCardDialog.setNegativeButton("Cancel") {
+                dialog,_->
+            dialog.dismiss()
+        }
+        addCardDialog.create()
+        addCardDialog.show()
     }
 
     private fun eventChangeListener(adapter: CardsAdapter) {

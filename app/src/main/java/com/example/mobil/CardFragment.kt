@@ -17,7 +17,7 @@ class CardFragment : Fragment() {
     private var cards = ArrayList<Card>()
     private lateinit var database: FirebaseFirestore
     private val cardText = view?.findViewById<TextView>(R.id.cardTextView)
-    var index = 0
+    private var index = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +32,7 @@ class CardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        // Loads non-ignored cards into a local navigatable ArrayList
+        // Loads non-ignored cards into a local navigable ArrayList
         loadDeck()
 
         // Previous Card button
@@ -68,9 +68,8 @@ class CardFragment : Fragment() {
             }
         }
 
-        var menu : ImageView = view.findViewById(R.id.cardHamburgerMenu)
+        val menu : ImageView = view.findViewById(R.id.cardHamburgerMenu)
         menu.setOnClickListener{ popupMenu(menu) }
-
     }
 
     private fun popupMenu(menuView : View) {
@@ -86,7 +85,6 @@ class CardFragment : Fragment() {
                     var ignored = cards[index].isIgnored
 
                     ignored = !ignored!!
-
 
                     val card = hashMapOf(
                         "question" to cards[index].question,
@@ -110,7 +108,6 @@ class CardFragment : Fragment() {
                     }
                     else {
                         cards[index].isIgnored = ignored
-
                     }
                     showCard(true)
                     true
@@ -142,7 +139,6 @@ class CardFragment : Fragment() {
                             .collection("cards")
                             .document(cardID.toString())
                             .set(card)
-
 
                         cards[index] = Card(question, answer, cards[index].isIgnored, cardID)
                         showCard(true)
@@ -198,8 +194,6 @@ class CardFragment : Fragment() {
         popupMenu.show()
     }
 
-
-
     //Loads deck from firestore
     private fun loadDeck() {
         database = FirebaseFirestore.getInstance()
@@ -230,7 +224,7 @@ class CardFragment : Fragment() {
                         cardIndex++
                     }
                 }
-                if (argsCard.shuffle == true) {
+                if (argsCard.shuffle) {
                     cards.shuffle()
                     cardIndex = 0
                     for (card in cards) {
@@ -249,7 +243,7 @@ class CardFragment : Fragment() {
     }
 
     private fun showCard(isQuestion: Boolean) {
-        if (isQuestion == true){
+        if (isQuestion){
             view?.findViewById<TextView>(R.id.cardTextView)?.text = cards[index].question
         }
         else {
@@ -257,7 +251,7 @@ class CardFragment : Fragment() {
         }
 
         // Checks if card is ignored, to determine if we are displaying the "ignored" icon
-        var cardImage = view?.findViewById<ImageView>(R.id.cardIgnoreImageView)
+        val cardImage = view?.findViewById<ImageView>(R.id.cardIgnoreImageView)
         if(cards[index].isIgnored == true) {
             cardImage?.setImageResource(R.drawable.ic_baseline_ignore_24)
         }
