@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.adapter.DecksAdapter
 import com.example.mobil.model.Deck
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -27,6 +28,8 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class MainFragment : Fragment() {
+
+    private var firebaseAuth : FirebaseAuth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +88,9 @@ class MainFragment : Fragment() {
                 dialog,_->
             val deckID = System.currentTimeMillis().toString()
             val deckName = addTxt.text.toString()
+            val userID = firebaseAuth.currentUser?.uid
             val deck = hashMapOf(
+                "userID" to userID,
                 "title" to deckName
             )
             database.collection("Decks").document(deckID).set(deck)

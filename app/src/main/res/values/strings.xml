@@ -29,6 +29,13 @@
 
 
     <string name="card_fragment">Question</string>
+    <string name="sign_up">CREATE ACCOUNT</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="email_hint">Type in Email address</string>
+    <string name="password_hint">Type in password</string>
+    <string name="repeat_password_hint">Repeat password</string>
+    <string name="already_registered_button">Already registered? Sign in here!</string>
+    <string name="not_registered_button">Not registered? Sign up here!</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="ignore_cards">Ignore Cards</string>
