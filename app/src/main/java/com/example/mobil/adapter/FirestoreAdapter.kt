@@ -22,7 +22,6 @@ abstract class FirestoreAdapter<VH : RecyclerView.ViewHolder>(private val query:
             registration!!.remove()
             registration = null
         }
-
         snapshots.clear()
     }
 
