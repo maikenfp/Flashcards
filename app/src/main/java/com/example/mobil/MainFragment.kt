@@ -48,7 +48,6 @@ class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_main, container, false)
-
         return view
     }
 
@@ -74,6 +73,7 @@ class MainFragment : Fragment() {
         val addDeckBtn = view.findViewById<Button>(R.id.addDeckButton)
         addDeckBtn.setOnClickListener {
             addDeck()
+
         }
 
         decksAdapter.setOnItemClickListener(object : DecksAdapter.OnItemClickListener {
@@ -124,7 +124,7 @@ class MainFragment : Fragment() {
 
     private fun eventChangeListener(adapter: DecksAdapter) {
         database = FirebaseFirestore.getInstance()
-        database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser.uid).
+        database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid).
         addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
                 value: QuerySnapshot?,
