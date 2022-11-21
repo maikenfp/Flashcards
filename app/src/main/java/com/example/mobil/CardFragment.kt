@@ -16,7 +16,6 @@ class CardFragment : Fragment() {
     private val argsCard: CardFragmentArgs by navArgs()
     private var cards = ArrayList<Card>()
     private lateinit var database: FirebaseFirestore
-    private val cardText = view?.findViewById<TextView>(R.id.cardTextView)
     private var index = 0
 
     override fun onCreateView(
@@ -79,7 +78,6 @@ class CardFragment : Fragment() {
         popupMenu.setOnMenuItemClickListener {
             when(it.itemId){
                 R.id.cardIgnore->{
-                    Log.e("CARD HAMBURGER MENU","IGNORE")
                     // guaranteed
                     val cardID = cards[index].docId
                     var ignored = cards[index].isIgnored
@@ -97,7 +95,7 @@ class CardFragment : Fragment() {
                         .document(cardID.toString())
                         .set(card)
 
-                    Log.e("IGNORED", ignored.toString())
+
                     if (ignored) {
                         cards.removeAt(index)
                         if (index == 0) {
@@ -113,7 +111,7 @@ class CardFragment : Fragment() {
                     true
                 }
                 R.id.cardEdit->{
-                    Log.e("CARD HAMBURGER MENU","EDIT")
+
                     val inflater = LayoutInflater.from(context).inflate(R.layout.add_card, null)
                     val addQuestion = inflater.findViewById<EditText>(R.id.enter_question)
                     val addAnswer = inflater.findViewById<EditText>(R.id.enter_answer)
@@ -155,7 +153,6 @@ class CardFragment : Fragment() {
                     true
                 }
                 R.id.cardDelete->{
-                    Log.e("CARD HAMBURGER MENU","DELETE")
                     val inflater = LayoutInflater.from(context).inflate(R.layout.delete_card, null)
 
                     val deleteDialog = android.app.AlertDialog.Builder(context)
@@ -164,7 +161,6 @@ class CardFragment : Fragment() {
                     deleteDialog.setPositiveButton("Delete") {
                             dialog,_->
 
-                        Log.e("DELETING", cards[index].docId.toString())
                         database.collection("Decks")
                             .document(argsCard.deckId.toString())
                             .collection("cards")
@@ -197,7 +193,6 @@ class CardFragment : Fragment() {
     //Loads deck from firestore
     private fun loadDeck() {
         database = FirebaseFirestore.getInstance()
-        Log.e("Load Decks LOG", database.toString())
         cards = ArrayList<Card>()
         var cardIndex = 0
         var cardQuestion = ""
@@ -205,7 +200,6 @@ class CardFragment : Fragment() {
         database.collection("Decks").document(argsCard.deckId.toString()).collection("cards").get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-                    Log.d("TAG", "${document.id} => ${document.data}")
 
                     if (document.id == argsCard.cardId) {
                         index = cardIndex
@@ -228,7 +222,6 @@ class CardFragment : Fragment() {
                     cards.shuffle()
                     cardIndex = 0
                     for (card in cards) {
-                        Log.e("Card ID", card.docId.toString())
                         if (card.question == cardQuestion) {
                             index = cardIndex
                         }

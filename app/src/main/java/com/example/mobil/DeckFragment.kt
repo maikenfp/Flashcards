@@ -48,7 +48,7 @@ class DeckFragment : Fragment() {
     }
 
 
-    val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser.uid)
+    val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
     val cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
 
     override fun onCreateView(
@@ -178,12 +178,14 @@ class DeckFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         cardsAdapter.startListening()
     }
 
     override fun onPause() {
         super.onPause()
         cardsAdapter.stopListening()
+        cards = ArrayList<Card>()
     }
 
     companion object {
