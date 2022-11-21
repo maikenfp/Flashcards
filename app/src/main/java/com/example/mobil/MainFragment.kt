@@ -1,7 +1,6 @@
 package com.example.mobil
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -78,14 +77,19 @@ class MainFragment : Fragment() {
         }
 
         decksAdapter.setOnItemClickListener(object : DecksAdapter.OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                val currentTitle = decks[position].title.toString()
-                val currentId = database.collection("Decks").document(decks[position].docId.toString()).id
-                val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(currentId, currentTitle)
+            override fun onItemClick(position: DocumentSnapshot?) {
+                val currentTitle = position?.get("title")
+                val currentId = position?.id?.let { database.collection("Decks").document(it).id }
+                val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(currentId,
+                    currentTitle as String??)
                 findNavController().navigate(directions)
 
-                Log.e("NAVIGATE TO DECKID: ", currentId)
-                Log.e("NAVIGATE TO DECKTITLE: ", currentTitle)
+                if (currentId != null) {
+                    Log.e("NAVIGATE TO DECKID: ", currentId)
+                }
+                if (currentTitle != null) {
+                    Log.e("NAVIGATE TO DECKTITLE: ", currentTitle)
+                }
             }
         })
     }
