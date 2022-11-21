@@ -7,8 +7,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mobil.MainActivity
 import com.example.mobil.R
 import com.example.mobil.model.Card
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.ktx.toObject
 
-class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>, query : com.google.firebase.firestore.Query) : FirestoreAdapter<CardsAdapter.CardsViewHolder>(query) {
+class CardsAdapter(val context: MainActivity, query : com.google.firebase.firestore.Query) : FirestoreAdapter<CardsAdapter.CardsViewHolder>(query) {
 
     private lateinit var listener : OnCardClickListener
     private lateinit var longListener : OnLongClickListener
@@ -35,26 +37,24 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
     }
 
     override fun onBindViewHolder(viewHolder: CardsViewHolder, position: Int) {
-        val currentCard = cards[position]
-        viewHolder.textItem.text = currentCard.question
-        if (currentCard.isIgnored == true) {
-            viewHolder.imageItem.visibility = View.VISIBLE
-        }
-        else{
-            viewHolder.imageItem.visibility = View.INVISIBLE
-        }
-    }
-
-    override fun getItemCount(): Int {
-        return cards.size
+        getSnapshot(position)?.let { snapshot  -> viewHolder.bind(snapshot) }
     }
 
     inner class CardsViewHolder (cardView: View, listener: OnCardClickListener, longListener: OnLongClickListener) : RecyclerView.ViewHolder(cardView) {
         val textItem: TextView = cardView.findViewById(R.id.cardTitle)
         val imageItem: ImageView = cardView.findViewById(R.id.cardImage)
 
-        fun bind(cardItem: Card){
-            textItem.text = cardItem.toString()
+        fun bind(snapshot: DocumentSnapshot) {
+            val card: Card? = snapshot.toObject(Card::class.java)
+            textItem.text = card?.question
+
+            textItem.text = card?.question
+            if (card?.isIgnored == true) {
+                imageItem.visibility = View.VISIBLE
+            } else {
+                imageItem.visibility = View.INVISIBLE
+
+            }
         }
 
         init {
@@ -67,6 +67,4 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
             }
         }
     }
-
-
 }

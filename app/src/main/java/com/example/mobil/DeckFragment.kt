@@ -47,9 +47,9 @@ class DeckFragment : Fragment() {
         Log.e("HELLO", args.deckId.toString())
     }
 
-
     val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser.uid)
     val cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
