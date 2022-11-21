@@ -120,7 +120,7 @@ class MainFragment : Fragment() {
 
     private fun eventChangeListener(adapter: DecksAdapter) {
         database = FirebaseFirestore.getInstance()
-        database.collection("Decks").
+        database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser.uid).
         addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
                 value: QuerySnapshot?,
