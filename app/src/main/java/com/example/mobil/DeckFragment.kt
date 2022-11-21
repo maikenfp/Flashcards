@@ -44,8 +44,8 @@ class DeckFragment : Fragment() {
         }
     }
 
-    val query : Query = database.collection("Decks")
-    val cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
+    val query : Query = database.collection("Decks").document(args.deckId.toString()).collection("cards")
+    val cardsAdapter = CardsAdapter(context = MainActivity(), query)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
