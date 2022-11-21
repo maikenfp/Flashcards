@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.CardsAdapter
 import com.example.mobil.databinding.FragmentDeckBinding
 import com.example.mobil.model.Card
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -35,6 +36,7 @@ class DeckFragment : Fragment() {
 
     private var cards = ArrayList<Card>()
     private var database : FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private var shuffle = false
 
@@ -42,9 +44,11 @@ class DeckFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
+        Log.e("HELLO", args.deckId.toString())
     }
 
-    val query : Query = database.collection("Decks")
+
+    val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser.uid)
     val cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
 
     override fun onCreateView(
