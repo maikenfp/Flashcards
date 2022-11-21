@@ -18,7 +18,7 @@ class DecksAdapter(val context: MainActivity, query : com.google.firebase.firest
     private lateinit var listener : OnItemClickListener
 
     interface OnItemClickListener{
-        fun onItemClick(position: Int)
+        fun onItemClick(position: DocumentSnapshot?)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener){
@@ -45,7 +45,7 @@ class DecksAdapter(val context: MainActivity, query : com.google.firebase.firest
         }
 
         init {
-            itemView.setOnClickListener { listener.onItemClick(adapterPosition) }
+            itemView.setOnClickListener { listener.onItemClick(getSnapshot(adapterPosition)) }
             menu.setOnClickListener{ popupMenu(menu) }
         }
 
