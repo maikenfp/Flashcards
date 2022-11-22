@@ -90,7 +90,7 @@ class EditFragment : Fragment() {
                 editAdapter.notifyDataSetChanged()
             }
             dialog.dismiss()
-            (activity as MainActivity).onSupportNavigateUp()
+            (activity as FlashcardContainer).onSupportNavigateUp()
         }
 
         deleteDialog.setNegativeButton("Cancel"){
@@ -117,7 +117,7 @@ class EditFragment : Fragment() {
                 .document(card.docId.toString())
                 .set(cardHash)
         }
-        (activity as MainActivity).onSupportNavigateUp()
+        (activity as FlashcardContainer).onSupportNavigateUp()
     }
 
     private fun eventChangeListener(adapter: EditAdapter) {
