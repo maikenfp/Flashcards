@@ -43,7 +43,6 @@ class CardFragment : Fragment() {
                 index -= 1
             }
             showCard(true)
-
         }
 
         // Next Card Button
@@ -94,7 +93,6 @@ class CardFragment : Fragment() {
                         .collection("cards")
                         .document(cardID.toString())
                         .set(card)
-
 
                     if (ignored) {
                         cards.removeAt(index)
@@ -205,7 +203,6 @@ class CardFragment : Fragment() {
                         index = cardIndex
                         cardQuestion = document.data.getValue("question").toString()
                     }
-
                     if (document.data.getValue("isIgnored") == false || document.id == argsCard.cardId) {
                         cards.add(
                             Card(
@@ -255,6 +252,5 @@ class CardFragment : Fragment() {
             cardImage?.setImageResource(R.drawable.ic_exclamation_mark)
         }
     }
-
 }
 

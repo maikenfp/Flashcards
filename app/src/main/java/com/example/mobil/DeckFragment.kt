@@ -1,11 +1,14 @@
 package com.example.mobil
 
 import android.app.AlertDialog
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.EditText
+import androidx.core.content.ContextCompat
+import androidx.core.widget.TextViewCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,11 +28,10 @@ private const val ARG_PARAM2 = "param2"
  * Use the [DeckFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
 class DeckFragment : Fragment() {
 
-    //testing ********************
     private val args: DeckFragmentArgs by navArgs()
-    //testing ********************
 
     private var _deckBinding: FragmentDeckBinding? = null
     private val deckBinding get() = _deckBinding!!
@@ -47,20 +49,18 @@ class DeckFragment : Fragment() {
         Log.e("HELLO", args.deckId.toString())
     }
 
+    private val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
+    private val cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
 
-    val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
-    val cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _deckBinding = FragmentDeckBinding.inflate(layoutInflater)
         return deckBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        shuffle = false
 
         // Adapter & Recycler
         val cardsRecycler = deckBinding.cardRecycler
@@ -82,6 +82,7 @@ class DeckFragment : Fragment() {
         // Shuffle button
         shuffleBtn.setOnClickListener {
             shuffle = !shuffle
+            setIconTint()
         }
 
         //Go to Edit by edit button
@@ -114,6 +115,15 @@ class DeckFragment : Fragment() {
                 Log.e("NAVIGATE TO CARD ID: ", currentCardId)
             }
         })
+    }
+
+    private fun setIconTint() {
+        val btn = deckBinding.shuffleBtn
+        if (shuffle) {
+            TextViewCompat.setCompoundDrawableTintList(btn, ColorStateList.valueOf(context.let { ContextCompat.getColor(requireContext(), R.color.shuffleActive) }) )
+        } else if (!shuffle) {
+            TextViewCompat.setCompoundDrawableTintList(btn, ColorStateList.valueOf(context.let { ContextCompat.getColor(requireContext(), R.color.md_theme_light_background) }) )
+        }
     }
 
     private fun addCard() {
@@ -178,7 +188,6 @@ class DeckFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         cardsAdapter.startListening()
     }
 

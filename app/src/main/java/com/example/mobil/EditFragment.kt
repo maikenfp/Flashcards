@@ -24,6 +24,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [EditFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
 class EditFragment : Fragment() {
 
     // NAV ARGS
@@ -44,10 +45,7 @@ class EditFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _editBinding = FragmentEditBinding.inflate(layoutInflater)
 
         // Adapter & Recycler
@@ -132,7 +130,6 @@ class EditFragment : Fragment() {
                     Log.e("Firestore Error", error.message.toString())
                     return
                 }
-
                 for(dc : DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
                         cards.add(dc.document.toObject(Card::class.java))
@@ -140,7 +137,6 @@ class EditFragment : Fragment() {
                         Log.e("Add Card Error", cards.toString())
                     }
                 }
-
                 adapter.notifyDataSetChanged()
             }
         })
@@ -165,4 +161,5 @@ class EditFragment : Fragment() {
                 }
             }
     }
+
 }

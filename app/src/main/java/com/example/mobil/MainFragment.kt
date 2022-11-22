@@ -29,6 +29,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MainFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
 class MainFragment : Fragment() {
 
     private var firebaseAuth : FirebaseAuth = FirebaseAuth.getInstance()
@@ -42,8 +43,8 @@ class MainFragment : Fragment() {
     private var decks = ArrayList<Deck>()
     private var database : FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
-    val decksAdapter = DecksAdapter(context = MainActivity(), query)
+    private val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
+    private val decksAdapter = DecksAdapter(context = MainActivity(), query)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
