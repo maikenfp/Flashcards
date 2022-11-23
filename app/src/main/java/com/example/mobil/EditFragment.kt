@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mobil.adapter.EditAdapter
@@ -78,7 +77,7 @@ class EditFragment : Fragment() {
                 editAdapter.notifyDataSetChanged()
             }
             dialog.dismiss()
-            findNavController().navigate(EditFragmentDirections.actionEditFragmentToDeckFragment(args.deckId.toString(), args.deckTitle.toString()))
+            (activity as FlashcardContainer).onSupportNavigateUp()
         }
 
         deleteDialog.setNegativeButton("Cancel"){
@@ -105,7 +104,7 @@ class EditFragment : Fragment() {
                 .document(card.docId.toString())
                 .set(cardHash)
         }
-        findNavController().navigate(EditFragmentDirections.actionEditFragmentToDeckFragment(args.deckId.toString(), args.deckTitle.toString()))
+        (activity as FlashcardContainer).onSupportNavigateUp()
     }
 
     private fun eventChangeListener(adapter: EditAdapter) {
