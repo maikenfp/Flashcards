@@ -17,6 +17,7 @@ import com.example.mobil.adapter.DecksAdapter
 import com.example.mobil.model.Deck
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.ktx.firestoreSettings
 import java.lang.Error
 
 // TODO: Rename parameter arguments, choose names that match
@@ -53,6 +54,12 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val settings = firestoreSettings {
+            isPersistenceEnabled = true
+        }
+        database.firestoreSettings = settings
+
         val decksRecycler = view.findViewById<RecyclerView>(R.id.deck_recycler)
         decksRecycler.adapter = decksAdapter
         decksRecycler.layoutManager = LinearLayoutManager(context)
@@ -63,7 +70,6 @@ class MainFragment : Fragment() {
         logout.setOnClickListener{
             try {
                 firebaseAuth.signOut()
-                Log.e("Error in sign out", "HELLOOOOOO")
             } catch (error : Error){
                 Log.e("Error in sign out", error.message.toString())
             }
@@ -84,12 +90,12 @@ class MainFragment : Fragment() {
                     currentTitle as String??)
                 findNavController().navigate(directions)
 
-                if (currentId != null) {
+                /*if (currentId != null) {
                     Log.e("NAVIGATE TO DECKID: ", currentId)
                 }
                 if (currentTitle != null) {
                     Log.e("NAVIGATE TO DECKTITLE: ", currentTitle)
-                }
+                }*/
             }
         })
     }
