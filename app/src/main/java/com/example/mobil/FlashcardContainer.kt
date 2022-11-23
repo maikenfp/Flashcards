@@ -23,7 +23,6 @@ class FlashcardContainer : AppCompatActivity() {
 
         findViewById<Toolbar>(R.id.main_toolbar)?.let { toolbar: Toolbar ->
             setSupportActionBar(toolbar)
-            title = "My Decks"
         }
 
         getController()
