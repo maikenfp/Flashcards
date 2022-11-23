@@ -25,7 +25,6 @@
         android:id="@+id/main_cardView"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        app:cardBackgroundColor="@color/md_theme_light_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -36,9 +35,8 @@
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/main_toolbar"
-                android:layout_width="385dp"
-                android:layout_height="63dp"
-                android:background="@color/md_theme_light_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
                 android:visibility="visible"
@@ -66,6 +64,7 @@
                 app:layout_constraintVertical_bias="0.111" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.cardview.widget.CardView>
 
 
