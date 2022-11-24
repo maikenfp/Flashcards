@@ -17,6 +17,7 @@ import com.example.mobil.databinding.FragmentDeckBinding
 import com.example.mobil.model.Card
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.ktx.snapshots
 
 class DeckFragment : Fragment() {
 
@@ -31,6 +32,7 @@ class DeckFragment : Fragment() {
 
     private var shuffle = false
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -40,6 +42,7 @@ class DeckFragment : Fragment() {
 
     private val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
     private var cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _deckBinding = FragmentDeckBinding.inflate(layoutInflater)
@@ -51,12 +54,13 @@ class DeckFragment : Fragment() {
 
         shuffle = false
 
+        var listener : ListenerRegistration = eventChangeListener(cardsAdapter)
         // Adapter & Recycler
         val cardsRecycler = deckBinding.cardRecycler
         cardsRecycler.layoutManager = LinearLayoutManager(context)
         cardsRecycler.adapter = cardsAdapter
 
-        eventChangeListener(cardsAdapter)
+
 
         //BUTTONS
         val addCardBtn = deckBinding.addCardBtn
@@ -76,6 +80,7 @@ class DeckFragment : Fragment() {
 
         //Go to Edit by edit button
         editBtn.setOnClickListener {
+            listener.remove()
             val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
             val currentTitle = args.deckTitle.toString()
             val directions = DeckFragmentDirections.actionDeckFragmentToEditFragment(currentDeckId, currentTitle)
@@ -85,6 +90,7 @@ class DeckFragment : Fragment() {
         //Go to Edit by longclick
         cardsAdapter.setOnLongClickListener(object : CardsAdapter.OnLongClickListener{
             override fun onLongClick(position: Int) {
+                listener.remove()
                 val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
                 val currentTitle = args.deckTitle.toString()
                 val directions = DeckFragmentDirections.actionDeckFragmentToEditFragment(currentDeckId, currentTitle)
@@ -95,6 +101,7 @@ class DeckFragment : Fragment() {
         // Go to card
         cardsAdapter.setOnCardClickListener(object : CardsAdapter.OnCardClickListener{
             override fun onCardClick(position: Int) {
+                listener.remove()
                 val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
                 val currentCardId = database.collection("Decks").document(args.deckId.toString()).collection("cards").document(cards[position].docId.toString()).id
                 val currentDeckTitle = args.deckTitle.toString()
@@ -151,9 +158,9 @@ class DeckFragment : Fragment() {
         addCardDialog.show()
     }
 
-    private fun eventChangeListener(adapter: CardsAdapter) {
+    private fun eventChangeListener(adapter: CardsAdapter): ListenerRegistration {
         database = FirebaseFirestore.getInstance()
-        database.collection("Decks").document(args.deckId.toString()).collection("cards").
+        return database.collection("Decks").document(args.deckId.toString()).collection("cards").
         addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
                 value: QuerySnapshot?,
@@ -186,5 +193,6 @@ class DeckFragment : Fragment() {
         cardsAdapter.stopListening()
         cards = ArrayList<Card>()
         cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
+
     }
 }
