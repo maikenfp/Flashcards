@@ -46,6 +46,7 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //Able to store data locally offline
         val settings = firestoreSettings {
             isPersistenceEnabled = true
         }
@@ -57,6 +58,7 @@ class MainFragment : Fragment() {
 
         eventChangeListener(decksAdapter)
 
+        //Log out
         val logout = view.findViewById<TextView>(R.id.logOut)
         logout.setOnClickListener{
             try {
@@ -84,13 +86,6 @@ class MainFragment : Fragment() {
                 val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(currentId,
                     currentTitle as String??)
                 findNavController().navigate(directions)
-
-                /*if (currentId != null) {
-                    Log.e("NAVIGATE TO DECKID: ", currentId)
-                }
-                if (currentTitle != null) {
-                    Log.e("NAVIGATE TO DECKTITLE: ", currentTitle)
-                }*/
             }
         })
     }

@@ -18,11 +18,13 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        //Navigate between log in and create user
         binding.switchSignInButtonSignIn.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
 
+        //Sign in button
         binding.signUpButton.setOnClickListener {
             val email = binding.email.text.toString()
             val pass = binding.password.text.toString()
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //Check if user is still logged in
     override fun onStart() {
         super.onStart()
 
