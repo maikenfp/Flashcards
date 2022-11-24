@@ -66,18 +66,21 @@ class CardFragment : Fragment() {
             }
         }
 
+        // Hamburger Menu Button
         val menu : ImageView = view.findViewById(R.id.cardHamburgerMenu)
         menu.setOnClickListener{ popupMenu(menu) }
     }
 
+    // Hamburger Menu
     private fun popupMenu(menuView : View) {
-        //val db = FirebaseFirestore.getInstance()
+
         val popupMenu = PopupMenu(menuView.context, menuView)
         popupMenu.inflate(R.menu.card_hamburger_menu)
         popupMenu.setOnMenuItemClickListener {
             when(it.itemId){
+
+                // Ignore Button Functionality
                 R.id.cardIgnore->{
-                    // guaranteed
                     val cardID = cards[index].docId
                     var ignored = cards[index].isIgnored
 
@@ -108,6 +111,8 @@ class CardFragment : Fragment() {
                     showCard(true)
                     true
                 }
+
+                // Edit Button Functionality
                 R.id.cardEdit->{
 
                     val inflater = LayoutInflater.from(context).inflate(R.layout.add_card, null)
@@ -150,6 +155,8 @@ class CardFragment : Fragment() {
 
                     true
                 }
+
+                // Delete Button Functionality
                 R.id.cardDelete->{
                     val inflater = LayoutInflater.from(context).inflate(R.layout.delete_card, null)
 
@@ -232,6 +239,7 @@ class CardFragment : Fragment() {
             }
     }
 
+    // Shows the correct card and symbol
     private fun showCard(isQuestion: Boolean) {
         if (isQuestion){
             view?.findViewById<TextView>(R.id.cardTextView)?.text = cards[index].question
