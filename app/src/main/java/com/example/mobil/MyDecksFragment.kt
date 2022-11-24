@@ -50,6 +50,7 @@ class MyDecksFragment : Fragment() {
         val settings = firestoreSettings {
             isPersistenceEnabled = true
         }
+
         database.firestoreSettings = settings
 
         val decksRecycler = view.findViewById<RecyclerView>(R.id.deck_recycler)
@@ -142,13 +143,13 @@ class MyDecksFragment : Fragment() {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         decksAdapter.startListening()
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         decksAdapter.stopListening()
     }
 }
