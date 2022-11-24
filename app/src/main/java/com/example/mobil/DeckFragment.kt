@@ -1,11 +1,14 @@
 package com.example.mobil
 
 import android.app.AlertDialog
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.EditText
+import androidx.core.content.ContextCompat
+import androidx.core.widget.TextViewCompat
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,22 +17,11 @@ import com.example.mobil.databinding.FragmentDeckBinding
 import com.example.mobil.model.Card
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.ktx.snapshots
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [DeckFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class DeckFragment : Fragment() {
 
-    //testing ********************
     private val args: DeckFragmentArgs by navArgs()
-    //testing ********************
 
     private var _deckBinding: FragmentDeckBinding? = null
     private val deckBinding get() = _deckBinding!!
@@ -40,6 +32,7 @@ class DeckFragment : Fragment() {
 
     private var shuffle = false
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -47,14 +40,11 @@ class DeckFragment : Fragment() {
         Log.e("HELLO", args.deckId.toString())
     }
 
+    private val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
+    private var cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
 
-    val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
-    val cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _deckBinding = FragmentDeckBinding.inflate(layoutInflater)
         return deckBinding.root
     }
@@ -62,12 +52,15 @@ class DeckFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        shuffle = false
+
+        var listener : ListenerRegistration = eventChangeListener(cardsAdapter)
         // Adapter & Recycler
         val cardsRecycler = deckBinding.cardRecycler
         cardsRecycler.layoutManager = LinearLayoutManager(context)
         cardsRecycler.adapter = cardsAdapter
 
-        eventChangeListener(cardsAdapter)
+
 
         //BUTTONS
         val addCardBtn = deckBinding.addCardBtn
@@ -82,10 +75,12 @@ class DeckFragment : Fragment() {
         // Shuffle button
         shuffleBtn.setOnClickListener {
             shuffle = !shuffle
+            setIconTint()
         }
 
         //Go to Edit by edit button
         editBtn.setOnClickListener {
+            listener.remove()
             val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
             val currentTitle = args.deckTitle.toString()
             val directions = DeckFragmentDirections.actionDeckFragmentToEditFragment(currentDeckId, currentTitle)
@@ -95,6 +90,7 @@ class DeckFragment : Fragment() {
         //Go to Edit by longclick
         cardsAdapter.setOnLongClickListener(object : CardsAdapter.OnLongClickListener{
             override fun onLongClick(position: Int) {
+                listener.remove()
                 val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
                 val currentTitle = args.deckTitle.toString()
                 val directions = DeckFragmentDirections.actionDeckFragmentToEditFragment(currentDeckId, currentTitle)
@@ -105,6 +101,7 @@ class DeckFragment : Fragment() {
         // Go to card
         cardsAdapter.setOnCardClickListener(object : CardsAdapter.OnCardClickListener{
             override fun onCardClick(position: Int) {
+                listener.remove()
                 val currentDeckId = database.collection("Decks").document(args.deckId.toString()).id
                 val currentCardId = database.collection("Decks").document(args.deckId.toString()).collection("cards").document(cards[position].docId.toString()).id
                 val currentDeckTitle = args.deckTitle.toString()
@@ -114,6 +111,15 @@ class DeckFragment : Fragment() {
                 Log.e("NAVIGATE TO CARD ID: ", currentCardId)
             }
         })
+    }
+
+    private fun setIconTint() {
+        val btn = deckBinding.shuffleBtn
+        if (shuffle) {
+            TextViewCompat.setCompoundDrawableTintList(btn, ColorStateList.valueOf(context.let { ContextCompat.getColor(requireContext(), R.color.shuffleActive) }) )
+        } else if (!shuffle) {
+            TextViewCompat.setCompoundDrawableTintList(btn, ColorStateList.valueOf(context.let { ContextCompat.getColor(requireContext(), R.color.md_theme_light_background) }) )
+        }
     }
 
     private fun addCard() {
@@ -152,9 +158,9 @@ class DeckFragment : Fragment() {
         addCardDialog.show()
     }
 
-    private fun eventChangeListener(adapter: CardsAdapter) {
+    private fun eventChangeListener(adapter: CardsAdapter): ListenerRegistration {
         database = FirebaseFirestore.getInstance()
-        database.collection("Decks").document(args.deckId.toString()).collection("cards").
+        return database.collection("Decks").document(args.deckId.toString()).collection("cards").
         addSnapshotListener(object : EventListener<QuerySnapshot> {
             override fun onEvent(
                 value: QuerySnapshot?,
@@ -178,33 +184,15 @@ class DeckFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
         cardsAdapter.startListening()
+        cardsAdapter.notifyDataSetChanged()
     }
 
     override fun onPause() {
         super.onPause()
         cardsAdapter.stopListening()
         cards = ArrayList<Card>()
-    }
+        cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment DeckFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DeckFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

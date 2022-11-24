@@ -1,6 +1,7 @@
 package com.example.mobil
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,19 +18,10 @@ import com.example.mobil.adapter.DecksAdapter
 import com.example.mobil.model.Deck
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.ktx.firestoreSettings
 import java.lang.Error
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MainFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class MainFragment : Fragment() {
+class MyDecksFragment : Fragment() {
 
     private var firebaseAuth : FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -42,8 +34,8 @@ class MainFragment : Fragment() {
     private var decks = ArrayList<Deck>()
     private var database : FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
-    val decksAdapter = DecksAdapter(context = MainActivity(), query)
+    private val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
+    private val decksAdapter = DecksAdapter(context = MainActivity(), query)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -53,17 +45,29 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //Able to store data locally offline
+        val settings = firestoreSettings {
+            isPersistenceEnabled = true
+        }
+
+        database.firestoreSettings = settings
+
         val decksRecycler = view.findViewById<RecyclerView>(R.id.deck_recycler)
         decksRecycler.adapter = decksAdapter
         decksRecycler.layoutManager = LinearLayoutManager(context)
 
         eventChangeListener(decksAdapter)
 
+        //Log out
         val logout = view.findViewById<TextView>(R.id.logOut)
         logout.setOnClickListener{
             try {
                 firebaseAuth.signOut()
-                Log.e("Error in sign out", "HELLOOOOOO")
+                activity.let {
+                    val intent = Intent(it, MainActivity::class.java)
+                    startActivity(intent)
+                }
             } catch (error : Error){
                 Log.e("Error in sign out", error.message.toString())
             }
@@ -80,16 +84,9 @@ class MainFragment : Fragment() {
             override fun onItemClick(position: DocumentSnapshot?) {
                 val currentTitle = position?.get("title")
                 val currentId = position?.id?.let { database.collection("Decks").document(it).id }
-                val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(currentId,
+                val directions = MyDecksFragmentDirections.actionMainFragmentToDeckFragment(currentId,
                     currentTitle as String??)
                 findNavController().navigate(directions)
-
-                if (currentId != null) {
-                    Log.e("NAVIGATE TO DECKID: ", currentId)
-                }
-                if (currentTitle != null) {
-                    Log.e("NAVIGATE TO DECKTITLE: ", currentTitle)
-                }
             }
         })
     }
@@ -146,33 +143,13 @@ class MainFragment : Fragment() {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         decksAdapter.startListening()
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         decksAdapter.stopListening()
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MainFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MainFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
     }
 }

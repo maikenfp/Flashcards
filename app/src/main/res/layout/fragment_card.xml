@@ -70,6 +70,11 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0">
 
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="100dp"
+                android:clipToPadding="false">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -93,7 +98,7 @@
                     android:layout_width="360dp"
                     android:layout_height="460dp"
                     android:alpha=".07"
-                    android:src="@drawable/ic_baseline_ignore_24"
+                    android:src="@drawable/ic_question_mark"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -110,7 +115,6 @@
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
                     android:gravity="center"
-                    android:text="cardTextView"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -119,8 +123,9 @@
                     tools:textLocale="center" />/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
+        </androidx.core.widget.NestedScrollView>
         </androidx.cardview.widget.CardView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

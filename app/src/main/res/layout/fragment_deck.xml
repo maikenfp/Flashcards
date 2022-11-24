@@ -33,18 +33,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <androidx.appcompat.widget.Toolbar
-                    android:id="@+id/edit_toolbar"
-                    android:layout_width="0dp"
-                    android:layout_height="103dp"
-                    android:background="?attr/colorPrimary"
-                    android:minHeight="?attr/actionBarSize"
-                    android:theme="?attr/actionBarTheme"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <Button
                     android:id="@+id/addCardBtn"
                     android:layout_width="82dp"
@@ -70,6 +58,7 @@
                     app:iconGravity="textStart"
                     app:iconPadding="0dp"
                     app:iconSize="35dp"
+                    app:iconTint="@color/md_theme_light_background"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/addCardBtn"
                     app:layout_constraintHorizontal_bias="0.534"
