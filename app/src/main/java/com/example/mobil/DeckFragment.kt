@@ -39,7 +39,7 @@ class DeckFragment : Fragment() {
     }
 
     private val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
-    private val cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
+    private var cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _deckBinding = FragmentDeckBinding.inflate(layoutInflater)
@@ -178,11 +178,13 @@ class DeckFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         cardsAdapter.startListening()
+        cardsAdapter.notifyDataSetChanged()
     }
 
     override fun onPause() {
         super.onPause()
         cardsAdapter.stopListening()
         cards = ArrayList<Card>()
+        cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
     }
 }
