@@ -21,7 +21,7 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestoreSettings
 import java.lang.Error
 
-class MainFragment : Fragment() {
+class MyDecksFragment : Fragment() {
 
     private var firebaseAuth : FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -81,16 +81,9 @@ class MainFragment : Fragment() {
             override fun onItemClick(position: DocumentSnapshot?) {
                 val currentTitle = position?.get("title")
                 val currentId = position?.id?.let { database.collection("Decks").document(it).id }
-                val directions = MainFragmentDirections.actionMainFragmentToDeckFragment(currentId,
+                val directions = MyDecksFragmentDirections.actionMainFragmentToDeckFragment(currentId,
                     currentTitle as String??)
                 findNavController().navigate(directions)
-
-                /*if (currentId != null) {
-                    Log.e("NAVIGATE TO DECKID: ", currentId)
-                }
-                if (currentTitle != null) {
-                    Log.e("NAVIGATE TO DECKTITLE: ", currentTitle)
-                }*/
             }
         })
     }
