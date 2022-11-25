@@ -17,7 +17,6 @@ import com.example.mobil.databinding.FragmentDeckBinding
 import com.example.mobil.model.Card
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.ktx.snapshots
 
 class DeckFragment : Fragment() {
 
@@ -37,14 +36,13 @@ class DeckFragment : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
-        Log.e("HELLO", args.deckId.toString())
     }
 
     private val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
     private var cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _deckBinding = FragmentDeckBinding.inflate(layoutInflater)
         return deckBinding.root
     }
@@ -54,7 +52,7 @@ class DeckFragment : Fragment() {
 
         shuffle = false
 
-        var listener : ListenerRegistration = eventChangeListener(cardsAdapter)
+        val listener : ListenerRegistration = eventChangeListener(cardsAdapter)
         // Adapter & Recycler
         val cardsRecycler = deckBinding.cardRecycler
         cardsRecycler.layoutManager = LinearLayoutManager(context)
@@ -87,7 +85,7 @@ class DeckFragment : Fragment() {
             findNavController().navigate(directions)
         }
 
-        //Go to Edit by longclick
+        //Go to Edit by long click
         cardsAdapter.setOnLongClickListener(object : CardsAdapter.OnLongClickListener{
             override fun onLongClick(position: Int) {
                 listener.remove()
@@ -108,7 +106,7 @@ class DeckFragment : Fragment() {
                 val directions = DeckFragmentDirections.actionDeckFragmentToCardFragment(currentDeckId, currentCardId, currentDeckTitle, shuffle)
                 findNavController().navigate(directions)
 
-                Log.e("NAVIGATE TO CARD ID: ", currentCardId)
+                Log.d("NAVIGATE TO CARD ID: ", currentCardId)
             }
         })
     }
@@ -174,7 +172,6 @@ class DeckFragment : Fragment() {
                 for(dc : DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
                         cards.add(dc.document.toObject(Card::class.java))
-                        Log.e("Load Decks TEST", cards.toString())
                     }
                 }
                 adapter.notifyDataSetChanged()
@@ -191,7 +188,7 @@ class DeckFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         cardsAdapter.stopListening()
-        cards = ArrayList<Card>()
+        cards = ArrayList()
         cardsAdapter = CardsAdapter(context = MainActivity(), cards, query)
 
     }

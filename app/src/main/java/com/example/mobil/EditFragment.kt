@@ -34,7 +34,7 @@ class EditFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _editBinding = FragmentEditBinding.inflate(layoutInflater)
 
         // Adapter & Recycler
@@ -90,7 +90,6 @@ class EditFragment : Fragment() {
 
     private fun ignoreCards() {
         for (card in selected){
-            Log.e("SELECTED CARD", card.toString())
             var ignored = card.isIgnored
             ignored = !ignored!!
             val cardHash = hashMapOf(
@@ -122,8 +121,6 @@ class EditFragment : Fragment() {
                 for(dc : DocumentChange in value?.documentChanges!!){
                     if(dc.type == DocumentChange.Type.ADDED){
                         cards.add(dc.document.toObject(Card::class.java))
-                        //cards.add(Card(dc.document.data.getValue("question").toString(),dc.document.data.getValue("answer").toString(),dc.document.data.getValue("isIgnored").toString()
-                        Log.e("Add Card Error", cards.toString())
                     }
                 }
                 adapter.notifyDataSetChanged()
