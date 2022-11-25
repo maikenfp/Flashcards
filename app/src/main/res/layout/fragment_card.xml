@@ -57,6 +57,7 @@
             app:layout_constraintTop_toTopOf="@+id/flipCardButton" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/card_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
@@ -98,15 +99,15 @@
                         android:layout_width="360dp"
                         android:layout_height="460dp"
                         android:alpha=".07"
-                        android:src="@drawable/ic_question_mark"
+                        android:src="@drawable/ic_exclamation_mark"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/ic_question_mark" />
+                        app:srcCompat="@drawable/ic_exclamation_mark" />
 
                     <TextView
-                        android:id="@+id/cardTextView"
+                        android:id="@+id/cardTextViewAnswer"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:autoSizeMaxTextSize="60sp"
@@ -138,6 +139,103 @@
 
                 <Button
                     android:id="@+id/ttsButton"
+                    android:layout_width="60dp"
+                    android:layout_height="68dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:contentDescription="@string/textview"
+                    app:icon="@drawable/ic_baseline_volume_up_24"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconSize="30dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view_question"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:cardBackgroundColor="@color/md_theme_light_primaryContainer"
+            app:layout_constraintBottom_toTopOf="@+id/flipCardButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="100dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/cardHamburgerMenuQuestion"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:alpha=".75"
+                        android:src="@drawable/ic_baseline_more_vert_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <ImageView
+                        android:id="@+id/cardIgnoreImageViewQuestion"
+                        android:layout_width="360dp"
+                        android:layout_height="460dp"
+                        android:alpha=".07"
+                        android:src="@drawable/ic_question_mark"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_question_mark" />
+
+                    <TextView
+                        android:id="@+id/cardTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:autoSizeMaxTextSize="60sp"
+                        android:autoSizeMinTextSize="6sp"
+                        android:autoSizeStepGranularity="2sp"
+                        android:autoSizeTextType="uniform"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0"
+                        tools:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                        tools:textLocale="center" /><![CDATA[
+                />
+            ]]>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:id="@+id/ttsButtonQuestion"
                     android:layout_width="60dp"
                     android:layout_height="68dp"
                     android:layout_marginEnd="8dp"
