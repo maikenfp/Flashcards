@@ -51,7 +51,7 @@ class EditAdapter(val context: MainActivity, private val cards: ArrayList<Card>)
     // helper function that adds/removes a card to the array depending on the app's state
     private fun selectCard(holder: CardsViewHolder, card: Card) {
         val selectText = holder.itemView.findViewById<TextView>(R.id.selectText)
-        // If the "selectedCards" zarray contains the card, remove from array and set Invisible
+        // If the "selectedCards" array contains the card, remove from array and set Invisible
         if (selectedCards.contains(card)) {
             selectedCards.remove(card)
             selectText.visibility = View.INVISIBLE
@@ -68,12 +68,8 @@ class EditAdapter(val context: MainActivity, private val cards: ArrayList<Card>)
 
     class CardsViewHolder (cardView: View) : RecyclerView.ViewHolder(cardView) {
 
-        val textItem = cardView.findViewById<TextView>(R.id.cardTitle)
-        val imageItem = cardView.findViewById<ImageView>(R.id.cardImage)
-
-        fun bind(cardItem: Card){
-            textItem.text = cardItem.question
-        }
+        val textItem: TextView = cardView.findViewById(R.id.cardTitle)
+        val imageItem: ImageView = cardView.findViewById(R.id.cardImage)
     }
 
 }

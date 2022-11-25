@@ -2,8 +2,6 @@ package com.example.mobil
 
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
-import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.speech.tts.TextToSpeech
 import android.util.Log
@@ -24,16 +22,12 @@ class CardFragment : Fragment() {
     private val argsCard: CardFragmentArgs by navArgs()
     private var cards = ArrayList<Card>()
     private lateinit var database: FirebaseFirestore
-
-    lateinit var frontAnimator: AnimatorSet
-    lateinit var backAnimator: AnimatorSet
-    lateinit var fastFrontAnimator: AnimatorSet
-    lateinit var fastBackAnimator: AnimatorSet
-    var isFront = true
-
-
-    lateinit var tts: TextToSpeech
-
+    private lateinit var frontAnimator: AnimatorSet
+    private lateinit var backAnimator: AnimatorSet
+    private lateinit var fastFrontAnimator: AnimatorSet
+    private lateinit var fastBackAnimator: AnimatorSet
+    private lateinit var tts: TextToSpeech
+    private var isFront = true
     private var index = 0
 
     override fun onCreateView(
@@ -43,16 +37,11 @@ class CardFragment : Fragment() {
 
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_card, container, false)
+
+        // Text-To_speech Language
+        tts = TextToSpeech(context) { status -> if (status != TextToSpeech.ERROR) { tts.language = Locale.US } }
+
         index = 0
-
-
-        // Text-To_speech
-        tts = TextToSpeech(context, TextToSpeech.OnInitListener { status ->
-            if (status != TextToSpeech.ERROR) {
-                tts.language = Locale.US
-            }
-        })
-
         return view
     }
 
@@ -63,96 +52,100 @@ class CardFragment : Fragment() {
         loadDeck()
 
         // Card Front and Back
-        var cardFront = view.findViewById<CardView>(R.id.card_view_question)
-        var cardBack = view.findViewById<CardView>(R.id.card_view)
+        val cardFront = view.findViewById<CardView>(R.id.card_view_question)
+        val cardBack = view.findViewById<CardView>(R.id.card_view_answer)
 
         // Animators
         frontAnimator = AnimatorInflater.loadAnimator(context, R.animator.front_animation) as AnimatorSet
         backAnimator = AnimatorInflater.loadAnimator(context, R.animator.back_animation) as AnimatorSet
+
+        // Fast animators to instantly flip card
         fastFrontAnimator = AnimatorInflater.loadAnimator(context, R.animator.fast_front_animation) as AnimatorSet
         fastBackAnimator = AnimatorInflater.loadAnimator(context, R.animator.fast_back_animation) as AnimatorSet
 
         // Text-To-Speech Button
         val ttsButtonFront = view.findViewById<Button>(R.id.ttsButtonQuestion)
-        val ttsButtonBack = view.findViewById<Button>(R.id.ttsButton)
+        val ttsButtonBack = view.findViewById<Button>(R.id.ttsButtonAnswer)
         ttsButtonFront.setOnClickListener { ttsFunction(view) }
         ttsButtonBack.setOnClickListener { ttsFunction(view) }
 
         // Hamburger Menu Button
         val menuFront : ImageView = view.findViewById(R.id.cardHamburgerMenuQuestion)
-        val menuBack : ImageView = view.findViewById(R.id.cardHamburgerMenu)
+        val menuBack : ImageView = view.findViewById(R.id.cardHamburgerMenuAnswer)
         menuFront.setOnClickListener{ popupMenu(menuFront)}
         menuBack.setOnClickListener{ popupMenu(menuBack) }
 
         // Previous Card button
         val previousCardBtn = view.findViewById<Button>(R.id.previousCardButton)
         previousCardBtn.setOnClickListener {
-            if (index == 0) {
-                index = cards.size - 1
-            } else {
-                index -= 1
-            }
-            if (isFront) {
-                showCard()
-            } else {
+
+            // Previous Index
+            if (index == 0) { index = cards.size - 1 }
+            else { index -= 1 }
+
+            // Previous card will show question first
+            if (isFront) { showCard() }
+            else {
                 flipToQuestionFast(cardFront,cardBack)
+                isFront = true
             }
-            stopTTS()
-            isFront = true
+
+            // Stop Text-To-Speech
+            tts.stop()
         }
 
         // Next Card Button
         val nextCardBtn = view.findViewById<Button>(R.id.nextCardButton)
         nextCardBtn.setOnClickListener {
-            if (index == cards.size - 1) {
-                index = 0
-            } else {
-                index += 1
-            }
-            if (isFront) {
-                showCard()
-            } else {
+
+            // Next Index
+            if (index == cards.size - 1) { index = 0 }
+            else { index += 1 }
+
+            // Next card will show question first
+            if (isFront) { showCard() }
+            else {
                 flipToQuestionFast(cardFront,cardBack)
+                isFront = true
             }
-            stopTTS()
-            isFront = true
+
+            // Stop Text-To-Speech
+            tts.stop()
         }
 
 
         // Flip Card Button
         val flipCardBtn = view.findViewById<Button>(R.id.flipCardButton)
         flipCardBtn.setOnClickListener {
+            // Flip to answer
             if (isFront) {
                 showCard()
                 flipToAnswer(cardFront,cardBack)
-
-            } else {
+            }
+            // Flip to question
+            else {
                 showCard()
                 flipToQuestion(cardFront,cardBack)
             }
-            stopTTS()
 
+            // Stop Text-To-Speech
+            tts.stop()
         }
 
     }
 
+    // Text-To-Speech Functionality
     private fun ttsFunction(view: View){
-        var toSpeak = ""
-        if (isFront) {
-            toSpeak = view.findViewById<TextView>(R.id.cardTextView).text.toString()
-        }
-        else {
-            toSpeak = view.findViewById<TextView>(R.id.cardTextViewAnswer).text.toString()
-        }
 
-        if (toSpeak == "") {
-            // Toast.makeText(this,"Enter text", Toast.LENGTH_SHORT).show()
-            Toast.makeText(context,"Enter text", Toast.LENGTH_SHORT).show()
-        }
-        else {
-            Toast.makeText(context, toSpeak, Toast.LENGTH_SHORT).show()
-            tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, "1")
-        }
+        // Text to be spoken
+        val toSpeak: String =
+            if (isFront) { view.findViewById<TextView>(R.id.cardTextViewQuestion).text.toString() }
+            else { view.findViewById<TextView>(R.id.cardTextViewAnswer).text.toString() }
+
+        // Speak the text, QUEUE_FlUSH flushes the TTS queue when pressed
+        Toast.makeText(context, toSpeak, Toast.LENGTH_SHORT).show()
+        tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, "1")
+
     }
 
     // Hamburger Menu
@@ -193,7 +186,7 @@ class CardFragment : Fragment() {
                         cards[index].isIgnored = ignored
                     }
                     showCard()
-                    stopTTS()
+                    tts.stop()
                     true
                 }
 
@@ -237,7 +230,7 @@ class CardFragment : Fragment() {
                     }
                     addCardDialog.create()
                     addCardDialog.show()
-                    stopTTS()
+                    tts.stop()
 
                     true
                 }
@@ -265,7 +258,7 @@ class CardFragment : Fragment() {
                         }
                         showCard()
                         dialog.dismiss()
-                        stopTTS()
+                        tts.stop()
                     }
 
                     deleteDialog.setNegativeButton("Cancel"){
@@ -282,21 +275,25 @@ class CardFragment : Fragment() {
         popupMenu.show()
     }
 
-    //Loads deck from firestore
+    //Loads deck from Firestore
     private fun loadDeck() {
         database = FirebaseFirestore.getInstance()
-        cards = ArrayList<Card>()
+        cards = ArrayList()
         var cardIndex = 0
         var cardQuestion = ""
 
+        // Gets the database collection
         database.collection("Decks").document(argsCard.deckId.toString()).collection("cards").get()
             .addOnSuccessListener { result ->
                 for (document in result) {
 
+                    // Displays the question which the user clicked on in DeckFragment, regardless if it is ignored or not
                     if (document.id == argsCard.cardId) {
                         index = cardIndex
                         cardQuestion = document.data.getValue("question").toString()
                     }
+
+                    // Loads the database collection into the local arraylist
                     if (document.data.getValue("isIgnored") == false || document.id == argsCard.cardId) {
                         cards.add(
                             Card(
@@ -309,6 +306,8 @@ class CardFragment : Fragment() {
                         cardIndex++
                     }
                 }
+
+                // Shuffles the local arraylist
                 if (argsCard.shuffle) {
                     cards.shuffle()
                     cardIndex = 0
@@ -319,31 +318,18 @@ class CardFragment : Fragment() {
                         cardIndex++
                     }
                 }
+
+                // Display the card
                 showCard()
             }
+
+            // Logs the error
             .addOnFailureListener { exception ->
-                Log.d("TAG", "Error getting documents: ", exception)
+                Log.e("TAG", "Error getting documents: ", exception)
             }
     }
 
-    private fun flipToQuestion(cardFront: CardView, cardBack:CardView) {
-        frontAnimator.setTarget(cardBack)
-        backAnimator.setTarget(cardFront)
-        frontAnimator.start()
-        backAnimator.start()
-        cardFront.bringToFront()
-        isFront = true
-    }
-    private fun flipToQuestionFast(cardFront: CardView, cardBack:CardView) {
-        fastFrontAnimator.setTarget(cardBack)
-        fastBackAnimator.setTarget(cardFront)
-        fastFrontAnimator.start()
-        fastBackAnimator.start()
-        cardFront.bringToFront()
-        isFront = true
-        // Necesarry to not spoil the answer of the next card
-        fastFrontAnimator.doOnEnd { showCard() }
-    }
+    // Animation to flip to the answer
     private fun flipToAnswer(cardFront: CardView, cardBack:CardView) {
         frontAnimator.setTarget(cardFront)
         backAnimator.setTarget(cardBack)
@@ -353,15 +339,38 @@ class CardFragment : Fragment() {
         isFront = false
     }
 
+    // Animation to flip to the question
+    private fun flipToQuestion(cardFront: CardView, cardBack:CardView) {
+        frontAnimator.setTarget(cardBack)
+        backAnimator.setTarget(cardFront)
+        frontAnimator.start()
+        backAnimator.start()
+        cardFront.bringToFront()
+        isFront = true
+    }
+
+    // Instant animation to flip to the question
+    private fun flipToQuestionFast(cardFront: CardView, cardBack:CardView) {
+        fastFrontAnimator.setTarget(cardBack)
+        fastBackAnimator.setTarget(cardFront)
+        // DoOnEnd is necessary to not spoil the answer of the next card
+        fastFrontAnimator.doOnEnd { showCard() }
+        fastFrontAnimator.start()
+        fastBackAnimator.start()
+        cardFront.bringToFront()
+        isFront = true
+
+    }
+
     // Shows the correct card and symbol
     private fun showCard() {
-        view?.findViewById<TextView>(R.id.cardTextView)?.text = cards[index].question
+        view?.findViewById<TextView>(R.id.cardTextViewQuestion)?.text = cards[index].question
         view?.findViewById<TextView>(R.id.cardTextViewAnswer)?.text = cards[index].answer
 
 
         // Checks if card is ignored, to determine if we are displaying the "ignored" icon
-        val cardImageQuestion = view?.findViewById<ImageView>(R.id.cardIgnoreImageViewQuestion)
-        val cardImageAnswer = view?.findViewById<ImageView>(R.id.cardIgnoreImageView)
+        val cardImageQuestion = view?.findViewById<ImageView>(R.id.cardBackgroundImageViewQuestion)
+        val cardImageAnswer = view?.findViewById<ImageView>(R.id.cardBackgroundImageViewAnswer)
         if(cards[index].isIgnored == true) {
             cardImageQuestion?.setImageResource(R.drawable.ic_baseline_ignore_24)
             cardImageAnswer?.setImageResource(R.drawable.ic_baseline_ignore_24)
@@ -372,23 +381,16 @@ class CardFragment : Fragment() {
         }
     }
 
-    private fun stopTTS() {
-        if (tts != null) {
-            tts.stop()
-        }
-    }
-
+    // When fragment pauses
     override fun onPause() {
-        stopTTS()
+        tts.stop()
         super.onPause()
     }
 
+    // When fragment is destroyed
     override fun onDestroy() {
-        if (tts != null) {
-            tts.stop()
-            tts.shutdown()
-        }
+        tts.stop()
+        tts.shutdown()
         super.onDestroy()
     }
 }
-

@@ -37,7 +37,11 @@
     <string name="repeat_password_hint">Repeat password</string>
     <string name="already_registered_button">Already registered? Sign in here!</string>
     <string name="not_registered_button">Not registered? Sign up here!</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="previous_card_button">Previous Card Button</string>
+    <string name="next_card_button">Next Card Button</string>
+    <string name="flip_card_button">Flip Card Button</string>
+    <string name="background_icon">Background Icon</string>
+    <string name="hamburger_menu">Hamburger Menu</string>
+    <string name="tts_button">Text-To-Speech Button</string>
     <string name="ignore_cards">Ignore Cards</string>
 </resources>

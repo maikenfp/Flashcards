@@ -37,10 +37,13 @@ class MyDecksFragment : Fragment() {
     private val query : Query = database.collection("Decks").whereEqualTo("userID", firebaseAuth.currentUser?.uid)
     private val decksAdapter = DecksAdapter(context = MainActivity(), query)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_main, container, false)
-        return view
+        return inflater.inflate(R.layout.fragment_main, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,7 +88,7 @@ class MyDecksFragment : Fragment() {
                 val currentTitle = position?.get("title")
                 val currentId = position?.id?.let { database.collection("Decks").document(it).id }
                 val directions = MyDecksFragmentDirections.actionMainFragmentToDeckFragment(currentId,
-                    currentTitle as String??)
+                    currentTitle as String?)
                 findNavController().navigate(directions)
             }
         })

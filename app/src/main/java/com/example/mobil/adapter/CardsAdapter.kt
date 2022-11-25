@@ -53,10 +53,6 @@ class CardsAdapter(val context: MainActivity, private val cards: ArrayList<Card>
         val textItem: TextView = cardView.findViewById(R.id.cardTitle)
         val imageItem: ImageView = cardView.findViewById(R.id.cardImage)
 
-        fun bind(cardItem: Card){
-            textItem.text = cardItem.toString()
-        }
-
         init {
             cardView.setOnClickListener{
                 listener.onCardClick(adapterPosition)

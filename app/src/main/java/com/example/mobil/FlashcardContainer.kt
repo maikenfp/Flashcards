@@ -3,7 +3,6 @@ package com.example.mobil
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.fragment.NavHostFragment
-import com.example.mobil.databinding.ActivityMainBinding
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.NavController
 import androidx.navigation.ui.setupActionBarWithNavController
