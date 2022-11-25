@@ -1,6 +1,7 @@
 package com.example.mobil
 
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,12 +11,17 @@ import android.widget.*
 import androidx.navigation.fragment.navArgs
 import com.example.mobil.model.Card
 import com.google.firebase.firestore.*
+import java.util.*
 import kotlin.collections.ArrayList
 
 class CardFragment : Fragment() {
     private val argsCard: CardFragmentArgs by navArgs()
     private var cards = ArrayList<Card>()
     private lateinit var database: FirebaseFirestore
+
+    lateinit var tts: TextToSpeech
+
+
     private var index = 0
 
     override fun onCreateView(
@@ -25,6 +31,14 @@ class CardFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_card, container, false)
         index = 0
+
+        // Text-To_speech
+        // tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
+        tts = TextToSpeech(context, TextToSpeech.OnInitListener { status ->
+            if (status != TextToSpeech.ERROR) {
+                tts.language = Locale.US
+            }
+        })
 
         return view
     }
@@ -43,6 +57,7 @@ class CardFragment : Fragment() {
                 index -= 1
             }
             showCard(true)
+            stopTTS()
         }
 
         // Next Card Button
@@ -54,6 +69,7 @@ class CardFragment : Fragment() {
                 index += 1
             }
             showCard(true)
+            stopTTS()
         }
 
         // Flip Card Button
@@ -63,6 +79,21 @@ class CardFragment : Fragment() {
                 showCard(false)
             } else {
                 showCard(true)
+            }
+            stopTTS()
+        }
+
+        // Text-To-Speech Button
+        val ttsButton = view.findViewById<Button>(R.id.ttsButton)
+        ttsButton.setOnClickListener {
+            val toSpeak = view.findViewById<TextView>(R.id.cardTextView).text.toString()
+            if (toSpeak == "") {
+                // Toast.makeText(this,"Enter text", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,"Enter text", Toast.LENGTH_SHORT).show()
+            }
+            else {
+                Toast.makeText(context, toSpeak, Toast.LENGTH_SHORT).show()
+                tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null, "1")
             }
         }
 
@@ -109,6 +140,7 @@ class CardFragment : Fragment() {
                         cards[index].isIgnored = ignored
                     }
                     showCard(true)
+                    stopTTS()
                     true
                 }
 
@@ -152,6 +184,7 @@ class CardFragment : Fragment() {
                     }
                     addCardDialog.create()
                     addCardDialog.show()
+                    stopTTS()
 
                     true
                 }
@@ -179,6 +212,7 @@ class CardFragment : Fragment() {
                         }
                         showCard(true)
                         dialog.dismiss()
+                        stopTTS()
                     }
 
                     deleteDialog.setNegativeButton("Cancel"){
@@ -259,6 +293,25 @@ class CardFragment : Fragment() {
         else {
             cardImage?.setImageResource(R.drawable.ic_exclamation_mark)
         }
+    }
+
+    private fun stopTTS() {
+        if (tts != null) {
+            tts.stop()
+        }
+    }
+
+    override fun onPause() {
+        stopTTS()
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        if (tts != null) {
+            tts.stop()
+            tts.shutdown()
+        }
+        super.onDestroy()
     }
 }
 

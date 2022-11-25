@@ -73,57 +73,88 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="100dp"
-                android:clipToPadding="false">
+                android:clipToPadding="false"
+                android:paddingBottom="100dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/cardHamburgerMenu"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:alpha=".75"
+                        android:src="@drawable/ic_baseline_more_vert_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.0" />
+
+                    <ImageView
+                        android:id="@+id/cardIgnoreImageView"
+                        android:layout_width="360dp"
+                        android:layout_height="460dp"
+                        android:alpha=".07"
+                        android:src="@drawable/ic_question_mark"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_question_mark" />
+
+                    <TextView
+                        android:id="@+id/cardTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:autoSizeMaxTextSize="60sp"
+                        android:autoSizeMinTextSize="6sp"
+                        android:autoSizeStepGranularity="2sp"
+                        android:autoSizeTextType="uniform"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0"
+                        tools:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                        tools:textLocale="center" /><![CDATA[
+
+
+
+                    />
+
+
+                ]]>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/cardHamburgerMenu"
-                    android:alpha=".75"
+                <Button
+                    android:id="@+id/ttsButton"
                     android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/ic_baseline_more_vert_24"
+                    android:layout_height="68dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:contentDescription="@string/textview"
+                    app:icon="@drawable/ic_baseline_volume_up_24"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconSize="30dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
-
-                <ImageView
-                    android:id="@+id/cardIgnoreImageView"
-                    android:layout_width="360dp"
-                    android:layout_height="460dp"
-                    android:alpha=".07"
-                    android:src="@drawable/ic_question_mark"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/ic_question_mark"
-                    />
-
-                <TextView
-                    android:id="@+id/cardTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:autoSizeMaxTextSize="60sp"
-                    android:autoSizeMinTextSize="6sp"
-                    android:autoSizeStepGranularity="2sp"
-                    android:autoSizeTextType="uniform"
-                    android:gravity="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                    tools:textLocale="center" />/>
-
+                    app:layout_constraintVertical_bias="1.0" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
+
         </androidx.cardview.widget.CardView>
 
 
